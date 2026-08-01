@@ -872,6 +872,28 @@ check('20b: real vercel.json yields capture=healthy', () => {
     'real vercel.json has the exact env-backed /api/lead route');
 });
 
+check('20c: capture check rejects duplicate, overlapping, and legacy lead routes', () => {
+  const vercelPath = resolve(PROJECT_ROOT, 'vercel.json');
+  const original = readFileSync(vercelPath, 'utf8');
+  const mutations = [
+    ['duplicate exact route', (config) => config.routes.push({ ...config.routes[0] })],
+    ['overlapping broad route', (config) => config.routes.push({ src: '^/api/.*$', dest: 'https://unapproved.invalid' })],
+    ['legacy rewrite', (config) => { config.rewrites = [{ source: '/api/lead', destination: 'https://unapproved.invalid' }]; }],
+  ];
+  try {
+    for (const [label, mutate] of mutations) {
+      const config = JSON.parse(original);
+      mutate(config);
+      writeFileSync(vercelPath, `${JSON.stringify(config, null, 2)}\n`);
+      const { report } = runAudit({});
+      assert.equal(report.checks.capture.status, 'unhealthy', `${label} must fail closed`);
+      assert.equal(report.checks.capture.remediation, 'CAPTURE_ROUTE_AMBIGUOUS', `${label} must identify route ambiguity`);
+    }
+  } finally {
+    writeFileSync(vercelPath, original);
+  }
+});
+
 // =========================================================================
 // Category 21: Forensic interpretation is the completed preservation result
 // (verified against PR body text, not the script)

@@ -197,17 +197,35 @@ function checkCapture() {
   }
 
   const routes = Array.isArray(parsed.routes) ? parsed.routes : [];
-  const match = routes.find(route =>
-    route && typeof route === 'object' &&
-    route.src === '^/api/lead$' &&
-    route.dest === '${MDG_LEAD_WEBHOOK_URL}' &&
-    Array.isArray(route.env) &&
-    route.env.length === 1 &&
-    route.env[0] === 'MDG_LEAD_WEBHOOK_URL');
+  const leadRoutes = routes.filter(route => {
+    if (!route || typeof route !== 'object' || typeof route.src !== 'string') return false;
+    try {
+      return new RegExp(route.src).test('/api/lead');
+    } catch {
+      return true;
+    }
+  });
+  const legacyLeadRewrites = (Array.isArray(parsed.rewrites) ? parsed.rewrites : [])
+    .filter(rewrite => rewrite && typeof rewrite === 'object' && rewrite.source === '/api/lead');
+  const match = leadRoutes[0];
+  const approved = leadRoutes.length === 1
+    && legacyLeadRewrites.length === 0
+    && match
+    && match.src === '^/api/lead$'
+    && match.dest === '${MDG_LEAD_WEBHOOK_URL}'
+    && Array.isArray(match.env)
+    && match.env.length === 1
+    && match.env[0] === 'MDG_LEAD_WEBHOOK_URL';
 
-  if (match) {
+  if (approved) {
     return checkResult('healthy',
       'Vercel env-backed route ^/api/lead$ present with the approved request-time destination');
+  }
+
+  if (leadRoutes.length > 1 || legacyLeadRewrites.length > 0) {
+    return checkResult('unhealthy',
+      'Lead capture route is ambiguous: only one exact approved routes[] entry may handle /api/lead and no legacy rewrite may remain',
+      'CAPTURE_ROUTE_AMBIGUOUS');
   }
 
   return checkResult('unhealthy',
