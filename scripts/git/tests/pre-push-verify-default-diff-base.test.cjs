@@ -187,6 +187,38 @@ test('default verifier blocks a clean committed branch when origin/main is unava
   }
 });
 
+test('default verifier fails closed when committed history is unverifiable even with unrelated live dirt', () => {
+  try {
+    writeVerifierFixture(noOriginRepo);
+    fs.writeFileSync(path.join(noOriginRepo, 'scripts', 'fixture.mjs'), 'export const = ;\n');
+    git(['add', 'scripts/fixture.mjs'], noOriginRepo);
+    git(['commit', '-m', 'test: invalid committed fixture without origin'], noOriginRepo);
+    fs.writeFileSync(path.join(noOriginRepo, 'README.md'), 'unrelated worktree dirt\n');
+
+    const result = runVerifier(noOriginRepo);
+    const output = combinedOutput(result);
+    assert.equal(result.status, 3, output);
+    assert.match(output, /origin\/main merge base/);
+    assert.doesNotMatch(output, /checking live worktree changes only/);
+  } finally {
+    cleanup(noOriginRepo);
+  }
+});
+
+test('default verifier checks live worktree changes in an initial no-origin repository', () => {
+  try {
+    writeVerifierFixture(noOriginRepo);
+    fs.writeFileSync(path.join(noOriginRepo, uncommittedFixture), 'export const = ;\n');
+
+    const result = runVerifier(noOriginRepo);
+    const output = combinedOutput(result);
+    assert.equal(result.status, 10, output);
+    assert.match(output, new RegExp(uncommittedFixture.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  } finally {
+    cleanup(noOriginRepo);
+  }
+});
+
 test('SCRIPTS.md does not instruct users to bypass the pre-push verifier', () => {
   const scriptsGuide = fs.readFileSync(path.join(ROOT, 'SCRIPTS.md'), 'utf8');
   assert.doesNotMatch(scriptsGuide, /git push --no-verify/);

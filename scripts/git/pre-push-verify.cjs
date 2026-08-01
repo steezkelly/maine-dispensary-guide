@@ -294,15 +294,16 @@ function resolveDefaultIterationBase(refArg) {
         log('info', `auto-detected default diff base: ${base}..${head} (plus live worktree changes)`);
         return base;
     } catch (error) {
-        let dirty = '';
+        let hasCommittedHistoryBeyondInitial = false;
         try {
-            dirty = gitExec(['status', '--porcelain', '--untracked-files=all']);
+            gitExec(['rev-parse', '--verify', 'HEAD^']);
+            hasCommittedHistoryBeyondInitial = true;
         } catch {}
-        if (dirty) {
-            log('warn', 'origin/main is unavailable; checking live worktree changes only. Committed branch history remains unverified — fetch origin before release verification.');
+        if (!hasCommittedHistoryBeyondInitial) {
+            log('warn', 'origin/main is unavailable in an initial repository; checking live worktree changes only. Fetch origin before verifying committed branch history.');
             return null;
         }
-        const baseError = new Error(`default verification requires a resolvable origin/main merge base for a clean committed branch; fetch origin or pass an explicit --ref=<base>: ${error.message.split('\n')[0]}`);
+        const baseError = new Error(`default verification requires a resolvable origin/main merge base to verify committed branch history and live worktree changes; fetch origin or pass an explicit --ref=<base>: ${error.message.split('\n')[0]}`);
         baseError.code = 'DEFAULT_BASE_UNAVAILABLE';
         throw baseError;
     }
