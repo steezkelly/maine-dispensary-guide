@@ -161,27 +161,29 @@ const { policyUrl = '/cookies' } = Astro.props;
       function hide() {
         banner.removeAttribute('data-shown');
       }
+      function hasPrivacySignal() {
+        var nav = window.navigator || {};
+        var dnt = nav.doNotTrack || window.doNotTrack || nav.msDoNotTrack;
+        return dnt === '1' || dnt === 'yes' || nav.globalPrivacyControl === true;
+      }
       function applyConsent(granted) {
-        // Google's Consent Mode v2 default keys. `granted` enables standard
-        // analytics + ad personalization; `denied` switches the SDK into
-        // cookieless ping mode (no identifiers stored, no Measurement
-        // Protocol hits dispatched).
-        if (typeof window.gtag !== 'function') return;
-        window.gtag('consent', 'update', {
-          'ad_storage': granted ? 'granted' : 'denied',
-          'ad_user_data': granted ? 'granted' : 'denied',
-          'ad_personalization': granted ? 'granted' : 'denied',
-          'analytics_storage': granted ? 'granted' : 'denied',
-          'functionality_storage': granted ? 'granted' : 'denied',
-          'personalization_storage': granted ? 'granted' : 'denied',
-          'security_storage': 'granted',  // always on; needed for csrf/state cookies
-        });
+        if (!window.__mdgAnalytics || typeof window.__mdgAnalytics.setConsent !== 'function') return;
+        window.__mdgAnalytics.setConsent(granted && !hasPrivacySignal() ? 'granted' : 'denied');
       }
       function handle(action) {
         var granted = action === 'accept';
         writeChoice(granted ? 'granted' : 'denied');
         applyConsent(granted);
         hide();
+      }
+
+      // Browser privacy signals override a stale grant and suppress the banner:
+      // DNT/GPC is already an explicit preference, not an invitation to opt in.
+      if (hasPrivacySignal()) {
+        writeChoice('denied');
+        applyConsent(false);
+        hide();
+        return;
       }
 
       // Existing choice — apply without re-prompting.

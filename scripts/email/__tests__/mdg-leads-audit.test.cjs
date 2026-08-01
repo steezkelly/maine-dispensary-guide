@@ -847,25 +847,55 @@ check('19d: dry-run does not require credentials and does not send', () => {
 });
 
 // =========================================================================
-// Category 20: Structured capture check
+// Category 20: Structured env-backed capture-route check
 // =========================================================================
 
-check('20a: capture check parses JSON rewrite object (not substring)', () => {
+check('20a: capture check parses the exact env-backed route object (not a substring)', () => {
   const src = readFileSync(SCRIPT, 'utf8');
   const capBody = src.slice(src.indexOf('function checkCapture'),
     src.indexOf('// ----', src.indexOf('function checkCapture') + 10));
   assert.match(capBody, /JSON\.parse/, 'must JSON.parse vercel.json');
-  assert.match(capBody, /source === '\/api\/lead'/, 'must match exact source');
-  assert.match(capBody, /https:/, 'must require HTTPS destination');
+  assert.match(capBody, /routes/, 'must inspect route objects');
+  assert.match(capBody, /src === '\^\/api\/lead\$'/,
+    'must match the exact /api/lead route regex');
+  assert.match(capBody, /dest === '\$\{MDG_LEAD_WEBHOOK_URL\}'/,
+    'must require the approved request-time destination variable');
+  assert.match(capBody, /env/, 'must require an explicit route environment allowlist');
   assert.doesNotMatch(capBody, /content\.includes\('\/api\/lead'\)/,
-    'must not use naive substring match');
+    'must not use naive substring matching');
 });
 
 check('20b: real vercel.json yields capture=healthy', () => {
   const { report } = runAudit({});
   assert.ok(report);
   assert.equal(report.checks.capture.status, 'healthy',
-    'real vercel.json has the /api/lead HTTPS rewrite');
+    'real vercel.json has the exact env-backed /api/lead route');
+});
+
+check('20c: capture check rejects duplicate, overlapping, and legacy lead routes', () => {
+  const vercelPath = resolve(PROJECT_ROOT, 'vercel.json');
+  const original = readFileSync(vercelPath, 'utf8');
+  const mutations = [
+    ['duplicate exact route', (config) => config.routes.push({ ...config.routes[0] })],
+    ['overlapping broad route', (config) => config.routes.push({ src: '^/api/.*$', dest: 'https://unapproved.invalid' })],
+    ['legacy literal rewrite', (config) => { config.rewrites = [{ source: '/api/lead', destination: 'https://unapproved.invalid' }]; }],
+    ['legacy broad rewrite', (config) => { config.rewrites = [{ source: '/api/:path*', destination: 'https://unapproved.invalid/$1' }]; }],
+    ['legacy regex rewrite', (config) => { config.rewrites = [{ source: '^/api/(.*)$', destination: 'https://unapproved.invalid/$1' }]; }],
+    ['GET-only route', (config) => { config.routes[0].methods = ['GET']; }],
+    ['conditional route', (config) => { config.routes[0].has = [{ type: 'header', key: 'x-test', value: 'present' }]; }],
+  ];
+  try {
+    for (const [label, mutate] of mutations) {
+      const config = JSON.parse(original);
+      mutate(config);
+      writeFileSync(vercelPath, `${JSON.stringify(config, null, 2)}\n`);
+      const { report } = runAudit({});
+      assert.equal(report.checks.capture.status, 'unhealthy', `${label} must fail closed`);
+      assert.equal(report.checks.capture.remediation, 'CAPTURE_ROUTE_AMBIGUOUS', `${label} must identify route ambiguity`);
+    }
+  } finally {
+    writeFileSync(vercelPath, original);
+  }
 });
 
 // =========================================================================

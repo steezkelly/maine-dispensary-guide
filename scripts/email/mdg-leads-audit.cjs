@@ -196,21 +196,60 @@ function checkCapture() {
       'vercel.json is not valid JSON', 'CAPTURE_CONFIG_MALFORMED');
   }
 
-  const rewrites = Array.isArray(parsed.rewrites) ? parsed.rewrites : [];
-  const match = rewrites.find(r =>
-    r && typeof r === 'object' &&
-    r.source === '/api/lead' &&
-    typeof r.destination === 'string' &&
-    /^https:\/\//.test(r.destination));
+  const routes = Array.isArray(parsed.routes) ? parsed.routes : [];
+  const leadRoutes = routes.filter(route => {
+    if (!route || typeof route !== 'object' || typeof route.src !== 'string') return false;
+    try {
+      return new RegExp(route.src).test('/api/lead');
+    } catch {
+      return true;
+    }
+  });
+  const legacyLeadRewrites = (Array.isArray(parsed.rewrites) ? parsed.rewrites : [])
+    .filter(rewrite => {
+      if (!rewrite || typeof rewrite !== 'object' || typeof rewrite.source !== 'string') return false;
+      const routePattern = rewrite.source.startsWith('^')
+        ? rewrite.source
+        : rewrite.source
+          .replace(/:([A-Za-z_][A-Za-z0-9_]*)(\*)?/g, (_match, _name, wildcard) => wildcard ? '__MDG_WILDCARD__' : '__MDG_SEGMENT__')
+          .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+          .replace(/__MDG_WILDCARD__/g, '.*')
+          .replace(/__MDG_SEGMENT__/g, '[^/]+');
+      try {
+        return new RegExp(`^${routePattern}$`).test('/api/lead');
+      } catch {
+        return true;
+      }
+    });
+  const match = leadRoutes[0];
+  const isUnconditionalPostRoute = match
+    && (!Object.hasOwn(match, 'methods') || (Array.isArray(match.methods) && match.methods.includes('POST')))
+    && !Object.hasOwn(match, 'has')
+    && !Object.hasOwn(match, 'missing')
+    && !Object.hasOwn(match, 'continue');
+  const approved = leadRoutes.length === 1
+    && legacyLeadRewrites.length === 0
+    && isUnconditionalPostRoute
+    && match.src === '^/api/lead$'
+    && match.dest === '${MDG_LEAD_WEBHOOK_URL}'
+    && Array.isArray(match.env)
+    && match.env.length === 1
+    && match.env[0] === 'MDG_LEAD_WEBHOOK_URL';
 
-  if (match) {
+  if (approved) {
     return checkResult('healthy',
-      'Vercel rewrite /api/lead present with HTTPS destination');
+      'Vercel env-backed route ^/api/lead$ present with the approved request-time destination');
+  }
+
+  if (leadRoutes.length > 1 || legacyLeadRewrites.length > 0 || (match && !isUnconditionalPostRoute)) {
+    return checkResult('unhealthy',
+      'Lead capture route is ambiguous: only one exact approved routes[] entry may handle /api/lead and no legacy rewrite may remain',
+      'CAPTURE_ROUTE_AMBIGUOUS');
   }
 
   return checkResult('unhealthy',
-    'No vercel.json rewrite with source "/api/lead" and an HTTPS destination',
-    'CAPTURE_REWRITE_MISSING');
+    'No exact env-backed Vercel route for ^/api/lead$ with approved request-time destination',
+    'CAPTURE_ROUTE_MISSING');
 }
 
 // ---------------------------------------------------------------------------
