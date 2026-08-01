@@ -13,6 +13,11 @@ const noOriginRepo = path.join(os.tmpdir(), `mdg-verify-no-origin-${suffix}`);
 const shallowSeedRepo = path.join(os.tmpdir(), `mdg-verify-shallow-seed-${suffix}`);
 const shallowRemote = path.join(os.tmpdir(), `mdg-verify-shallow-origin-${suffix}.git`);
 const shallowNoOriginRepo = path.join(os.tmpdir(), `mdg-verify-shallow-no-origin-${suffix}`);
+const unrelatedRepo = path.join(os.tmpdir(), `mdg-verify-unrelated-${suffix}`);
+const unrelatedSeedRepo = path.join(os.tmpdir(), `mdg-verify-unrelated-seed-${suffix}`);
+const unrelatedRemote = path.join(os.tmpdir(), `mdg-verify-unrelated-origin-${suffix}.git`);
+const maskingRepo = path.join(os.tmpdir(), `mdg-verify-masking-${suffix}`);
+const maskingRemote = path.join(os.tmpdir(), `mdg-verify-masking-origin-${suffix}.git`);
 const fixtureBranch = `test/verify-default-diff-${suffix}`;
 const committedFixture = `scripts/__verify-default-committed-${suffix}.mjs`;
 const uncommittedFixture = `scripts/__verify-default-uncommitted-${suffix}.mjs`;
@@ -243,6 +248,49 @@ test('default verifier fails closed for a shallow no-origin clone with unverifia
     cleanup(shallowNoOriginRepo);
     cleanup(shallowSeedRepo);
     cleanup(shallowRemote);
+  }
+});
+
+test('default verifier fails closed when reachable origin/main is unrelated', () => {
+  try {
+    writeVerifierFixture(unrelatedSeedRepo);
+    fs.writeFileSync(path.join(unrelatedSeedRepo, 'scripts', 'fixture.mjs'), 'export const unrelatedBaseline = true;\n');
+    git(['add', 'scripts/fixture.mjs'], unrelatedSeedRepo);
+    git(['commit', '--amend', '-m', 'test: unrelated origin root'], unrelatedSeedRepo);
+    configurePrivateOrigin(unrelatedSeedRepo, unrelatedRemote);
+    writeVerifierFixture(unrelatedRepo);
+    git(['remote', 'add', 'origin', unrelatedRemote], unrelatedRepo);
+    git(['fetch', 'origin', 'main:refs/remotes/origin/main'], unrelatedRepo);
+
+    const result = runVerifier(unrelatedRepo);
+    const output = combinedOutput(result);
+    assert.equal(result.status, 3, output);
+    assert.match(output, /origin\/main merge base/);
+    assert.doesNotMatch(output, /initial repository/);
+  } finally {
+    cleanup(unrelatedRepo);
+    cleanup(unrelatedSeedRepo);
+    cleanup(unrelatedRemote);
+  }
+});
+
+test('default verifier blocks a dirty replacement that masks an invalid committed branch file', () => {
+  try {
+    writeVerifierFixture(maskingRepo);
+    configurePrivateOrigin(maskingRepo, maskingRemote);
+    git(['checkout', '-b', `test/verify-masking-${suffix}`], maskingRepo);
+    fs.writeFileSync(path.join(maskingRepo, 'scripts', 'fixture.mjs'), 'export const = ;\n');
+    git(['add', 'scripts/fixture.mjs'], maskingRepo);
+    git(['commit', '-m', 'test: invalid committed verifier fixture'], maskingRepo);
+    fs.writeFileSync(path.join(maskingRepo, 'scripts', 'fixture.mjs'), 'export const repaired = true;\n');
+
+    const result = runVerifier(maskingRepo);
+    const output = combinedOutput(result);
+    assert.equal(result.status, 3, output);
+    assert.match(output, /overlap/);
+  } finally {
+    cleanup(maskingRepo);
+    cleanup(maskingRemote);
   }
 });
 

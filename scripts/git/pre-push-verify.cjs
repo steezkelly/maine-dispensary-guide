@@ -285,14 +285,11 @@ function resolveDefaultIterationBase(refArg) {
         throw baseError;
     }
 
+    let originMain;
     try {
         // Resolve the local tracking ref only. Reaching the network here would
         // make iterative verification nondeterministic and unexpectedly slow.
-        gitExec(['rev-parse', '--verify', 'origin/main^{commit}']);
-        const base = gitExec(['merge-base', 'HEAD', 'origin/main']);
-        if (base === head) return null;
-        log('info', `auto-detected default diff base: ${base}..${head} (plus live worktree changes)`);
-        return base;
+        originMain = gitExec(['rev-parse', '--verify', 'origin/main^{commit}']);
     } catch (error) {
         let hasCommittedHistoryBeyondInitial = false;
         let isShallowRepository = false;
@@ -307,6 +304,17 @@ function resolveDefaultIterationBase(refArg) {
             log('warn', 'origin/main is unavailable in an initial repository; checking live worktree changes only. Fetch origin before verifying committed branch history.');
             return null;
         }
+        const baseError = new Error(`default verification requires a resolvable origin/main merge base to verify committed branch history and live worktree changes; fetch origin or pass an explicit --ref=<base>: ${error.message.split('\n')[0]}`);
+        baseError.code = 'DEFAULT_BASE_UNAVAILABLE';
+        throw baseError;
+    }
+
+    try {
+        const base = gitExec(['merge-base', 'HEAD', originMain]);
+        if (base === head) return null;
+        log('info', `auto-detected default diff base: ${base}..${head} (plus live worktree changes)`);
+        return base;
+    } catch (error) {
         const baseError = new Error(`default verification requires a resolvable origin/main merge base to verify committed branch history and live worktree changes; fetch origin or pass an explicit --ref=<base>: ${error.message.split('\n')[0]}`);
         baseError.code = 'DEFAULT_BASE_UNAVAILABLE';
         throw baseError;
@@ -351,6 +359,29 @@ function changedFiles(refArg, targetArg = 'HEAD') {
 
     return [...all].filter(f => ASTRO_FILE_RE.test(f) || TS_FILE_RE.test(f) || isRootNodeScript(f)
         || isGovernanceTrigger(f) || isRequiredVerifierInput(f));
+}
+
+function rejectDirtyRangeOverlap(refArg, targetArg = 'HEAD') {
+    // A default HEAD verification reads live files. If an uncommitted edit overlays
+    // a path in the committed candidate range, it can mask the object being pushed.
+    if (!refArg || targetArg !== 'HEAD') return;
+    let committed;
+    try {
+        committed = new Set(git(`git diff --no-renames --name-only ${refArg}..HEAD`).split('\n').filter(Boolean));
+    } catch (error) {
+        const refError = new Error(`could not diff exact range ${refArg}..HEAD: ${error.message.split('\n')[0]}`);
+        refError.code = 'INVALID_REF';
+        throw refError;
+    }
+    const dirty = new Set();
+    for (const cmd of ['git diff --no-renames --name-only --cached', 'git diff --no-renames --name-only']) {
+        git(cmd).split('\n').filter(Boolean).forEach(file => dirty.add(file));
+    }
+    const overlap = [...committed].filter(file => dirty.has(file));
+    if (overlap.length === 0) return;
+    const overlapError = new Error(`default verification refuses a dirty worktree that overlaps committed candidate paths: ${overlap.join(', ')}. Commit, stash, or explicitly verify an immutable --target SHA.`);
+    overlapError.code = 'DIRTY_RANGE_OVERLAP';
+    throw overlapError;
 }
 
 function normalizeRepoPath(filePath) {
@@ -1054,6 +1085,7 @@ function main() {
     try {
         validateExactTarget(options);
         effectiveRefArg = resolveDefaultIterationBase(refArg);
+        rejectDirtyRangeOverlap(effectiveRefArg, targetArg);
         files = changedFiles(effectiveRefArg, targetArg);
     } catch (error) {
         log('err', `${error.message} — exact-range verification cannot continue.`);
