@@ -101,6 +101,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Test public dashboard retirement regression
+        run: node --test scripts/check/admin-dashboard-retirement.test.cjs
+
       - name: Verify built ICA continuation output
         run: npm run test:continuation:built
 
