@@ -1,13 +1,16 @@
 {
   "buildCommand": "bash vercel-build.sh",
   "outputDirectory": "dist",
-  "routes": [],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/lead",
-      "destination": "https://g3nuc.tail1a791f.ts.net/webhook/mdg-lead-intake"
+      "src": "^/api/lead$",
+      "dest": "${MDG_LEAD_WEBHOOK_URL}",
+      "env": [
+        "MDG_LEAD_WEBHOOK_URL"
+      ]
     }
   ],
+  "rewrites": [],
   "redirects": [
     {
       "source": "/guides/maine-cannabis-280e-guide",

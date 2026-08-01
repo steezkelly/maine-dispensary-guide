@@ -29,13 +29,11 @@ import CookieConsent from '../components/CookieConsent.astro';
 import BaseHead from './BaseHead.astro';
 import AffiliateClickTracker from '../components/AffiliateClickTracker.astro';
 import siteConfig from '../data/site-config.json';
-import Analytics from '@vercel/analytics/astro';
 
 interface TocItem {
   id: string;
   label: string;
 }
-import SpeedInsights from '@vercel/speed-insights/astro';
 // Design system — split into tokens / globals / components for maintainability.
 // Theme 2026 (theme-2026.css) is loaded separately in step 4 to win specificity.
 import '../styles/index.css';
@@ -328,55 +326,60 @@ const breadcrumbListJsonLd = breadcrumbListSchema
       document.addEventListener('DOMContentLoaded', () => syncThemeToggle(theme), { once: true });
     </script>
 
-    <!-- Google Analytics GA4 (Consent Mode v2) -->
+    <!-- Google Analytics GA4 (strict opt-in) -->
     {/*
-      Sprint 81 (2026-07-11) PSI mobile round 4: asynchronous gtag.js load.
-      Cycle 16 (2026-07-23) #189: wrap in Google Consent Mode v2 so no
-      measurement data is sent until the user grants consent via the cookie
-      banner. Default consent state is 'denied' for all storage types; the
-      banner updates this to 'granted' on accept. Until then, GA4 still
-      loads but receives ping events that record consent_status without
-      storing identifiers — fully GDPR/ePrivacy compliant.
-
-      The inline stub queues `js`, `consent`, and `config` before the
-      asynchronous client fetch so instrumentation has an ordered destination
-      from the first event.
+      Analytics is deliberately not loaded until a visitor grants consent. This
+      avoids Consent Mode's cookieless pings before a choice and makes browser
+      Do Not Track / Global Privacy Control a hard opt-out.
     */}
     <script is:inline define:vars={{ analyticsId: siteConfig.analyticsId }}>
-      // Stub gtag so engagement instrumentation (below) can call window.gtag
-      // before the real gtag.js library loads. Calls queue to dataLayer and
-      // are flushed when the real gtag initializes.
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
-      window.gtag('js', new Date());
-
-      // Consent Mode v2 default state: deny all storage and analytics until
-      // the user accepts. The cookie banner (rendered below this script)
-      // calls gtag('consent', 'update', { ... }) when the user accepts or
-      // rejects. Until then, gtag.js still loads (so the SDK can read
-      // ad_storage / analytics_storage flags), but emits no user-identifying
-      // hit to GA4's measurement endpoint.
-      window.gtag('consent', 'default', {
-        'ad_storage': 'denied',
-        'ad_user_data': 'denied',
-        'ad_personalization': 'denied',
-        'analytics_storage': 'denied',
-        'wait_for_update': 500,
-      });
-
-      window.gtag('config', analyticsId);
-
-      // Start the async client immediately. The stub keeps this non-blocking,
-      // while avoiding a deliberate 1.5–2.5 second window where a first CTA
-      // can navigate before gtag has even begun to load.
       (function () {
-        function loadGtag() {
-          var s = document.createElement('script');
-          s.async = true;
-          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + analyticsId;
-          document.head.appendChild(s);
+        var STORAGE_KEY = 'consent:mdg';
+        var loaded = false;
+
+        function hasPrivacySignal() {
+          var nav = window.navigator || {};
+          var dnt = nav.doNotTrack || window.doNotTrack || nav.msDoNotTrack;
+          return dnt === '1' || dnt === 'yes' || nav.globalPrivacyControl === true;
         }
-        loadGtag();
+
+        function readSavedConsent() {
+          try { return window.localStorage.getItem(STORAGE_KEY); } catch (_) { return null; }
+        }
+
+        // Engagement instrumentation may call gtag before consent. Keep it a
+        // no-op so pre-consent events are never queued and replayed later.
+        window.gtag = function () {};
+
+        function loadGtag() {
+          if (loaded || hasPrivacySignal()) return false;
+          loaded = true;
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () { window.dataLayer.push(arguments); };
+          window.gtag('js', new Date());
+          window.gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied',
+            'analytics_storage': 'granted',
+          });
+          window.gtag('config', analyticsId);
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=' + analyticsId;
+          document.head.appendChild(script);
+          return true;
+        }
+
+        window.__mdgAnalytics = {
+          hasPrivacySignal: hasPrivacySignal,
+          setConsent: function (choice) {
+            if (choice !== 'granted' || hasPrivacySignal()) return false;
+            return loadGtag();
+          },
+        };
+
+        if (readSavedConsent() === 'granted') window.__mdgAnalytics.setConsent('granted');
       })();
     </script>
 
@@ -821,8 +824,6 @@ const breadcrumbListJsonLd = breadcrumbListSchema
 
     <button id="back-to-top" class="back-to-top" aria-label="↑ Back to Top">&uarr;</button>
 
-    <Analytics />
-    <SpeedInsights />
     <AffiliateClickTracker />
 
     <div id="theater-overlay" class="theater-overlay" aria-hidden="true"></div>
