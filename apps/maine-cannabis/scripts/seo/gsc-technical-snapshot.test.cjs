@@ -61,6 +61,16 @@ test('omits wildcard redirect patterns from concrete route states', () => {
   assert.deepEqual(snapshot.routes.map((row) => row.route), ['/legacy']);
 });
 
+test('does not retain a deleted dashboard in the canonical analytics manifest', () => {
+  const manifestPath = path.resolve(__dirname, '..', '..', 'docs', 'analytics', 'page_task_manifest.v1.jsonl');
+  const canonicalPaths = fs.readFileSync(manifestPath, 'utf8')
+    .trim()
+    .split(/\r?\n/)
+    .map((line) => JSON.parse(line).canonical_path);
+  assert.ok(!canonicalPaths.includes('/admin/email-dashboard'),
+    'a deleted public dashboard must not remain a canonical analytics route');
+});
+
 test('models configured noindex routes as ineligible for sitemap and indexation review', () => {
   assert.deepEqual(indexabilityFor('/admin/email-dashboard'), { indexable: false, sitemapEligible: false, reason: 'SOURCE_DECLARED_NOINDEX_ROUTE' });
   assert.deepEqual(indexabilityFor('/search'), { indexable: false, sitemapEligible: false, reason: 'SOURCE_DECLARED_NOINDEX_ROUTE' });
