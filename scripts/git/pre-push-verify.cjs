@@ -295,11 +295,15 @@ function resolveDefaultIterationBase(refArg) {
         return base;
     } catch (error) {
         let hasCommittedHistoryBeyondInitial = false;
+        let isShallowRepository = false;
         try {
             gitExec(['rev-parse', '--verify', 'HEAD^']);
             hasCommittedHistoryBeyondInitial = true;
         } catch {}
-        if (!hasCommittedHistoryBeyondInitial) {
+        try {
+            isShallowRepository = gitExec(['rev-parse', '--is-shallow-repository']) === 'true';
+        } catch {}
+        if (!hasCommittedHistoryBeyondInitial && !isShallowRepository) {
             log('warn', 'origin/main is unavailable in an initial repository; checking live worktree changes only. Fetch origin before verifying committed branch history.');
             return null;
         }

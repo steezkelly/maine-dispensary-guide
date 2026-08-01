@@ -10,6 +10,9 @@ const suffix = `${process.pid}-${Date.now()}`;
 const fixtureRepo = path.join(os.tmpdir(), `mdg-verify-default-diff-${suffix}`);
 const fixtureRemote = path.join(os.tmpdir(), `mdg-verify-default-diff-origin-${suffix}.git`);
 const noOriginRepo = path.join(os.tmpdir(), `mdg-verify-no-origin-${suffix}`);
+const shallowSeedRepo = path.join(os.tmpdir(), `mdg-verify-shallow-seed-${suffix}`);
+const shallowRemote = path.join(os.tmpdir(), `mdg-verify-shallow-origin-${suffix}.git`);
+const shallowNoOriginRepo = path.join(os.tmpdir(), `mdg-verify-shallow-no-origin-${suffix}`);
 const fixtureBranch = `test/verify-default-diff-${suffix}`;
 const committedFixture = `scripts/__verify-default-committed-${suffix}.mjs`;
 const uncommittedFixture = `scripts/__verify-default-uncommitted-${suffix}.mjs`;
@@ -216,6 +219,30 @@ test('default verifier checks live worktree changes in an initial no-origin repo
     assert.match(output, new RegExp(uncommittedFixture.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   } finally {
     cleanup(noOriginRepo);
+  }
+});
+
+test('default verifier fails closed for a shallow no-origin clone with unverifiable committed history', () => {
+  try {
+    writeVerifierFixture(shallowSeedRepo);
+    configurePrivateOrigin(shallowSeedRepo, shallowRemote);
+    fs.writeFileSync(path.join(shallowSeedRepo, 'scripts', 'fixture.mjs'), 'export const = ;\n');
+    git(['add', 'scripts/fixture.mjs'], shallowSeedRepo);
+    git(['commit', '-m', 'test: invalid shallow committed history'], shallowSeedRepo);
+    git(['push', 'origin', 'main'], shallowSeedRepo);
+    execFileSync('git', ['clone', '--depth', '1', '--branch', 'main', `file://${shallowRemote}`, shallowNoOriginRepo], { encoding: 'utf8' });
+    assert.equal(git(['rev-parse', '--is-shallow-repository'], shallowNoOriginRepo).trim(), 'true');
+    git(['remote', 'remove', 'origin'], shallowNoOriginRepo);
+    fs.writeFileSync(path.join(shallowNoOriginRepo, 'README.md'), 'unrelated worktree dirt\n');
+
+    const result = runVerifier(shallowNoOriginRepo);
+    const output = combinedOutput(result);
+    assert.equal(result.status, 3, output);
+    assert.match(output, /origin\/main merge base/);
+  } finally {
+    cleanup(shallowNoOriginRepo);
+    cleanup(shallowSeedRepo);
+    cleanup(shallowRemote);
   }
 });
 
