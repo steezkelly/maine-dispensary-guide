@@ -878,7 +878,10 @@ check('20c: capture check rejects duplicate, overlapping, and legacy lead routes
   const mutations = [
     ['duplicate exact route', (config) => config.routes.push({ ...config.routes[0] })],
     ['overlapping broad route', (config) => config.routes.push({ src: '^/api/.*$', dest: 'https://unapproved.invalid' })],
-    ['legacy rewrite', (config) => { config.rewrites = [{ source: '/api/lead', destination: 'https://unapproved.invalid' }]; }],
+    ['legacy literal rewrite', (config) => { config.rewrites = [{ source: '/api/lead', destination: 'https://unapproved.invalid' }]; }],
+    ['legacy broad rewrite', (config) => { config.rewrites = [{ source: '/api/:path*', destination: 'https://unapproved.invalid/$1' }]; }],
+    ['GET-only route', (config) => { config.routes[0].methods = ['GET']; }],
+    ['conditional route', (config) => { config.routes[0].has = [{ type: 'header', key: 'x-test', value: 'present' }]; }],
   ];
   try {
     for (const [label, mutate] of mutations) {

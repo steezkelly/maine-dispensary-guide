@@ -206,11 +206,28 @@ function checkCapture() {
     }
   });
   const legacyLeadRewrites = (Array.isArray(parsed.rewrites) ? parsed.rewrites : [])
-    .filter(rewrite => rewrite && typeof rewrite === 'object' && rewrite.source === '/api/lead');
+    .filter(rewrite => {
+      if (!rewrite || typeof rewrite !== 'object' || typeof rewrite.source !== 'string') return false;
+      const routePattern = rewrite.source
+        .replace(/:([A-Za-z_][A-Za-z0-9_]*)(\*)?/g, (_match, _name, wildcard) => wildcard ? '__MDG_WILDCARD__' : '__MDG_SEGMENT__')
+        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        .replace(/__MDG_WILDCARD__/g, '.*')
+        .replace(/__MDG_SEGMENT__/g, '[^/]+');
+      try {
+        return new RegExp(`^${routePattern}$`).test('/api/lead');
+      } catch {
+        return true;
+      }
+    });
   const match = leadRoutes[0];
+  const isUnconditionalPostRoute = match
+    && (!Object.hasOwn(match, 'methods') || (Array.isArray(match.methods) && match.methods.includes('POST')))
+    && !Object.hasOwn(match, 'has')
+    && !Object.hasOwn(match, 'missing')
+    && !Object.hasOwn(match, 'continue');
   const approved = leadRoutes.length === 1
     && legacyLeadRewrites.length === 0
-    && match
+    && isUnconditionalPostRoute
     && match.src === '^/api/lead$'
     && match.dest === '${MDG_LEAD_WEBHOOK_URL}'
     && Array.isArray(match.env)
@@ -222,7 +239,7 @@ function checkCapture() {
       'Vercel env-backed route ^/api/lead$ present with the approved request-time destination');
   }
 
-  if (leadRoutes.length > 1 || legacyLeadRewrites.length > 0) {
+  if (leadRoutes.length > 1 || legacyLeadRewrites.length > 0 || (match && !isUnconditionalPostRoute)) {
     return checkResult('unhealthy',
       'Lead capture route is ambiguous: only one exact approved routes[] entry may handle /api/lead and no legacy rewrite may remain',
       'CAPTURE_ROUTE_AMBIGUOUS');
