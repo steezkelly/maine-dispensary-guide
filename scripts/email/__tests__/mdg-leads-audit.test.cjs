@@ -880,6 +880,7 @@ check('20c: capture check rejects duplicate, overlapping, and legacy lead routes
     ['overlapping broad route', (config) => config.routes.push({ src: '^/api/.*$', dest: 'https://unapproved.invalid' })],
     ['legacy literal rewrite', (config) => { config.rewrites = [{ source: '/api/lead', destination: 'https://unapproved.invalid' }]; }],
     ['legacy broad rewrite', (config) => { config.rewrites = [{ source: '/api/:path*', destination: 'https://unapproved.invalid/$1' }]; }],
+    ['legacy regex rewrite', (config) => { config.rewrites = [{ source: '^/api/(.*)$', destination: 'https://unapproved.invalid/$1' }]; }],
     ['GET-only route', (config) => { config.routes[0].methods = ['GET']; }],
     ['conditional route', (config) => { config.routes[0].has = [{ type: 'header', key: 'x-test', value: 'present' }]; }],
   ];
