@@ -196,21 +196,23 @@ function checkCapture() {
       'vercel.json is not valid JSON', 'CAPTURE_CONFIG_MALFORMED');
   }
 
-  const rewrites = Array.isArray(parsed.rewrites) ? parsed.rewrites : [];
-  const match = rewrites.find(r =>
-    r && typeof r === 'object' &&
-    r.source === '/api/lead' &&
-    typeof r.destination === 'string' &&
-    /^https:\/\//.test(r.destination));
+  const routes = Array.isArray(parsed.routes) ? parsed.routes : [];
+  const match = routes.find(route =>
+    route && typeof route === 'object' &&
+    route.src === '^/api/lead$' &&
+    route.dest === '${MDG_LEAD_WEBHOOK_URL}' &&
+    Array.isArray(route.env) &&
+    route.env.length === 1 &&
+    route.env[0] === 'MDG_LEAD_WEBHOOK_URL');
 
   if (match) {
     return checkResult('healthy',
-      'Vercel rewrite /api/lead present with HTTPS destination');
+      'Vercel env-backed route ^/api/lead$ present with the approved request-time destination');
   }
 
   return checkResult('unhealthy',
-    'No vercel.json rewrite with source "/api/lead" and an HTTPS destination',
-    'CAPTURE_REWRITE_MISSING');
+    'No exact env-backed Vercel route for ^/api/lead$ with approved request-time destination',
+    'CAPTURE_ROUTE_MISSING');
 }
 
 // ---------------------------------------------------------------------------

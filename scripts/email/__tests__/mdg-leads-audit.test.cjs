@@ -847,25 +847,29 @@ check('19d: dry-run does not require credentials and does not send', () => {
 });
 
 // =========================================================================
-// Category 20: Structured capture check
+// Category 20: Structured env-backed capture-route check
 // =========================================================================
 
-check('20a: capture check parses JSON rewrite object (not substring)', () => {
+check('20a: capture check parses the exact env-backed route object (not a substring)', () => {
   const src = readFileSync(SCRIPT, 'utf8');
   const capBody = src.slice(src.indexOf('function checkCapture'),
     src.indexOf('// ----', src.indexOf('function checkCapture') + 10));
   assert.match(capBody, /JSON\.parse/, 'must JSON.parse vercel.json');
-  assert.match(capBody, /source === '\/api\/lead'/, 'must match exact source');
-  assert.match(capBody, /https:/, 'must require HTTPS destination');
+  assert.match(capBody, /routes/, 'must inspect route objects');
+  assert.match(capBody, /src === '\^\/api\/lead\$'/,
+    'must match the exact /api/lead route regex');
+  assert.match(capBody, /dest === '\$\{MDG_LEAD_WEBHOOK_URL\}'/,
+    'must require the approved request-time destination variable');
+  assert.match(capBody, /env/, 'must require an explicit route environment allowlist');
   assert.doesNotMatch(capBody, /content\.includes\('\/api\/lead'\)/,
-    'must not use naive substring match');
+    'must not use naive substring matching');
 });
 
 check('20b: real vercel.json yields capture=healthy', () => {
   const { report } = runAudit({});
   assert.ok(report);
   assert.equal(report.checks.capture.status, 'healthy',
-    'real vercel.json has the /api/lead HTTPS rewrite');
+    'real vercel.json has the exact env-backed /api/lead route');
 });
 
 // =========================================================================
