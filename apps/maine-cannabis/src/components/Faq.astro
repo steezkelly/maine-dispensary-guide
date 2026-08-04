@@ -21,14 +21,15 @@ interface Props {
   // `<script type="application/ld+json">` block to avoid duplicate schema.
   withoutSchema?: boolean;
   citationLinks?: boolean;
+  citationSourceIds?: number[];
 }
 
-const { faqs, items, questions, withoutSchema, citationLinks = false } = Astro.props;
+const { faqs, items, questions, withoutSchema, citationLinks = false, citationSourceIds = [] } = Astro.props;
 const normalizedFaqs = faqs ?? items ?? questions?.map(({ q, a }) => ({ question: q, answer: a }));
 ---
 
 {normalizedFaqs ? (
-  <UiFaq faqs={normalizedFaqs} withoutSchema={withoutSchema} citationLinks={citationLinks}>
+  <UiFaq faqs={normalizedFaqs} withoutSchema={withoutSchema} citationLinks={citationLinks} citationSourceIds={citationSourceIds}>
     <slot />
   </UiFaq>
 ) : (
