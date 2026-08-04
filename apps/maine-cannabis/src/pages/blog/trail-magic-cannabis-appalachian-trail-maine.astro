@@ -76,6 +76,8 @@ const faqItems = [
   .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem 1.25rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); margin-top: 2rem; }
   .verification { font-size: 0.875rem; color: var(--color-text-light); border-top: 1px solid var(--color-border); padding-top: 1rem; margin-top: 2rem; }
   .editorial-note { font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border); }
+  .citation-link { text-decoration: underline; text-underline-offset: 0.15em; white-space: nowrap; }
+  .citation-link:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-radius: 0.15rem; }
   @media (max-width: 620px) {
     .article-header h1 { font-size: 1.9rem; }
     .fact-grid { grid-template-columns: 1fr; }
@@ -92,11 +94,11 @@ const faqItems = [
     </div>
   </div>
 
-  <p class="answer-capsule"><strong>Short answer:</strong> trail magic is an unexpected act of kindness, not a product category. Cannabis should not be handed out or used on the Appalachian Trail as a default form of support. Maine's adult-use law [11], Baxter State Park rules, federal-land restrictions, consent, and impairment risks all make the setting more complicated than a friendly “take one” basket. <strong>The best Maine trail magic is useful, offered in person, and easy to decline.</strong></p>
+  <p class="answer-capsule"><strong>Short answer:</strong> trail magic is an unexpected act of kindness, not a product category. Cannabis should not be handed out or used on the Appalachian Trail as a default form of support. Maine's adult-use law <a class="citation-link" href="#source-11" aria-label="Source 11">[11]</a>, Baxter State Park rules, federal-land restrictions, consent, and impairment risks all make the setting more complicated than a friendly “take one” basket. <strong>The best Maine trail magic is useful, offered in person, and easy to decline.</strong></p>
 
   <section class="intro">
     <p>There is a particular kind of generosity that makes a long hike feel less solitary. A stranger points out the cleanest water. Someone at a road crossing offers a cold drink. A local gives a tired hiker a ride into town, or a volunteer repairs a shelter before the next storm. On the Appalachian Trail, those moments are often called <em>trail magic</em>.</p>
-    <p>It is natural to wonder whether cannabis could fit into that tradition—especially in Maine, where adult-use cannabis is legal for adults 21 and older [11]. But the trail is not a private living room, a licensed retail counter, or one continuous legal jurisdiction. A thoughtful act can still create a problem if it ignores the land manager, public-place rules, wildlife, consent, or a hiker's ability to make a safe decision.</p>
+    <p>It is natural to wonder whether cannabis could fit into that tradition—especially in Maine, where adult-use cannabis is legal for adults 21 and older <a class="citation-link" href="#source-11" aria-label="Source 11">[11]</a>. But the trail is not a private living room, a licensed retail counter, or one continuous legal jurisdiction. A thoughtful act can still create a problem if it ignores the land manager, public-place rules, wildlife, consent, or a hiker's ability to make a safe decision.</p>
   </section>
 
   <Callout title="The kind version of the answer" type="insight">
@@ -105,8 +107,8 @@ const faqItems = [
 
   <section>
     <h2>What “trail magic” really means</h2>
-    <p>The Appalachian Trail Conservancy describes trail magic as something rooted in the A.T. experience: finding what you need when you least expect it, encountering something rare in nature, or receiving an unexpected act of generosity. [1] That definition is wider—and more beautiful—than “free stuff.”</p>
-    <p>It also comes with a stewardship rule. ATC warns that support should protect the Trail's ecological integrity and the hiker's journey. Hikers should not be made to feel like a captive audience, and unattended food and trash can attract wildlife. [1] In other words, trail magic works best when it is:</p>
+    <p>The Appalachian Trail Conservancy describes trail magic as something rooted in the A.T. experience: finding what you need when you least expect it, encountering something rare in nature, or receiving an unexpected act of generosity. <a class="citation-link" href="#source-1" aria-label="Source 1">[1]</a> That definition is wider—and more beautiful—than “free stuff.”</p>
+    <p>It also comes with a stewardship rule. ATC warns that support should protect the Trail's ecological integrity and the hiker's journey. Hikers should not be made to feel like a captive audience, and unattended food and trash can attract wildlife. <a class="citation-link" href="#source-1" aria-label="Source 1">[1]</a> In other words, trail magic works best when it is:</p>
     <ul>
       <li><strong>Useful:</strong> it solves a real problem without adding another one.</li>
       <li><strong>Consent-based:</strong> the hiker can accept, decline, or keep walking.</li>
@@ -121,44 +123,44 @@ const faqItems = [
     <p>Maine is not just the scenic final chapter of a thru-hike. It is a demanding section with its own logistics, weather, crossings, and land-management rules.</p>
 
     <div class="fact-grid" aria-label="Maine Appalachian Trail facts">
-      <div class="fact-card"><strong>282.0</strong><span>A.T. miles in Maine [3]</span></div>
-      <div class="fact-card"><strong>33</strong><span>Shelters listed by ATC for Maine [3]</span></div>
-      <div class="fact-card"><strong>21</strong><span>Unbridged A.T. stream crossings [3]</span></div>
+      <div class="fact-card"><strong>282.0</strong><span>A.T. miles in Maine <a class="citation-link" href="#source-3" aria-label="Source 3">[3]</a></span></div>
+      <div class="fact-card"><strong>33</strong><span>Shelters listed by ATC for Maine <a class="citation-link" href="#source-3" aria-label="Source 3">[3]</a></span></div>
+      <div class="fact-card"><strong>21</strong><span>Unbridged A.T. stream crossings <a class="citation-link" href="#source-3" aria-label="Source 3">[3]</a></span></div>
     </div>
 
-    <p>The full Appalachian Trail is 2,197.9 miles as of 2026 and runs through 14 states, from Springer Mountain in Georgia to Katahdin in Maine. [4] Katahdin is the northern terminus, and the 100 Mile Wilderness between Monson and Baxter State Park gets its name because no public roads cross the Trail for those 100 miles. [3] [6]</p>
+    <p>The full Appalachian Trail is 2,197.9 miles as of 2026 and runs through 14 states, from Springer Mountain in Georgia to Katahdin in Maine. <a class="citation-link" href="#source-4" aria-label="Source 4">[4]</a> Katahdin is the northern terminus, and the 100 Mile Wilderness between Monson and Baxter State Park gets its name because no public roads cross the Trail for those 100 miles. <a class="citation-link" href="#source-3" aria-label="Source 3">[3]</a> <a class="citation-link" href="#source-6" aria-label="Source 6">[6]</a></p>
     <p>Those facts are more than trivia. They are a reminder that a hiker may be making decisions around river crossings, changing weather, navigation, and resupply—not looking for an unsolicited substance. A good gift should reduce friction, not introduce uncertainty.</p>
   </section>
 
   <section>
     <h2>Why cannabis is a boundary case on the Maine A.T.</h2>
-    <p>The National Park Service says the A.T. is managed by the NPS, U.S. Forest Service, Appalachian Trail Conservancy, state agencies, and thousands of volunteers. ATC's own basics page notes that the route passes through national forests, national park units, state parks, forests, and game lands. [4] [9] That means “the Appalachian Trail” is not one single legal venue.</p>
+    <p>The National Park Service says the A.T. is managed by the NPS, U.S. Forest Service, Appalachian Trail Conservancy, state agencies, and thousands of volunteers. ATC's own basics page notes that the route passes through national forests, national park units, state parks, forests, and game lands. <a class="citation-link" href="#source-4" aria-label="Source 4">[4]</a> <a class="citation-link" href="#source-9" aria-label="Source 9">[9]</a> That means “the Appalachian Trail” is not one single legal venue.</p>
 
     <h3>Maine law is not the whole answer</h3>
-    <p>Title 28-B includes a narrow provision allowing an adult 21 or older to transfer or furnish cannabis without remuneration to another adult 21 or older within the statute's limits. [11] That is worth acknowledging because a blanket statement that every adult-to-adult transfer is illegal in Maine would be too broad.</p>
-    <p>But the same statute says an adult may consume cannabis only in a private residence or on private property that is not generally accessible to the public and where the owner explicitly permits consumption. [11] A trail, shelter, road crossing, campground, or public parking area should not be treated as a private consumption space. Our practical recommendation is simple: <strong>do not turn an A.T. stop into a cannabis handoff or consumption site.</strong></p>
+    <p>Title 28-B includes a narrow provision allowing an adult 21 or older to transfer or furnish cannabis without remuneration to another adult 21 or older within the statute's limits. <a class="citation-link" href="#source-11" aria-label="Source 11">[11]</a> That is worth acknowledging because a blanket statement that every adult-to-adult transfer is illegal in Maine would be too broad.</p>
+    <p>But the same statute says an adult may consume cannabis only in a private residence or on private property that is not generally accessible to the public and where the owner explicitly permits consumption. <a class="citation-link" href="#source-11" aria-label="Source 11">[11]</a> A trail, shelter, road crossing, campground, or public parking area should not be treated as a private consumption space. Our practical recommendation is simple: <strong>do not turn an A.T. stop into a cannabis handoff or consumption site.</strong></p>
 
     <h3>Baxter State Park has its own rules</h3>
-    <p>Katahdin sits inside Baxter State Park. The Park's rules prohibit the sale or offering for sale of any object or merchandise within the Park, say that general Maine laws pertaining to alcohol and drugs apply, and require unattended food, garbage, and scented items to be securely stowed. [7] That is a poor fit for a cannabis giveaway, and it is also a useful reminder that even a well-intentioned gift can create stewardship work.</p>
+    <p>Katahdin sits inside Baxter State Park. <a class="citation-link" href="#source-3" aria-label="Source 3">[3]</a> The Park's rules prohibit the sale or offering for sale of any object or merchandise within the Park, say that general Maine laws pertaining to alcohol and drugs apply, and require unattended food, garbage, and scented items to be securely stowed. <a class="citation-link" href="#source-7" aria-label="Source 7">[7]</a> That is a poor fit for a cannabis giveaway, and it is also a useful reminder that even a well-intentioned gift can create stewardship work.</p>
 
     <h3>Federal land is a separate line</h3>
-    <p>Federal land can be stricter than Maine state law. The U.S. Forest Service tells visitors that it is illegal to possess, use, sell, or cultivate cannabis on federal land. [10] Do not assume a Maine purchase becomes lawful simply because a hiker is still inside the state. Check the exact land manager and current rules for the segment, park, campground, or private property involved.</p>
+    <p>Federal land can be stricter than Maine state law. The U.S. Forest Service tells visitors that it is illegal to possess, use, sell, or cultivate cannabis on federal land. <a class="citation-link" href="#source-10" aria-label="Source 10">[10]</a> Do not assume a Maine purchase becomes lawful simply because a hiker is still inside the state. Check the exact land manager and current rules for the segment, park, campground, or private property involved.</p>
     <p>For a broader state-law explanation, see our <a href="/blog/is-weed-legal-in-maine">Maine cannabis legality guide</a>. If your trip also includes Downeast travel, our <a href="/blog/recreational-cannabis-near-acadia">Acadia-area cannabis travel guide</a> covers the same state-versus-federal boundary in a tourism context.</p>
   </section>
 
   <Callout title="A safety note before anyone says “edibles for the summit”" type="warning">
-    The CDC says cannabis effects vary by concentration, frequency, other substances, biology, and mode of use. Edibles and high-THC products can have delayed or unpredictable effects. [13] CDC also notes effects on decision-making, coordination, reaction time, balance, and judgment. [14] [15] Applying those documented impairment risks to remote hiking is a common-sense safety inference: navigation, river crossings, scrambling, and driving are not good places to test how a product affects you.
+    The CDC says cannabis effects vary by concentration, frequency, other substances, biology, and mode of use. Edibles and high-THC products can have delayed or unpredictable effects. <a class="citation-link" href="#source-13" aria-label="Source 13">[13]</a> CDC also notes effects on decision-making, coordination, reaction time, balance, and judgment. <a class="citation-link" href="#source-14" aria-label="Source 14">[14]</a> <a class="citation-link" href="#source-15" aria-label="Source 15">[15]</a> Applying those documented impairment risks to remote hiking is a common-sense safety inference: navigation, river crossings, scrambling, and driving are not good places to test how a product affects you.
   </Callout>
 
   <section>
     <h2>Harm reduction for hikers and trail angels</h2>
     <p>This is not a dosing guide, and it is not a claim that cannabis treats the aches, stress, or sleep disruption that can come with a long hike. It is a short list of ways to avoid turning kindness into risk:</p>
     <ul class="rule-list">
-      <li><strong>Never hike, navigate, ford, scramble, climb, or drive while impaired.</strong> The CDC identifies slowed reactions, impaired coordination, distorted perception, and poorer decision-making as cannabis-related safety concerns. [15]</li>
-      <li><strong>Do not leave cannabis, edibles, wrappers, or scented products unattended.</strong> Baxter requires unattended food, garbage, and scented items to be securely stowed. [7]</li>
+      <li><strong>Never hike, navigate, ford, scramble, climb, or drive while impaired.</strong> The CDC identifies slowed reactions, impaired coordination, distorted perception, and poorer decision-making as cannabis-related safety concerns. <a class="citation-link" href="#source-15" aria-label="Source 15">[15]</a></li>
+      <li><strong>Do not leave cannabis, edibles, wrappers, or scented products unattended.</strong> Baxter requires unattended food, garbage, and scented items to be securely stowed. <a class="citation-link" href="#source-7" aria-label="Source 7">[7]</a></li>
       <li><strong>Do not pressure anyone.</strong> A hiker may be sober, taking medication, managing a health condition, avoiding substances, under 21, or simply not interested.</li>
-      <li><strong>Keep cannabis and edibles away from children.</strong> CDC notes that cannabis edibles carry a greater poisoning risk than smoked cannabis. [14]</li>
-      <li><strong>Keep food, trash, and scented products away from wildlife.</strong> ATC warns that smells and trash can attract wildlife, and Baxter requires unattended scented items to be secured. [1] [7]</li>
+      <li><strong>Keep cannabis and edibles away from children.</strong> CDC notes that cannabis edibles carry a greater poisoning risk than smoked cannabis. <a class="citation-link" href="#source-14" aria-label="Source 14">[14]</a></li>
+      <li><strong>Keep food, trash, and scented products away from wildlife.</strong> ATC warns that smells and trash can attract wildlife, and Baxter requires unattended scented items to be secured. <a class="citation-link" href="#source-1" aria-label="Source 1">[1]</a> <a class="citation-link" href="#source-7" aria-label="Source 7">[7]</a></li>
       <li><strong>Check the place before the product.</strong> The exact land manager and owner permission matter more than a general statement that “weed is legal in Maine.”</li>
     </ul>
   </section>
@@ -185,7 +187,7 @@ const faqItems = [
 
   <section class="faq-section">
     <h2>Frequently asked questions</h2>
-    <Faq faqs={faqItems} />
+    <Faq faqs={faqItems} citationLinks={true} />
   </section>
 
   <section>

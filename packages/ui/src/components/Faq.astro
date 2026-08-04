@@ -21,10 +21,22 @@ interface Props {
   // Default `false` preserves backward-compat for callers that relied on
   // the package to emit schema (107 pages).
   withoutSchema?: boolean;
+  /** Render bracketed source markers as same-page keyboard-navigable links. */
+  citationLinks?: boolean;
 }
 
-const { faqs, items, questions, withoutSchema = false } = Astro.props;
+const { faqs, items, questions, withoutSchema = false, citationLinks = false } = Astro.props;
 const normalizedFaqs = faqs ?? items ?? questions?.map(({ q, a }) => ({ question: q, answer: a })) ?? [];
+
+type AnswerPart = string | number;
+
+function answerParts(answer: string): AnswerPart[] {
+  if (!citationLinks) return [answer];
+  return answer.split(/(\[\d+\])/g).filter(Boolean).map((part) => {
+    const match = part.match(/^\[(\d+)\]$/);
+    return match ? Number(match[1]) : part;
+  });
+}
 
 const siteUrl = "https://mainedispensaryguide.com";
 const faqSchema = normalizedFaqs.length === 0 ? null : {
@@ -48,7 +60,11 @@ const faqSchema = normalizedFaqs.length === 0 ? null : {
     {normalizedFaqs.map((faq) => (
       <details class="faq-item">
         <summary>{faq.question}</summary>
-        <p>{faq.answer}</p>
+        <p>{citationLinks
+          ? answerParts(faq.answer).map((part) => typeof part === 'number'
+            ? <a class="faq-citation" href={`#source-${part}`} aria-label={`Source ${part}`}>{`[${part}]`}</a>
+            : part)
+          : faq.answer}</p>
       </details>
     ))}
   </div>
@@ -81,5 +97,15 @@ const faqSchema = normalizedFaqs.length === 0 ? null : {
     margin: 0.5rem 0 0;
     color: var(--color-text-light);
     line-height: 1.6;
+  }
+  .faq-citation {
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    white-space: nowrap;
+  }
+  .faq-citation:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 0.15rem;
   }
 </style>
