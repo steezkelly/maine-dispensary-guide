@@ -4,9 +4,8 @@ import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 
 const article = {
-  author: 'Calvin Waters',
-  authorId: 'calvin-waters',
-  authorTitle: 'Licensing & Compliance Analyst',
+  author: 'Maine Dispensary Guide Editorial Team',
+  authorSchemaType: 'Organization' as const,
   publishDate: '2026-08-04',
   modifiedDate: '2026-08-04',
   section: 'Lifestyle & Travel'
@@ -85,11 +84,11 @@ const faqItems = [
 
 <article>
   <div class="article-header">
-    <h1>Trail Magic in Maine: Cannabis, Kindness &amp; the Appalachian Trail</h1>
+    <h1>Trail Magic in Maine: Cannabis, Kindness, and the Appalachian Trail</h1>
     <p class="subtitle">A warm look at hiker hospitality, Maine's A.T. realities, and why cannabis is a boundary case—not a drop box at the trailhead.</p>
     <div class="byline">
-      <p>By <a href="/about/authors#calvin-waters"><strong>Calvin Waters</strong></a>, Licensing &amp; Compliance Analyst.</p>
-      <p class="last-updated">Published August 4, 2026 · Source check completed August 4, 2026</p>
+      <p>By <strong>Maine Dispensary Guide Editorial Team.</strong> Editorially reviewed against the cited primary sources on August 4, 2026.</p>
+      <p class="last-updated">Published August 4, 2026 · Research checked August 4, 2026</p>
     </div>
   </div>
 
