@@ -4,12 +4,16 @@ import Layout from '../../layouts/Layout.astro';
 import Faq from '../../components/Faq.astro';
 const article = {
   publishDate: '2026-06-05',
-  modifiedDate: '2026-07-29',
+  modifiedDate: '2026-08-03',
   section: 'Lifestyle & Travel',
 };
 const topics = ['travel', 'tourism', 'consumer law'];
 
 const faqItems = [
+  {
+    question: 'Is weed legal in Maine?',
+    answer: 'Yes. Maine voters approved adult-use cannabis in 2016, and adults 21 or older may buy it from a licensed store. Tourists can buy too — a government-issued photo ID is required and residency is not. Consumption is limited to a private residence or private property where the owner has explicitly permitted it. For the full statutes, penalties, and exceptions, see the dedicated <a href="/blog/is-weed-legal-in-maine">Is Weed Legal in Maine guide</a>.',
+  },
   {
     question: 'Can tourists buy cannabis in Maine?',
     answer: 'Yes. A tourist age 21 or older may buy from a licensed Maine adult-use cannabis store after presenting acceptable government-issued photo identification. Maine residency is not required. Medical stores follow separate patient-documentation rules. For the full legality rules, see our <a href="/blog/is-weed-legal-in-maine">is weed legal in Maine guide</a>.',
@@ -42,14 +46,14 @@ const faqItems = [
 ---
 
 <Layout
-  title="Cannabis-Friendly Maine Travel Guide: Buy and Consume Legally"
-  description="Can tourists buy cannabis in Maine, and where can they consume it? A current travel guide to ID, purchase limits, private-property rules, vehicles, lodging, medical visitors, and borders."
+  title="Maine Cannabis Travel Guide: Camp, Stay & Consume Rules"
+  description="Tourists 21+ can buy cannabis in Maine. Purchase limits, legal consumption, camping and lodging rules, Acadia's federal ban, and fall foliage trip planning."
   heroImage="/images/heroes/cannabis-friendly-maine-travel.jpg"
   article={article}
   topics={topics}
 >
   <style>
-    article { max-width: 760px; margin: 0 auto; }
+    article { max-width: var(--reading-column, 60ch); margin: 0 auto; }
     .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
     .subtitle { color: var(--color-text-light); font-size: 1.2rem; }
     section { margin-bottom: 2.75rem; }
@@ -75,10 +79,10 @@ const faqItems = [
 
   <article>
     <header class="article-header">
-      <h1>Cannabis-Friendly Maine Travel Guide</h1>
-      <p class="subtitle">What visitors may buy, where consumption is legal, and the rules that follow you through the trip</p>
+      <h1>Maine Cannabis Travel Guide: Camp, Stay & Consume Rules</h1>
+      <p class="subtitle">Yes for adults 21+. What visitors may buy, where consumption is legal, and the rules that follow you through the trip — including fall foliage season.</p>
       <p class="byline">By Maine Dispensary Guide Editorial Team. Editorially reviewed against the cited primary sources on July 22, 2026.</p>
-      <p class="last-updated">Published June 5, 2026 · Corrected and editorially updated July 22, 2026</p>
+      <p class="last-updated">Published June 5, 2026 · Corrected and editorially updated July 22, 2026 · Updated for fall foliage season August 3, 2026</p>
     </header>
 
     <section class="answer-capsule" aria-labelledby="travel-answer">
@@ -138,6 +142,18 @@ const faqItems = [
     </section>
 
     <section>
+      <h2>Planning a fall foliage trip?</h2>
+      <p>Foliage season is Maine's busiest travel window, and the same purchase and consumption rules apply leaf-peeping as in summer. Fall color follows a north-to-south progression: northern Maine typically peaks in the last week of September into early October, the central interior and western mountains around the Indigenous Peoples' Day weekend, and the southern and mid-coast regions from mid-October through the end of the month. Check the <a href="https://www.maine.gov/dacf/mfs/projects/fall_foliage/whenandwhere/" rel="noopener noreferrer">Maine Department of Agriculture, Conservation & Forestry foliage reports</a> for the current season's timing before booking.</p>
+      <ul>
+        <li><strong>Bar Harbor and Acadia.</strong> Peak foliage here usually lands early-to-mid October. Before you go, know that <a href="/blog/recreational-cannabis-near-acadia">Acadia National Park is federal land where cannabis is prohibited</a>, and town rules still apply. Plan lodging and any lawful consumption outside the park with the town guide: <a href="/guides/bar-harbor-dispensary-guide">Bar Harbor</a>.</li>
+        <li><strong>Camden, Rockland, and the mid-coast.</strong> Coastal color typically peaks mid-to-late October. See the <a href="/guides/camden-dispensary-guide">Camden guide</a> for local purchase options and lodging considerations.</li>
+        <li><strong>Bethel, Rangeley, and the western mountains.</strong> Mountain peaks arrive around the second week of October. The <a href="/guides/bethel-dispensary-guide">Bethel guide</a> covers the Sunday River corridor.</li>
+        <li><strong>Downeast and Aroostook.</strong> The earliest color and the fewest crowds, with stores spread thin — plan around the <a href="/guides/downeast-acadia-aroostook-cannabis-guide">Downeast, Acadia, and Aroostook regional guide</a>.</li>
+      </ul>
+      <p>Two foliage-specific cautions: state parks, trailheads, and scenic overlooks are public land where consumption is never permitted, and foliage weekends fill lodging early — get any cannabis-permission from a host in writing before you book, exactly as the lodging checklist above describes.</p>
+    </section>
+
+    <section>
       <h2>Vehicles, airports, and borders</h2>
       <p>Do not consume cannabis in a vehicle on a public way, whether you are driving or riding as a passenger. Never drive while impaired. A legal retail purchase is not a defense to operating under the influence.</p>
       <p>Do not bring cannabis to an airport or attempt to fly with it. Airports and air travel involve federal jurisdiction and carrier rules. Likewise, do not take cannabis to New Hampshire, Massachusetts, Vermont, Canada, or any other jurisdiction. Crossing a state or international border is not authorized by Maine's adult-use law.</p>
@@ -175,21 +191,15 @@ const faqItems = [
     <AutoRelated currentPath="/blog/cannabis-friendly-maine-travel" currentTopics={topics} section="Lifestyle & Travel" limit={6} />
 
     
-  <section class="related-buyer-intent">
-    <h2>Related Buyer-Intent Guides</h2>
+  <section class="related-travel-guides">
+    <h2>More Maine trip planning</h2>
     <ul>
-      <li><a href="/guides/maine-dispensary-license">Maine Dispensary License: 2026 Costs & Application Timeline</a></li>
-      <li><a href="/guides/maine-cannabis-conditional-license">Maine Cannabis Conditional License Guide</a></li>
-      <li><a href="/guides/maine-cannabis-staffing-licensing">Maine Cannabis Staffing & Licensing Guide</a></li>
-      <li><a href="/blog/maine-dispensary-business-for-sale">Maine Dispensary for Sale: How to Find, Buy, and Close</a></li>
-      <li><a href="/guides/maine-cannabis-business-transfer">Maine Cannabis Business Transfer of Ownership</a></li>
-      <li><a href="/guides/maine-cannabis-license-denied">Maine Cannabis License Denied: Appeal & Next Steps</a></li>
-      <li><a href="/blog/maine-dispensary-roi-what-to-expect-2026">Maine Dispensary ROI: What to Expect in 2026</a></li>
-      <li><a href="/guides/maine-cannabis-cultivation-guide">Maine Cannabis Cultivation Guide</a></li>
-      <li><a href="/guides/maine-cannabis-real-estate">Maine Cannabis Real Estate Guide</a></li>
-      <li><a href="/guides/maine-cannabis-taxes-2026">Maine Cannabis Taxes 2026: 280E & State Tax Guide</a></li>
-      <li><a href="/blog/maine-medical-marijuana-patient-guide">Maine Medical Marijuana Patient Guide</a></li>
-      <li><a href="/blog/maine-cannabis-delivery-business-guide-2026">Maine Cannabis Delivery Business Guide 2026</a></li>
+      <li><a href="/blog/recreational-cannabis-near-acadia">Recreational Cannabis Near Acadia: What Park Visitors Need to Know</a></li>
+      <li><a href="/guides/downeast-acadia-aroostook-cannabis-guide">Downeast, Acadia & Aroostook Cannabis Guide</a></li>
+      <li><a href="/guides/first-time-maine-dispensary-buyer">First-Time Maine Dispensary Buyer: Visit Prep & What to Expect</a></li>
+      <li><a href="/guides/bar-harbor-dispensary-guide">Bar Harbor Dispensary Guide</a></li>
+      <li><a href="/guides/camden-dispensary-guide">Camden Dispensary Guide</a></li>
+      <li><a href="/guides/bethel-dispensary-guide">Bethel Dispensary Guide</a></li>
     </ul>
   </section>
 
