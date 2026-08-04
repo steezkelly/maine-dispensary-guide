@@ -101,6 +101,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Test trail-magic citation accessibility (source + built output)
+        run: npm run test:trail-magic-accessibility:built
+
       - name: Test public dashboard retirement regression
         run: node --test scripts/check/admin-dashboard-retirement.test.cjs
 

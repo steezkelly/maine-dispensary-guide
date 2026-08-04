@@ -36,6 +36,8 @@
     "agents:validate-contract": "node scripts/agent/validate-task-contract.cjs",
     "hooks:install": "node scripts/git/install-hooks.cjs",
     "test:market-stats-video": "npm --workspace @network/maine-cannabis run test:market-stats-video && node --test scripts/check/market-stats-video-ci-wiring.test.cjs",
+    "test:trail-magic-accessibility": "npm --workspace @network/maine-cannabis run test:trail-magic-accessibility",
+    "test:trail-magic-accessibility:built": "npm run test:trail-magic-accessibility && npm --workspace @network/maine-cannabis run test:trail-magic-accessibility:built",
     "test:answer-engine-benchmark-manifest": "node --test scripts/analytics/check-answer-engine-benchmark-manifest.test.cjs",
     "test:home-grow-legal-content": "node scripts/check/home-grow-legal-content.test.cjs",
     "test:maine-cannabis-product-recall-response": "node scripts/check/maine-cannabis-product-recall-response.test.cjs",

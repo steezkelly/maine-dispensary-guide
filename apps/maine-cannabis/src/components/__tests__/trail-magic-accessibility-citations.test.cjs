@@ -43,7 +43,7 @@ test('FAQ citation linking requires explicit source targets and preserves raw sc
   assert.match(uiFaq, /citationSourceIds\?: number\[\]/);
   assert.match(uiFaq, /citationLinks = false/);
   assert.match(uiFaq, /citationSourceIds = \[\]/);
-  assert.match(uiFaq, /validCitationIds/);
+  assert.match(uiFaq, /splitFaqAnswer/);
   assert.match(uiFaq, /"text": faq\.answer/);
   assert.match(uiFaq, /: faq\.answer}/);
 });
@@ -51,4 +51,12 @@ test('FAQ citation linking requires explicit source targets and preserves raw sc
 test('focused accessibility contract is available as a package script', () => {
   const packageJson = JSON.parse(read(PACKAGE_JSON));
   assert.equal(packageJson.scripts['test:trail-magic-accessibility'], 'node --test src/components/__tests__/trail-magic-accessibility-citations.test.cjs');
+});
+
+test('citation splitter links only allowlisted markers and preserves raw answers when disabled', async () => {
+  const { splitFaqAnswer } = await import(resolve(__dirname, '..', '..', '..', '..', '..', 'packages', 'ui', 'src', 'lib', 'faq-citations.mjs'));
+  const answer = 'Allowed [1], ignored [99]';
+
+  assert.deepEqual(splitFaqAnswer(answer, true, [1]), ['Allowed ', 1, ', ignored ', '[99]']);
+  assert.deepEqual(splitFaqAnswer(answer, false, [1]), [answer]);
 });

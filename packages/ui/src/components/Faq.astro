@@ -1,4 +1,6 @@
 ---
+import { splitFaqAnswer } from '../lib/faq-citations.mjs';
+
 interface FAQItem {
   question: string;
   answer: string;
@@ -29,18 +31,6 @@ interface Props {
 
 const { faqs, items, questions, withoutSchema = false, citationLinks = false, citationSourceIds = [] } = Astro.props;
 const normalizedFaqs = faqs ?? items ?? questions?.map(({ q, a }) => ({ question: q, answer: a })) ?? [];
-const validCitationIds = new Set(citationSourceIds);
-
-type AnswerPart = string | number;
-
-function answerParts(answer: string): AnswerPart[] {
-  if (!citationLinks) return [answer];
-  return answer.split(/(\[\d+\])/g).filter(Boolean).map((part) => {
-    const match = part.match(/^\[(\d+)\]$/);
-    const citationId = match ? Number(match[1]) : null;
-    return citationId !== null && validCitationIds.has(citationId) ? citationId : part;
-  });
-}
 
 const siteUrl = "https://mainedispensaryguide.com";
 const faqSchema = normalizedFaqs.length === 0 ? null : {
@@ -65,7 +55,7 @@ const faqSchema = normalizedFaqs.length === 0 ? null : {
       <details class="faq-item">
         <summary>{faq.question}</summary>
         <p>{citationLinks
-          ? answerParts(faq.answer).map((part) => typeof part === 'number'
+          ? splitFaqAnswer(faq.answer, citationLinks, citationSourceIds).map((part) => typeof part === 'number'
             ? <a class="faq-citation" href={`#source-${part}`} aria-label={`Source ${part}`}>{`[${part}]`}</a>
             : part)
           : faq.answer}</p>
