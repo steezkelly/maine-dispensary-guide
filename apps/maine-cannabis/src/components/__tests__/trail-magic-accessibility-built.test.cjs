@@ -25,18 +25,29 @@ function readJsonLd(html) {
     .map(([, value]) => JSON.parse(value));
 }
 
+function citationIds(html, className) {
+  const classPattern = new RegExp(`\\bclass="[^"]*\\b${className}\\b[^"]*"`);
+  return [...html.matchAll(/<a\b[^>]*>/g)]
+    .map(([tag]) => ({ tag, hasClass: classPattern.test(tag) }))
+    .filter(({ hasClass }) => hasClass)
+    .map(({ tag }) => tag.match(/\bhref="#source-(\d+)"/))
+    .filter(Boolean)
+    .map(([, id]) => Number(id));
+}
+
 test('built trail-magic route keeps rendered citation targets and plain FAQ JSON-LD', () => {
   const html = readRoute();
-  const bodyCitationLinks = [...html.matchAll(/<a class="citation-link" href="#source-(\d+)"/g)].map(([, id]) => Number(id));
-  const faqCitationLinks = [...html.matchAll(/<a class="faq-citation" href="#source-(\d+)"/g)].map(([, id]) => Number(id));
-  const sourceIds = new Set([...html.matchAll(/<li id="source-(\d+)"/g)].map(([, id]) => Number(id)));
+  const bodyCitationLinks = citationIds(html, 'citation-link');
+  const faqCitationLinks = citationIds(html, 'faq-citation');
+  const sourceIds = new Set([...html.matchAll(/<li\b[^>]*\bid="source-(\d+)"/g)].map(([, id]) => Number(id)));
   const faqSchema = readJsonLd(html).find((schema) => schema['@type'] === 'FAQPage');
 
   assert.equal(bodyCitationLinks.length, 25);
   assert.equal(faqCitationLinks.length, 12);
   assert.deepEqual([...new Set(faqCitationLinks)].sort((a, b) => a - b), [1, 4, 7, 9, 10, 11]);
+  assert.ok(bodyCitationLinks.every((id) => sourceIds.has(id)));
   assert.ok(faqCitationLinks.every((id) => sourceIds.has(id)));
   assert.equal(faqSchema.mainEntity.length, 6);
-  assert.ok(faqSchema.mainEntity.every(({ acceptedAnswer }) => !/<(?:a|script)\b/i.test(acceptedAnswer.text)));
+  assert.ok(faqSchema.mainEntity.every(({ acceptedAnswer }) => !/<[^>]+>/i.test(acceptedAnswer.text)));
   assert.ok(faqSchema.mainEntity[0].acceptedAnswer.text.includes('[1]'));
 });
