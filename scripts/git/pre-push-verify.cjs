@@ -671,9 +671,6 @@ function autoRelatedFreshnessCheck(files) {
             error: `autoRelated-freshness: required data file missing at ${path.relative(REPO_ROOT, dataFile)} — push blocked. Run the dedicated regen-and-stage step before committing.`,
         };
     }
-    if (astroPageFiles.length === 0) {
-        return { ok: true, error: null };
-    }
     const regenScript = path.join(REPO_ROOT, 'scripts', 'data', 'regen-auto-related.cjs');
     const regen = spawnSync(process.execPath, [regenScript, '--stdout'], {
         cwd: REPO_ROOT,
