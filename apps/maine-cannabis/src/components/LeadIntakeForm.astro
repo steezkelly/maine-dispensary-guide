@@ -46,8 +46,9 @@
  *      from window.location and document.referrer at submit time and
  *      included in the POST body.
  *   3. An explicit consent checkbox gates submit.
- *   4. The lead_capture GA4 event includes a `transport` field whose
- *      value is 'server' or 'mailto' depending on the path taken.
+ *   4. The `lead_capture` GA4 event is emitted only after a validated server
+ *      success response. Mailto paths emit `lead_mailto_open`, which measures
+ *      a client launch but never claims delivery or receipt.
  *
  * The component name `LeadIntakeForm` is the canonical name for new
  * call sites. The legacy `LeadMailtoForm.astro` is kept as a thin
@@ -107,9 +108,9 @@ const {
 <script is:inline define:vars={{ formId }}>
   // LeadIntakeForm inline IIFE. Same pattern as LeadMailtoForm: read all
   // named fields, intercept submit, dispatch to either the server endpoint
-  // or the mailto: fallback. The lead_capture GA4 event fires after the
-  // server confirms success (server path), or synchronously before the
-  // mailto: navigation (mailto path, where the navigation IS the signal).
+  // or the mailto fallback. `lead_capture` fires only after the server
+  // validates a success response; mailto navigation emits `lead_mailto_open`
+  // because it cannot prove a message was sent or received.
   (function () {
     var form = document.getElementById(formId);
     if (!form) return;
@@ -140,17 +141,12 @@ const {
       }
     }
 
-    function fireGA4(form, formName, trackFields, transport) {
+    function fireGA4(form, formName, trackFields, eventName, transport) {
       try {
         if (typeof window.gtag !== 'function') return;
-        // transport may be an event name ('lead_form_start'/'lead_capture')
-        // or a legacy path label ('server'/'mailto'). Use as event name
-        // when it's an event name, else fall back to lead_capture.
-        var eventName = (transport === 'lead_form_start' || transport === 'lead_capture')
-          ? transport : 'lead_capture';
-        // transport_type: 'beacon' → gtag routes the dispatch through
-        // navigator.sendBeacon, surviving page-unload between submit and
-        // the server reply (closes #188).
+        // `lead_capture` is reserved for a validated server-side success.
+        // Mailto and form-start paths use distinct event names and retain a
+        // path label in the bounded `transport` parameter.
         var payload = Object.assign(
           { form_name: formName, page_path: window.location.pathname, transport: transport, transport_type: 'beacon' },
           readAttribution(),
@@ -303,7 +299,7 @@ const {
       if (endpoint && endpoint.length > 0) {
         // #188: lead_form_start on intent; lead_capture already fires inside
         // the .then() after 2xx (see #197). Both use beacon transport.
-        fireGA4(form, formName, trackFields, 'lead_form_start');
+        fireGA4(form, formName, trackFields, 'lead_form_start', 'server');
         // One fresh request_id per deliberate submission attempt. It travels in
         // the JSON body as the server-side idempotency key. A transport-level
         // retry of THIS fetch reuses the same payload (same request_id) so it
@@ -333,7 +329,7 @@ const {
             if (isValidSuccessResponse(data)) {
               // GA4 lead_capture fires AFTER the server confirms success with a
               // valid contract — attribution reflects actual conversions.
-              fireGA4(form, formName, trackFields, 'server');
+              fireGA4(form, formName, trackFields, 'lead_capture', 'server');
               if (typeof data.redirect === 'string' && data.redirect.length > 0) {
                 window.location.href = data.redirect;
               } else {
@@ -349,6 +345,8 @@ const {
             // client with a pre-filled message, then redirects to successPath
             // after 800ms. This is the pre-existing fallback and is NOT the
             // same as the invalid-2xx containment above (which stays on page).
+            // record mailto-client intent without treating it as a received lead.
+            fireGA4(form, formName, trackFields, 'lead_mailto_open', 'mailto_fallback');
             window.location.href = buildMailto(to, subjectTpl, bodyTpl, values);
             setTimeout(function () {
               if (successPath) { window.location.href = successPath; }
@@ -360,10 +358,10 @@ const {
         }
       }
 
-      // Path 2: mailto: fallback. lead_form_start on intent; lead_capture
-      // immediately since the mailto: navigation IS the success signal.
-      fireGA4(form, formName, trackFields, 'lead_form_start');
-      fireGA4(form, formName, trackFields, 'lead_capture');
+      // Path 2: mailto fallback. Opening a mail client is measurable intent,
+      // not proof that the user sent or that MDG received a lead.
+      fireGA4(form, formName, trackFields, 'lead_form_start', 'mailto');
+      fireGA4(form, formName, trackFields, 'lead_mailto_open', 'mailto');
       setTimeout(function () {
         window.location.href = buildMailto(to, subjectTpl, bodyTpl, values);
         setTimeout(function () {

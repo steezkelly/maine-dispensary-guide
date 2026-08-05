@@ -35,7 +35,16 @@ const ANALYTICS = {
 };
 
 const KEY_EVENTS = ['lead_capture', 'mdg_action_select', 'mdg_partner_referral'];
-const RATIO_EVENTS = ['cta_view', 'mdg_action_exposure', 'mdg_active_attention', 'page_engaged'];
+const RATIO_EVENTS = [
+  'cta_view',
+  'mdg_action_exposure',
+  'mdg_active_attention',
+  'page_engaged',
+  // Intent diagnostics, explicitly not conversions. `lead_capture` stays
+  // reserved for a validated server-side intake response.
+  'lead_form_submission_attempt',
+  'lead_mailto_open',
+];
 const BASELINE_EVENTS = ['page_view', 'session_start', 'click'];
 const ALL_EVENTS = [...KEY_EVENTS, ...RATIO_EVENTS, ...BASELINE_EVENTS];
 
@@ -224,7 +233,7 @@ function formatReport({ totals, byKeyEventPage, outbound, channels, keyEventPage
     '|---|---:|---:|---:|',
     ...KEY_EVENTS.map((e) => `| ${e} | ${fmt(t[e]?.eventCount)} | ${fmt(t[e]?.totalUsers)} | ${fmt(t[e]?.sessions)} |`),
     '',
-    '## 2. Ratio events (exposure and engagement)',
+    '## 2. Diagnostic and ratio signals (exposure, engagement, lead intent)',
     '',
     '| Event | Count | Users | Sessions |',
     '|---|---:|---:|---:|',

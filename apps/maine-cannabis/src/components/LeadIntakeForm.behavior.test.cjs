@@ -126,7 +126,7 @@ test('validator: newline redirect /\\n//evil.com → false', () => {
 // Build a minimal DOM/fetch harness that runs the submit handler end-to-end.
 // We extract the whole IIFE and run it against a fake document/window, then
 // dispatch a synthetic submit and assert on side effects.
-function runSubmitHarness({ responseBody, responseOk = true, jsonThrows = false }) {
+function runSubmitHarness({ responseBody, responseOk = true, jsonThrows = false, endpoint = 'https://example.com/api/lead' }) {
   const events = [];          // captured gtag events
   const redirects = [];       // captured window.location.href assignments
   let appendedNode = null;    // node appended to the form (failure message)
@@ -138,7 +138,7 @@ function runSubmitHarness({ responseBody, responseOk = true, jsonThrows = false 
     elements: formElements,
     getAttribute(name) {
       const attrs = {
-        'data-endpoint': 'https://example.com/api/lead',
+        'data-endpoint': endpoint,
         'data-lead-to': 'leads@example.com',
         'data-lead-subject': 'Lead',
         'data-lead-body': 'Body',
@@ -282,7 +282,19 @@ test('behavior: lead_form_start fires on intent before fetch resolves', async ()
   assert.equal(starts.length, 1, 'lead_form_start fires exactly once on intent');
 });
 
-test('behavior: non-2xx → mailto fallback (documented unchanged behavior)', async () => {
-  const { redirects } = await runSubmitHarness({ responseBody: null, responseOk: false });
+test('behavior: non-2xx → mailto fallback is measured without claiming a verified capture', async () => {
+  const { events, redirects } = await runSubmitHarness({ responseBody: null, responseOk: false });
   assert.ok(redirects.some((r) => r.startsWith('mailto:')), 'non-2xx opens mailto fallback');
+  assert.equal(events.filter((event) => event.eventName === 'lead_mailto_open').length, 1);
+  assert.equal(events.filter((event) => event.eventName === 'lead_capture').length, 0);
+});
+
+test('behavior: mailto path records an open signal but never a verified lead capture', async () => {
+  const { events, redirects } = await runSubmitHarness({ responseBody: null, endpoint: '' });
+  assert.ok(redirects.some((r) => r.startsWith('mailto:')), 'mailto path opens the client');
+  assert.deepEqual(events.map((event) => event.eventName), [
+    'lead_form_start',
+    'lead_mailto_open',
+  ]);
+  assert.equal(events.some((event) => event.eventName === 'lead_capture'), false);
 });
