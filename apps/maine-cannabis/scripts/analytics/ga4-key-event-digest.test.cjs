@@ -14,6 +14,8 @@ test('ratio event list reflects the live key-event configuration', () => {
   assert.deepEqual(KEY_EVENTS, ['lead_capture', 'mdg_action_select', 'mdg_partner_referral']);
   assert.ok(RATIO_EVENTS.includes('cta_view'));
   assert.ok(RATIO_EVENTS.includes('mdg_active_attention'));
+  assert.ok(RATIO_EVENTS.includes('lead_form_submission_attempt'));
+  assert.ok(RATIO_EVENTS.includes('lead_mailto_open'));
   assert.ok(BASELINE_EVENTS.includes('page_view'));
   for (const e of KEY_EVENTS) assert.ok(!RATIO_EVENTS.includes(e), `${e} must be in key bucket only`);
   for (const e of RATIO_EVENTS) assert.ok(!KEY_EVENTS.includes(e), `${e} must be in ratio bucket only`);
@@ -44,7 +46,7 @@ test('formatReport renders every key ratio in percent form with one decimal', ()
     to: '2026-07-07',
   });
   assert.match(out, /## 1\. Key-event totals/);
-  assert.match(out, /## 2\. Ratio events/);
+  assert.match(out, /## 2\. Diagnostic and ratio signals/);
   assert.match(out, /## 3\. Baseline events/);
   assert.match(out, /## 4\. Conversion ratios/);
   assert.match(out, /\(selection rate\): 5\.0%/);

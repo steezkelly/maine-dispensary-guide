@@ -170,5 +170,5 @@ test('LeadIntakeForm: non-2xx still throws to the mailto fallback', () => {
 
 test('LeadIntakeForm: lead_form_start remains an intent event on the server path', () => {
   // lead_form_start fires on intent, before the fetch resolves.
-  assert.match(source, /fireGA4\(form, formName, trackFields, 'lead_form_start'\)/);
+  assert.match(source, /fireGA4\(form, formName, trackFields, 'lead_form_start', 'server'\)/);
 });
