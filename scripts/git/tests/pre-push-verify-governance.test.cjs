@@ -572,6 +572,61 @@ function testAutoRelatedDataOnlyDivergenceUsesBlockingExit13() {
   }
 }
 
+function testAutoRelatedGeneratorDivergenceUsesBlockingExit13() {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-auto-related-generator-'));
+  try {
+    const verifierPath = path.join(tempRoot, 'scripts/git/pre-push-verify.cjs');
+    const inventoryPath = path.join(tempRoot, 'scripts/git/release-governance-surfaces.cjs');
+    const dataOnlyAssertPath = path.join(tempRoot, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs');
+    const regenPath = path.join(tempRoot, 'scripts/data/regen-auto-related.cjs');
+    const astroPath = path.join(tempRoot, 'apps/maine-cannabis/src/pages/fixture.astro');
+    const dataPath = path.join(tempRoot, 'apps/maine-cannabis/src/data/autoRelatedData.json');
+    fs.mkdirSync(path.dirname(verifierPath), { recursive: true });
+    fs.mkdirSync(path.dirname(dataOnlyAssertPath), { recursive: true });
+    fs.mkdirSync(path.dirname(regenPath), { recursive: true });
+    fs.mkdirSync(path.dirname(astroPath), { recursive: true });
+    fs.writeFileSync(verifierPath, readFileSafe(VERIFIER));
+    fs.copyFileSync(SURFACE_INVENTORY, inventoryPath);
+    fs.copyFileSync(path.join(ROOT, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs'), dataOnlyAssertPath);
+    fs.copyFileSync(path.join(ROOT, 'scripts/data/regen-auto-related.cjs'), regenPath);
+    fs.writeFileSync(astroPath, "---\nconst title = 'baseline';\n---\n<h1>{title}</h1>\n");
+    const canonical = spawnSync(process.execPath, [regenPath, '--stdout'], { cwd: tempRoot, encoding: 'utf8' });
+    if (canonical.status !== 0) {
+      logFail('autoRelated generator divergence uses blocking exit code 13', `Fixture regeneration failed: ${(canonical.stderr || '').trim()}.`);
+      return;
+    }
+    fs.mkdirSync(path.dirname(dataPath), { recursive: true });
+    fs.writeFileSync(dataPath, canonical.stdout);
+
+    const gitCommands = [
+      ['init', '-q'],
+      ['config', 'user.name', 'Governance Contract'],
+      ['config', 'user.email', 'governance-contract@example.invalid'],
+      ['add', '.'],
+      ['commit', '-qm', 'baseline'],
+    ];
+    const setupFailure = gitCommands
+      .map((args) => spawnSync('git', args, { cwd: tempRoot, encoding: 'utf8' }))
+      .find((result) => result.status !== 0);
+    if (setupFailure) {
+      logFail('autoRelated generator divergence uses blocking exit code 13', `Temporary fixture setup failed: ${(setupFailure.stderr || setupFailure.stdout || '').trim()}.`);
+      return;
+    }
+
+    const generator = fs.readFileSync(regenPath, 'utf8');
+    fs.writeFileSync(regenPath, generator.replace('items.push({ title, section, topics, url });', 'items.push({ title: `${title} regenerated`, section, topics, url });'));
+    const result = spawnSync(process.execPath, ['scripts/git/pre-push-verify.cjs', '--fast-only'], { cwd: tempRoot, encoding: 'utf8' });
+    const output = `${result.stdout || ''}${result.stderr || ''}`;
+    if (result.status !== 13 || !/content divergence detected/.test(output)) {
+      logFail('autoRelated generator divergence uses blocking exit code 13', `Expected generator-only divergence to fail with exit 13; status=${result.status}, output=${output.trim()}.`);
+      return;
+    }
+    logPass('autoRelated generator divergence uses blocking exit code 13');
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
+}
+
 function testAutoRelatedDeletedPageUsesBlockingExit13() {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-auto-related-deletion-'));
   try {
@@ -1583,6 +1638,7 @@ function runAll() {
   testMissingEsbuildUsesEnvironmentExitCode();
   testAutoRelatedContentDivergenceUsesBlockingExit13();
   testAutoRelatedDataOnlyDivergenceUsesBlockingExit13();
+  testAutoRelatedGeneratorDivergenceUsesBlockingExit13();
   testAutoRelatedDeletedPageUsesBlockingExit13();
   testAutoRelatedStdoutDoesNotCreateDataDirectory();
   testKillScopedToVerifierProcessTree();

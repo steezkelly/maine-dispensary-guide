@@ -658,10 +658,12 @@ function governanceCheck(files) {
  */
 function autoRelatedFreshnessCheck(files) {
     const dataRelativePath = 'apps/maine-cannabis/src/data/autoRelatedData.json';
+    const generatorRelativePath = 'scripts/data/regen-auto-related.cjs';
     const astroPageFiles = files.filter(f => f.includes('apps/maine-cannabis/src/pages/') && ASTRO_FILE_RE.test(f));
     const dataInputChanged = files.some(f => normalizeRepoPath(f) === dataRelativePath);
-    if (astroPageFiles.length === 0 && !dataInputChanged) {
-        // No page or registry-input change → this gate is irrelevant to the diff.
+    const generatorChanged = files.some(f => normalizeRepoPath(f) === generatorRelativePath);
+    if (astroPageFiles.length === 0 && !dataInputChanged && !generatorChanged) {
+        // No page, registry-data, or canonical-generator change → this gate is irrelevant to the diff.
         return { ok: true, error: null };
     }
     const dataFile = path.join(REPO_ROOT, dataRelativePath);
