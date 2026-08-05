@@ -352,7 +352,7 @@ function main() {
         console.error(`Pages directory not found: ${PAGES_DIR}`);
         process.exit(2);
     }
-    if (!check && !fs.existsSync(path.dirname(DATA_FILE))) {
+    if (!check && !stdout && !fs.existsSync(path.dirname(DATA_FILE))) {
         fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
     }
 

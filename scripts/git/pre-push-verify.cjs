@@ -646,9 +646,9 @@ function governanceCheck(files) {
 
 /**
  * autoRelatedData freshness check. The relationship-registry data file
- * must exist and match a side-effect-free canonical regeneration when its
- * mtime is older than a changed .astro page. Required-check absent or
- * content-divergent → error string returned; main() routes
+ * must exist and match a side-effect-free canonical regeneration whenever
+ * a relevant source page or registry data file changes. Required-check absent
+ * or content-divergent → error string returned; main() routes
  * this to exit code 13. This is a fail-closed replacement for the
  * 2026-07-05 "auto-regen and auto-stage" behavior (which mutated the
  * working tree from inside the verifier).
@@ -674,20 +674,6 @@ function autoRelatedFreshnessCheck(files) {
     if (astroPageFiles.length === 0) {
         return { ok: true, error: null };
     }
-    let newestPageMtime = 0;
-    for (const rel of astroPageFiles) {
-        const abs = path.join(REPO_ROOT, rel);
-        try {
-            const stat = fs.statSync(abs);
-            if (stat.mtimeMs > newestPageMtime) newestPageMtime = stat.mtimeMs;
-        } catch {}
-    }
-    const dataStat = fs.statSync(dataFile);
-    if (dataStat.mtimeMs >= newestPageMtime) {
-        log('ok', `autoRelated-freshness: ${astroPageFiles.length} .astro page file(s) check out — mtime pre-filter confirms data is current`);
-        return { ok: true, error: null };
-    }
-
     const regenScript = path.join(REPO_ROOT, 'scripts', 'data', 'regen-auto-related.cjs');
     const regen = spawnSync(process.execPath, [regenScript, '--stdout'], {
         cwd: REPO_ROOT,
@@ -709,7 +695,7 @@ function autoRelatedFreshnessCheck(files) {
             error: `autoRelated-freshness: content divergence detected (${currentHash.slice(0, 12)} != ${regeneratedHash.slice(0, 12)}) — push blocked. Run the dedicated regen-and-stage step before committing.`,
         };
     }
-    log('ok', `autoRelated-freshness: ${astroPageFiles.length} .astro page file(s) check out — content hash matches despite older data mtime`);
+    log('ok', `autoRelated-freshness: ${astroPageFiles.length} .astro page file(s) check out — canonical content hash matches`);
     return { ok: true, error: null };
 }
 
