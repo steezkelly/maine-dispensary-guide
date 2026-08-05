@@ -16,6 +16,7 @@
  *
  * Usage:
  *   node scripts/data/regen-auto-related.cjs                # write to data file
+ *   node scripts/data/regen-auto-related.cjs --stdout       # emit canonical JSON without writing
  *   node scripts/data/regen-auto-related.cjs --dry-run      # print what would change
  *   node scripts/data/regen-auto-related.cjs --check        # exit 1 if data is stale, 0 if fresh
  *
@@ -338,8 +339,14 @@ function buildItems() {
 
 function main() {
     const args = process.argv.slice(2);
+    const stdout = args.includes('--stdout');
     const dryRun = args.includes('--dry-run');
     const check = args.includes('--check');
+
+    if (stdout && (dryRun || check)) {
+        console.error('--stdout cannot be combined with --dry-run or --check.');
+        process.exit(2);
+    }
 
     if (!fs.existsSync(PAGES_DIR)) {
         console.error(`Pages directory not found: ${PAGES_DIR}`);
@@ -351,6 +358,12 @@ function main() {
 
     const items = buildItems();
     const fresh = { items };
+    const serialized = JSON.stringify(fresh, null, 2) + '\n';
+
+    if (stdout) {
+        process.stdout.write(serialized);
+        return;
+    }
 
     if (check) {
         if (!fs.existsSync(DATA_FILE)) {
@@ -379,7 +392,7 @@ function main() {
         process.exit(0);
     }
 
-    fs.writeFileSync(DATA_FILE, JSON.stringify(fresh, null, 2) + '\n');
+    fs.writeFileSync(DATA_FILE, serialized);
     console.log(`✓ Wrote ${items.length} items to ${path.relative(REPO, DATA_FILE)}`);
 }
 
