@@ -92,6 +92,11 @@ test('no-script mobile fallback keeps static links visible and removes inert dro
   );
   assert.match(
     fallback,
+    /\.nav-search-mobile\s*\{[^}]*display:\s*none\s*!important/s,
+    'no-script fallback must hide the JavaScript-only mobile search control',
+  );
+  assert.match(
+    fallback,
     /\.nav-dropdown\s+\.dropdown-content\s*,\s*#site-nav\s+\.nav-dropdown\s+\.dropdown-content\.multi-column\s*\{[^}]*display:\s*block\s*!important/s,
     'no-script fallback must override the collapsed dropdown content cascade',
   );
