@@ -1,0 +1,192 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+import Callout from '../../components/Callout.astro';
+
+
+const article = {
+  author: 'Steve Kelly',
+  authorId: 'steve-kelly',
+  authorTitle: 'Founder & Publisher',
+  publishDate: '2026-08-06',
+  modifiedDate: '2026-08-06',
+  section: 'Consumer Guides',
+};
+
+const topics = ['consumer-guide', 'regulatory', 'lab-testing', 'product-safety'];
+
+const vapeFaqs = [
+  {
+    question: 'What is the most useful number on a Maine adult-use vape label?',
+    answer: 'For traceability, start with the batch number. It lets you match the package to an OCP recall notice or other batch-specific product record. Also check the license numbers and product identity; the batch number is not a quality score or a safety guarantee.',
+  },
+  {
+    question: 'Does Maine require adult-use cannabis vape products to be tested?',
+    answer: 'Maine law requires mandatory testing before an adult-use cannabis product may be sold or distributed, subject to the applicable rules and any statutory temporary waiver where no certified in-state testing capacity exists for a required factor. Testing is important evidence, but it does not answer every health or individual-suitability question.',
+  },
+  {
+    question: 'What should I do if an OCP recall names my vape batch?',
+    answer: 'Read the active OCP notice, compare its exact product and batch details with your package, and follow the notice’s return or disposal direction. Do not assume that a similar strain name or package design is enough; the batch number is the identifying record.',
+  },
+  {
+    question: 'Can I throw away a disposable cannabis vape in my household trash?',
+    answer: 'Do not put a lithium-ion battery or a device containing one in household garbage or curbside recycling. EPA directs consumers to separate battery or electronics recycling and household-hazardous-waste collection options. Check the device markings and your local collection program rather than trying to take the device apart yourself.',
+  },
+  {
+    question: 'Do adult-use Maine labeling rules also describe every medical cannabis vape?',
+    answer: 'No. This guide is limited to adult-use labeling and recall sources cited on the page. Medical-use products operate under a different program and should not be assumed to follow the identical packaging or label rules without checking the current medical-use authority.',
+  },
+];
+---
+
+<Layout
+  title="Maine Cannabis Vapes: Labels, Batches & Recalls"
+  description="A Maine adult-use cannabis vape guide: read label fields, use batch numbers for traceability and recalls, understand testing limits, and dispose of batteries responsibly."
+  article={article}
+  topics={topics}
+  continuationMode="pilot"
+>
+<style>
+  article { max-width: var(--reading-column, 720px); margin: 0 auto; }
+  .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+  .subtitle { font-size: 1.15rem; color: var(--color-text-light); line-height: 1.6; }
+  section { margin: 2.5rem 0; }
+  section h2 { margin: 0 0 1rem; }
+  ul, ol { padding-left: 1.35rem; }
+  li { margin-bottom: 0.65rem; }
+  .quick-reference, .source-note, .review-note { border-radius: 0.65rem; padding: 1.15rem 1.3rem; }
+  .quick-reference { background: color-mix(in oklab, var(--color-soft-green) 12%, transparent); border-left: 4px solid var(--color-primary); }
+  .source-note { background: color-mix(in oklab, var(--color-primary) 4%, transparent); border-left: 3px solid var(--color-accent); font-size: 0.92rem; }
+  .review-note { border-top: 1px solid var(--color-border); color: var(--color-text-light); font-size: 0.9rem; }
+  .label-list dt { font-weight: 700; margin-top: 1rem; }
+  .label-list dd { margin: 0.25rem 0 0; }
+  .faq-section { border-top: 1px solid var(--color-border); padding-top: 2rem; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>Cannabis Vapes in Maine: How to Read a Label and Choose a Traceable Product</h1>
+    <p class="subtitle">A consumer-first guide to the adult-use information on a vape package, what a batch number can help you check, and how to handle recalls and batteries without turning a label into a health promise.</p>
+  </div>
+
+  <!-- GUIDE_BODY_START -->
+  <section>
+    <h2>Start With the Record, Not the Marketing</h2>
+    <p>A cannabis vape package can be visually busy. Brand name, strain name, flavor language, potency, hardware style, and promotional copy may all compete for attention. The most useful information for an adult-use Maine buyer is usually less dramatic: the product identity, the responsible licensees, the batch number, the required label fields, and the package’s condition. Those details give you a way to identify the exact product in your hand and compare it with an official recall notice if one is issued.</p>
+    <p>That is the practical meaning of a traceable product in this guide. It does not mean a product is right for every person, that a label predicts an effect, or that testing removes every possible risk. It means the product can be connected to a specific regulated record: a batch number, a licensed adult-use supply chain, and the label information Maine requires. If an OCP notice names a product or batch, those records are what let a consumer determine whether the notice applies.</p>
+    <p>This page focuses on <strong>Maine adult-use</strong> cannabis products. Medical-use products are governed through a different program, so do not assume that every adult-use package rule or public resource described here transfers unchanged to a medical product.</p>
+  </section>
+
+  <section class="quick-reference">
+    <h2>A 60-Second Package Check</h2>
+    <ol>
+      <li>Confirm the product identity and the form you are buying: cartridge, all-in-one disposable, or another inhaled cannabis product.</li>
+      <li>Find the batch number and keep the package long enough to compare it with an official recall if needed.</li>
+      <li>Look for the applicable license numbers, universal symbol, potency information, ingredients/allergens, extraction-chemical information, route-of-administration instruction, and recommended-use or expiration date.</li>
+      <li>Check that the retail package appears tamper-evident and child-resistant as required for adult-use retail sale.</li>
+      <li>If a current OCP recall is relevant, compare the exact batch number and product details—not just the brand or strain name.</li>
+    </ol>
+    <p>This is an identification checklist, not a scorecard. A package can help a buyer locate information, but it cannot provide an individualized health assessment or predict a person’s experience.</p>
+  </section>
+
+  <section>
+    <h2>What Counts as a Cannabis Vape?</h2>
+    <p>In everyday retail language, “vape” can refer to several things. A <strong>cartridge</strong> is typically a prefilled container of cannabis concentrate intended to connect to compatible hardware. An <strong>all-in-one disposable</strong> combines a reservoir and power source in a single device. A <strong>battery</strong> or power unit supplies energy to heat the concentrate. A <strong>concentrate</strong> is the cannabis material in the cartridge or device; label terms such as distillate, live resin, or live rosin may describe how that material was made or presented, but they are not substitutes for the legally required product record.</p>
+    <p>The form matters because it changes what the package can tell you and what you will eventually need to dispose of. A cartridge may separate from its battery. A disposable may contain both cannabis material and an internal rechargeable battery. A consumer should not assume every device can be opened, serviced, or separated safely. Product markings and local collection instructions are more reliable than trying to infer construction from the product name.</p>
+    <p>For label-reading purposes, do not let hardware language displace the core questions. Who produced the product? What is its batch number? What ingredients and extraction information are listed? What route information and dates appear? And, if an official notice is issued, can the exact package be matched to the notice?</p>
+  </section>
+
+  <section>
+    <h2>Reading a Maine Adult-Use Vape Label</h2>
+    <p>Maine’s adult-use labeling statute, <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec701.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §701</a>, requires applicable information on cannabis and cannabis-product labels. The word “applicable” matters: package layout and product form differ, and not every field will appear in the same place. Still, a vape buyer should know the categories to locate.</p>
+
+    <dl class="label-list">
+      <dt>License numbers</dt>
+      <dd>The adult-use label identifies the cultivation facility, products-manufacturing facility, and cannabis store license numbers as applicable. These are identifiers, not endorsements. They help a reader distinguish the businesses connected with cultivation, manufacturing, and retail sale.</dd>
+
+      <dt>Identity statement and universal symbol</dt>
+      <dd>The identity statement describes the product, while Maine’s universal symbol identifies applicable adult-use cannabis content. The symbol is useful as a quick recognition cue, but it should be read alongside the full label rather than treated as the complete product description.</dd>
+
+      <dt>Batch number</dt>
+      <dd>The batch number is the traceability field to prioritize. It is the detail OCP told consumers to compare during its 2025 Yani adult-use vape recall. A brand can make many products with similar names; a batch number ties a particular package to the record named in a recall notice.</dd>
+
+      <dt>Potency information</dt>
+      <dd>The label must include THC potency information and potency information for other cannabinoids or chemicals as applicable. Potency describes a measured label value. It is not a promise about effects, a comparison of health risk, or a substitute for the other required information.</dd>
+
+      <dt>Extraction gases, solvents, and chemicals</dt>
+      <dd>For a cannabis product made through extraction, Maine requires information about gases, solvents, and chemicals used in extraction. This is a disclosure field. Read it as part of the product record, not as a shortcut to a conclusion about the entire product or a person’s response to it.</dd>
+
+      <dt>Route-of-administration instruction</dt>
+      <dd>Maine requires route-of-administration instructions. On an inhaled product, this helps distinguish the product category from an edible or topical. It is not a personalized use plan.</dd>
+
+      <dt>Ingredients, allergens, and date</dt>
+      <dd>For adult-use cannabis products, the statute calls for ingredients and possible allergens as well as a recommended use or expiration date. These fields help a consumer identify what the manufacturer lists and whether the package is within the stated date window.</dd>
+    </dl>
+
+    <p>Also inspect the retail package itself. Section 701 requires adult-use cannabis and cannabis products to be prepackaged in, or placed at final sale in, child-resistant and tamper-evident packaging as applicable. A package that appears opened, altered, or missing identifying information is not a reason to diagnose a problem from the outside; it is a reason to pause the transaction and ask the retailer for the correct sealed product and its identifying record.</p>
+  </section>
+
+  <section>
+    <h2>What Traceability Can and Cannot Tell You</h2>
+    <p>Traceability is useful because it narrows a question to a particular product rather than a general brand impression. A buyer who keeps the package can compare its batch number with an OCP notice, show a retailer the exact label, or check whether the product details match a record the retailer provides. That is especially useful when multiple products have similar strain names, package designs, or marketing descriptions.</p>
+    <p>Traceability also has limits. A batch number does not tell you whether a product will have a particular effect. It does not replace a current recall notice, a retailer’s information, or a health professional when a person has an individual health concern. It does not make a product free of risk. The responsible conclusion is narrower: the number makes it possible to identify the package and investigate an official notice with more precision.</p>
+    <p>For the same reason, do not treat a vague online menu, a cropped social image, or a broad claim about a brand as a replacement for the package in hand. The batch number and required adult-use label are the fields that connect a consumer question to an actual product record. Save a clear photo of those fields if you need to contact a retailer, but avoid sharing purchase details publicly unless that is necessary for a report or recall response.</p>
+  </section>
+
+  <section>
+    <h2>Testing: Useful Evidence, Not a Safety Guarantee</h2>
+    <p>Maine’s adult-use mandatory-testing statute, <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec602.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §602</a>, says a licensee may not sell or distribute an adult-use cannabis product unless required testing shows that it does not exceed the maximum allowable contamination level for contaminants that are injurious to health and subject to required testing. The statute identifies residual solvents, poisons and toxins, harmful chemicals, dangerous yeasts, molds and mildew, harmful microbes, pesticides, fungicides, insecticides, and potency, homogeneity, and cannabinoid profiles among the mandatory-testing scope.</p>
+    <p>That framework gives consumers meaningful information: adult-use products are subject to a regulated testing system, and the law requires recordkeeping about testing. It is not a blank check. Testing speaks to the required analytes, standards, and product circumstances under the applicable rules. It does not tell a reader that a product is appropriate for their body, eliminate all possible health concerns, or establish that every risk associated with inhalation has been measured in a single report.</p>
+    <p>If you want to understand laboratory documentation, MDG’s <a href="/guides/cannabis-coa-maine-how-to-read">Maine COA guide</a> explains the difference between a certificate of analysis and a package label. Use the two records together: the label identifies the package and batch; a laboratory document, where available and properly matched, describes the analyses and results for that specific record. Neither should be turned into medical or effect advice.</p>
+  </section>
+
+  <section>
+    <h2>Vape Safety, Recalls, and Disposal in Maine</h2>
+    <p>Recall information is where keeping a package becomes most important. Maine OCP’s <a href="https://www.maine.gov/dafs/ocp/news-events/news/maine-office-cannabis-policy-expands-recall-adult-use-vape-cartridges-produced" target="_blank" rel="noopener noreferrer">2025 expanded recall of Yani adult-use vape cartridges produced by NorCO Outdoor Cannabis</a> is a clear example. OCP described an original recall and additional affected strains, listed exact batch numbers and sale windows, and told consumers to check the label on their vape products for the batch number. The notice said OCP expanded the recall after testing found unsafe levels of chlorfenapyr in the affected cartridges.</p>
+    <p>The lesson is not that every vape is subject to that recall. It is that official recall response works at the batch level. If you see a current notice, first open the original OCP page. Then compare its exact product type, brand or producer information, batch number, and other details to the package you have. Follow the notice’s return or disposal direction. If the notice names symptoms or emergency instructions, use the official notice rather than a general article as the source for what to do next.</p>
+    <p>OCP’s current adult-use compliance rule also gives the agency recall authority when it finds circumstances that pose a public-health and safety risk. The rule lists examples that can include an unauthorized pesticide, a failed mandatory test, contamination or unfitness, improper packaging or labeling, or production outside a cannabis establishment. Those are regulatory categories, not a list of conclusions a consumer should try to make from a photograph or a label alone.</p>
+    <Callout title="Historic public-health context" type="info">
+      CDC’s 2019 EVALI investigation found vitamin E acetate in all 29 samples in a small case-associated set and said the evidence was not sufficient to rule out other toxicants. That history explains why unknown ingredients and informal-source products demand caution. It does not establish a health conclusion about every current Maine adult-use product.
+    </Callout>
+    <p>Battery disposal is a separate part of vape safety. The U.S. Environmental Protection Agency says lithium-ion batteries and devices containing them should not go in household garbage or curbside recycling bins because damaged or crushed batteries can create a fire hazard. EPA directs consumers to separate battery or electronics recycling, retailer takeback, or household-hazardous-waste collection options. It also advises protecting terminals and separating batteries as appropriate for collection.</p>
+    <p>In Maine, the <a href="https://www.maine.gov/dep/waste/recycle/battery.html" target="_blank" rel="noopener noreferrer">Department of Environmental Protection’s battery-recycling guidance</a> points residents to Call2Recycle sites at many municipal transfer stations, recycling centers, and some hardware stores for rechargeable batteries. The practical rule is simple: do not put a battery-containing disposable device in the trash or curbside bin, and do not take it apart to make it fit a bin. Check the device’s markings and the collection site’s acceptance rules first, because not every location accepts every electronic device.</p>
+  </section>
+
+  <section>
+    <h2>How to Read a Recall Notice Without Overreading It</h2>
+    <p>Recall notices often contain more than one identifying detail. OCP may name the producer, a product line, a strain label, a product type, a batch number, a sale window, and a list of retailers. Each detail has a different job. The producer and product type help a reader locate the right notice. The sale window describes the period covered by that notice. The batch number is the detail that lets a consumer compare the notice with the package in hand.</p>
+    <p>Start with the primary notice, not a reposted headline or a social-media summary. Public summaries can omit an expansion, confuse a prior and later batch, or describe the reason for a recall more broadly than the agency did. Read the OCP notice’s product information and compare it line by line to the label. If the batch number does not match, do not state that your package is part of the recall simply because a name, color, or product form appears similar. If the number does match, follow the original notice’s direction and retain the packaging until the return or disposal question is resolved.</p>
+    <p>A recall is also a reason to resist a false binary. A package that is not named in one recall is not a permanent certification that it can never be affected by a future notice. Conversely, a notice about one identified batch is not evidence that every product by the same company, in the same format, or sold by the same retailer is implicated. The right scope is the scope the regulator published.</p>
+    <p>If a consumer cannot read a batch number, the practical next step is to ask the retailer to help identify the label—not to guess from a menu image. A retailer can often help locate the product record and explain its own return process. The final authority remains the current OCP notice. Keeping the question precise protects both the consumer and other customers from unnecessary alarm caused by an unsupported match.</p>
+  </section>
+
+  <section>
+    <h2>A Short Note for Operators: Make the Record Easy to Find</h2>
+    <p>For an operator, the consumer lesson is straightforward: required information only helps a customer if it can be located and read. Clear batch numbers, legible license information, a precise product identity, visible dates, and a consistent answer to a recall question reduce avoidable confusion. A package or product page should not make a consumer guess which batch a laboratory document or recall notice concerns.</p>
+    <p>That is a transparency standard, not a new legal requirement created by this guide. OCP offers a <a href="https://www.maine.gov/dafs/ocp/adult-use/PLA-review" target="_blank" rel="noopener noreferrer">voluntary packaging, labeling, and advertising review</a> path, while reminding licensees that voluntary review does not replace their obligation to comply with applicable statutes and rules. Operators should rely on current OCP authority and their own compliance process for legal decisions.</p>
+    <p>Consumer-facing clarity is also valuable during a recall. A retailer that can help a customer locate a batch number, compare it with the original OCP notice, and follow the notice’s instructions is making the regulated record usable. It is not appropriate to replace an official notice with an unsupported reassurance or to imply that a generic brand statement resolves a batch-specific question.</p>
+  </section>
+
+  <section>
+    <h2>Keep the Package Until the Product Record Is No Longer Useful</h2>
+    <p>There is a modest habit behind all of this: keep the label long enough to identify the product if a question arises. That can mean retaining the original package, photographing the batch and license fields, or saving the retailer receipt where appropriate. The goal is not to turn every purchase into a research project. It is to preserve the small set of details that makes an official recall, retailer conversation, or responsible disposal decision possible.</p>
+    <p>For broader adult-use rules and definitions, read MDG’s <a href="/guides/maine-cannabis-regulations">Maine cannabis regulations guide</a>. For changes or factual corrections to this page, use MDG’s public <a href="/about/corrections">Editorial Corrections Log</a>. The current primary sources remain the controlling record for a statute, rule, recall, or disposal program.</p>
+  </section>
+  <!-- GUIDE_BODY_END -->
+
+  <section class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={vapeFaqs} />
+  </section>
+
+  <section class="source-note">
+    <h2>Sources and method</h2>
+    <p>Last reviewed: 2026-08-06. This guide is a publisher’s plain-language reading of current adult-use sources, including <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec701.html" target="_blank" rel="noopener noreferrer">28-B M.R.S. §701</a>, <a href="https://legislature.maine.gov/statutes/28-B/title28-Bsec602.html" target="_blank" rel="noopener noreferrer">§602</a>, <a href="https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/18-691%20CMR%20Ch%2030%20Final.pdf" target="_blank" rel="noopener noreferrer">OCP Chapter 30</a>, OCP’s <a href="https://www.maine.gov/dafs/ocp/news-events/news/maine-office-cannabis-policy-expands-recall-adult-use-vape-cartridges-produced" target="_blank" rel="noopener noreferrer">2025 vape recall notice</a>, CDC’s <a href="https://www.cdc.gov/mmwr/volumes/68/wr/mm6845e2.htm" target="_blank" rel="noopener noreferrer">2019 EVALI report</a>, the <a href="https://www.epa.gov/recycle/used-lithium-ion-batteries" target="_blank" rel="noopener noreferrer">EPA lithium-ion battery guide</a>, and <a href="https://www.maine.gov/dep/waste/recycle/battery.html" target="_blank" rel="noopener noreferrer">Maine DEP battery guidance</a>. Requirements and public notices can change; follow the linked primary source for the current rule or recall.</p>
+  </section>
+
+  <section class="review-note">
+    <p><strong>Editorial note.</strong> This guide is published under a <a href="/about/authors">publisher-managed editorial byline</a> and reflects the publisher’s reading of the cited public sources, not a third-party clinical or legal assessment. Material corrections are recorded in the public <a href="/about/corrections">Editorial Corrections Log</a>.</p>
+  </section>
+
+</article>
+</Layout>
