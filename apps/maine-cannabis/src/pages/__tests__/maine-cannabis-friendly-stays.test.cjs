@@ -27,6 +27,7 @@ test('directory preserves the legal condition, review date, and visitor confirma
 test('directory keeps private residences separate from owner-permitted private property', () => {
   assert.match(page, /private residence, including its curtilage, or on private property that is not generally accessible to the public and where the owner explicitly permits consumption/i);
   assert.doesNotMatch(page, /private residence[^.]{0,160}only when the owner explicitly permits/i);
+  assert.doesNotMatch(page, /statute requires explicit owner permission and a setting not generally accessible to the public/i);
 });
 
 test('directory uses an honest selective-directory contract', () => {
