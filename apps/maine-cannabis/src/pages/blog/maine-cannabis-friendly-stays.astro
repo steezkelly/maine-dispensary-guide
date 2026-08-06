@@ -1,0 +1,156 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Faq from '../../components/Faq.astro';
+import Layout from '../../layouts/Layout.astro';
+
+const article = {
+  publishDate: '2026-08-06',
+  modifiedDate: '2026-08-06',
+  section: 'Lifestyle & Travel',
+};
+const topics = ['travel', 'tourism', 'consumer law', 'lodging'];
+const reviewedDate = '2026-08-06';
+
+const stays = [
+  {
+    name: 'Camp Laughing Grass',
+    place: 'Harrison · Maine Lake Region',
+    type: '21+ campground, cabins, and glamping',
+    source: 'https://camplaughinggrass.com/',
+    policy: 'The property describes itself as a cannabis-friendly, 21+ campground and says entry is reservation-only.',
+    note: 'Read the property rules, then confirm the currently permitted area and any event-specific conditions before booking.',
+  },
+  {
+    name: 'The Lodge at Puffers Place',
+    place: 'Dexter · Piscataquis County',
+    type: 'Lakefront vacation rental',
+    source: 'https://puffersplace.com/The-Lodge',
+    policy: 'The property describes the rental as 420-friendly outdoors and separately states that smoking is not allowed inside.',
+    note: 'Ask the host to confirm the outdoor location and the current house rules in writing before booking.',
+  },
+  {
+    name: "Schlafman's Hollow",
+    place: 'Lincoln · Penobscot County',
+    type: 'Adults-only solar camping cabins',
+    source: 'https://www.schlafmanshollow.com/',
+    policy: 'The property states that it is adults only and outdoor 420 cannabis-friendly.',
+    note: 'Confirm the outdoor setting, registered-guest rule, and current property policy in writing before booking.',
+  },
+];
+
+const faqs = [
+  {
+    question: 'Does a private rental automatically permit cannabis?',
+    answer: 'No. Maine law requires explicit owner permission on private property that is not generally accessible by the public. A platform tag, a smoking policy, or a private address is not a substitute for the property owner’s current written policy.',
+  },
+  {
+    question: 'Why are there only three stays in this first release?',
+    answer: 'MDG includes a stay only when the property itself publishes a current, clear statement about cannabis. That keeps this first release selective rather than turning search snippets or marketplace labels into claims about a property’s rules.',
+  },
+  {
+    question: 'Can a visitor consume cannabis in a car, beach, or public campground?',
+    answer: 'No. Maine restricts adult-use cannabis consumption to a private residence or owner-permitted private property that is not generally accessible to the public. It also prohibits consumption by a driver or passenger in a vehicle on a public way.',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Maine Cannabis-Friendly Stays Directory',
+  description: 'A selective directory of Maine lodging and campground properties that publish a current cannabis-permission statement.',
+  url: Astro.url.href,
+  isPartOf: { '@type': 'WebSite', name: 'Maine Dispensary Guide', url: new URL('/', Astro.url).href },
+  hasPart: stays.map((stay) => ({ '@type': 'LodgingBusiness', name: stay.name, url: stay.source })),
+};
+---
+
+<Layout
+  title="Maine Cannabis-Friendly Stays: Verified Lodging & Campgrounds"
+  description="Verified Maine campground and lodging policies for cannabis-friendly stays. Confirm each property’s current written permission before booking."
+  heroImage="/images/heroes/maine-cannabis-friendly-stays.jpg"
+  article={article}
+  topics={topics}
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <style>
+    article { max-width: var(--reading-column); margin: 0 auto; }
+    .article-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+    .subtitle { color: var(--color-text-light); font-size: 1.18rem; line-height: 1.6; }
+    .byline, .last-updated, .source-caption { color: var(--color-text-light); font-size: 0.9rem; }
+    section { margin: 2.75rem 0; }
+    section h2 { color: var(--color-text); font-family: var(--font-serif); }
+    .answer-capsule, .method-note, .law-note { padding: 1.3rem 1.5rem; border: 1px solid var(--color-border); border-radius: 0.9rem; background: var(--color-surface); }
+    .answer-capsule { border-left: 4px solid var(--color-primary); }
+    .directory-grid { display: grid; gap: 1.25rem; }
+    .stay-card { padding: 1.5rem; border: 1px solid var(--color-border); border-radius: 1rem; background: var(--color-surface); }
+    .stay-card h3 { margin: 0.25rem 0 0.5rem; color: var(--color-text); font-family: var(--font-serif); font-size: 1.5rem; }
+    .eyebrow { margin: 0; color: var(--color-primary); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .stay-meta { color: var(--color-text-light); margin: 0 0 1rem; }
+    .policy { margin: 1rem 0; padding: 1rem; border-radius: 0.75rem; background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); }
+    .stay-link { display: inline-block; color: var(--color-primary); font-weight: 700; }
+    .checklist { padding-left: 1.25rem; }
+    .checklist li { margin: 0.65rem 0; }
+  </style>
+
+  <article>
+    <header class="article-header">
+      <p class="eyebrow">Maine travel directory</p>
+      <h1>Maine Cannabis-Friendly Stays</h1>
+      <p class="subtitle">A selective first-release directory of lodging and camping properties that publish a current cannabis-permission statement.</p>
+      <p class="byline">By Maine Dispensary Guide Editorial Team. Direct property sources and the cited statute were reviewed on {reviewedDate}.</p>
+      <p class="last-updated">Published and last reviewed 2026-08-06</p>
+    </header>
+
+    <section class="answer-capsule" aria-labelledby="directory-answer">
+      <h2 id="directory-answer">Start with the property’s own policy</h2>
+      <p>Being 21+ and staying on private property does not itself create permission. Under <a href="https://www.mainelegislature.org/legis/statutes/28-B/title28-Bsec1501.html" rel="noopener noreferrer">28-B M.R.S. §1501</a>, an adult may consume cannabis at a private residence or on private property that is not generally accessible to the public only when the owner explicitly permits it. Read the rules and confirm the current policy in writing before booking.</p>
+    </section>
+
+    <section aria-labelledby="stays-title">
+      <p class="eyebrow">Verified first release</p>
+      <h2 id="stays-title">Three Maine stays with direct policy statements</h2>
+      <p>Inclusion is editorial, not paid placement. MDG does not rank these properties, publish availability or pricing, or infer permission from a third-party marketplace label.</p>
+      <div class="directory-grid">
+        {stays.map((stay) => (
+          <article class="stay-card">
+            <p class="eyebrow">{stay.type}</p>
+            <h3>{stay.name}</h3>
+            <p class="stay-meta">{stay.place}</p>
+            <p class="policy"><strong>What the property publishes:</strong> {stay.policy}</p>
+            <p><strong>Before you book:</strong> {stay.note}</p>
+            <a class="stay-link" href={stay.source} rel="noopener noreferrer">Read the property’s source <span aria-hidden="true">→</span></a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="law-note" aria-labelledby="law-title">
+      <h2 id="law-title">The rule that applies to every listing</h2>
+      <p>The property’s policy is only one part of the decision. Maine’s statute requires explicit owner permission and a setting not generally accessible to the public. Do not consume cannabis in a vehicle on a public way, and do not assume a shared parking area, public-facing common area, beach, trailhead, or a “smoking allowed” label qualifies.</p>
+      <p>For purchase, possession, vehicle, public-place, federal-land, and border rules, use MDG’s <a href="/blog/cannabis-friendly-maine-travel">Maine Cannabis Travel Guide</a>.</p>
+    </section>
+
+    <section aria-labelledby="booking-title">
+      <p class="eyebrow">A low-risk booking check</p>
+      <h2 id="booking-title">Ask before you arrive</h2>
+      <ol class="checklist">
+        <li>Is cannabis possession permitted during this stay?</li>
+        <li>Which form is permitted: smoking, vaping, or non-smoked products only?</li>
+        <li>What exact outdoor or private location is permitted?</li>
+        <li>Are there quiet-hour, fire-safety, event, cleaning-fee, lease, or neighbor restrictions?</li>
+        <li>Can the host or property manager confirm the current policy in writing?</li>
+      </ol>
+    </section>
+
+    <section class="method-note" aria-labelledby="method-title">
+      <h2 id="method-title">How this directory is maintained</h2>
+      <p>MDG lists properties only when a direct property-published page makes a clear cannabis-permission statement. We do not treat search snippets, review sites, “smoking friendly” filters, or old media coverage as sufficient evidence. Property policies change; a listing is not a promise of permission. Send a correction through our <a href="/about/corrections">Editorial Corrections Log</a>.</p>
+    </section>
+
+    <Faq items={faqs} />
+
+    <p class="source-caption"><strong>Primary legal source:</strong> <a href="https://www.mainelegislature.org/legis/statutes/28-B/title28-Bsec1501.html" rel="noopener noreferrer">28-B M.R.S. §1501</a>. Property-policy sources are linked from each listing and last checked {reviewedDate}.</p>
+
+    <AutoRelated currentPath="/blog/maine-cannabis-friendly-stays" currentTopics={topics} section="Lifestyle & Travel" limit={6} />
+  </article>
+</Layout>
