@@ -26,11 +26,6 @@ const releaseSurfacesSource = path.join(ROOT, 'scripts', 'git', 'release-governa
 const dataOnlyAssertSource = path.join(ROOT, 'apps', 'maine-cannabis', 'scripts', 'analytics', 'data-only-assert.cjs');
 const verifierArgs = [
   'scripts/git/pre-push-verify.cjs',
-  '--skip-sitemap-postprocess',
-  '--skip-docs-vs-code',
-  '--skip-compressed-frontmatter',
-  '--skip-hero-image-naming',
-  '--skip-autoRelated-freshness',
 ];
 function localGitEnvironmentNames() {
   return execFileSync('git', ['rev-parse', '--local-env-vars'], { cwd: ROOT, encoding: 'utf8' })
@@ -92,6 +87,16 @@ function writeVerifierFixture(repo, { defaultDiffSuiteSource = null, governanceS
   fs.copyFileSync(verifierSource, path.join(repo, 'scripts', 'git', 'pre-push-verify.cjs'));
   fs.copyFileSync(releaseSurfacesSource, path.join(repo, 'scripts', 'git', 'release-governance-surfaces.cjs'));
   fs.copyFileSync(dataOnlyAssertSource, path.join(repo, 'apps', 'maine-cannabis', 'scripts', 'analytics', 'data-only-assert.cjs'));
+  for (const relativePath of [
+    'scripts/check/sitemap-postprocess.test.mjs',
+    'scripts/check/docs-vs-code.cjs',
+    'scripts/check/check-compressed-frontmatter.cjs',
+    'apps/maine-cannabis/scripts/image/check-hero-naming.cjs',
+  ]) {
+    const destination = path.join(repo, relativePath);
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    fs.writeFileSync(destination, 'process.exit(0);\n');
+  }
   if (defaultDiffSuiteSource !== null) {
     fs.writeFileSync(path.join(repo, 'scripts', 'git', 'tests', 'pre-push-verify-default-diff-base.test.cjs'), defaultDiffSuiteSource);
   }

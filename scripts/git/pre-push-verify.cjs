@@ -215,11 +215,6 @@ const KNOWN_FLAGS = new Set([
     '--with-smoke',
     '--skip-smoke-200',
     '--skip-smoke-img-200',
-    '--skip-autoRelated-freshness',
-    '--skip-sitemap-postprocess',
-    '--skip-docs-vs-code',
-    '--skip-compressed-frontmatter',
-    '--skip-hero-image-naming',
 ]);
 
 function parseCliArgs(args) {
@@ -1129,17 +1124,13 @@ function main() {
     // job here is to fail closed if the data file is missing or stale
     // relative to changed pages.
     //
-    // The check is treated as a maintained gate; `--skip-autoRelated-freshness`
-    // is the documented bypass for legacy or test-only invocations.
-    if (!args.includes('--skip-autoRelated-freshness')) {
-        const autoRelatedFreshness = autoRelatedFreshnessCheck(files);
-        if (autoRelatedFreshness.error) {
-            console.log(`    ${autoRelatedFreshness.error}`);
-            log('err', 'autoRelated-freshness: required check absent or stale — push blocked. Run the dedicated regen-and-stage step before committing, do not bypass.');
-            process.exit(13);
-        }
-    } else {
-        log('info', 'autoRelated-freshness skipped (--skip-autoRelated-freshness)');
+    // The check is maintained and has no public bypass: it must fail closed
+    // when the generated registry is absent or stale.
+    const autoRelatedFreshness = autoRelatedFreshnessCheck(files);
+    if (autoRelatedFreshness.error) {
+        console.log(`    ${autoRelatedFreshness.error}`);
+        log('err', 'autoRelated-freshness: required check absent or stale — push blocked. Run the dedicated regen-and-stage step before committing.');
+        process.exit(13);
     }
 
     const fast = fastParseCheck(files);
@@ -1210,33 +1201,17 @@ function main() {
         log('info', 'smoke-img-200 skipped (default; pass --with-smoke + MDG_PREVIEW_URL to enable preview smoke)');
     }
 
-    if (!args.includes('--skip-sitemap-postprocess')) {
-        const smChk = sitemapPostprocessCheck();
-        if (!smChk.ok) process.exit(6);
-    } else {
-        log('info', 'sitemap-postprocess skipped (--skip-sitemap-postprocess)');
-    }
+    const smChk = sitemapPostprocessCheck();
+    if (!smChk.ok) process.exit(6);
 
-    if (!args.includes('--skip-docs-vs-code')) {
-        const dvc = docsVsCodeCheck();
-        if (!dvc.ok) process.exit(7);
-    } else {
-        log('info', 'docs-vs-code skipped (--skip-docs-vs-code)');
-    }
+    const dvc = docsVsCodeCheck();
+    if (!dvc.ok) process.exit(7);
 
-    if (!args.includes('--skip-compressed-frontmatter')) {
-        const cf = compressedFrontmatterCheck();
-        if (!cf.ok) process.exit(8);
-    } else {
-        log('info', 'compressed-frontmatter skipped (--skip-compressed-frontmatter)');
-    }
+    const cf = compressedFrontmatterCheck();
+    if (!cf.ok) process.exit(8);
 
-    if (!args.includes('--skip-hero-image-naming')) {
-        const hin = heroImageNamingCheck();
-        if (!hin.ok) process.exit(9);
-    } else {
-        log('info', 'hero-image-naming skipped (--skip-hero-image-naming)');
-    }
+    const hin = heroImageNamingCheck();
+    if (!hin.ok) process.exit(9);
 
     log('ok', 'pre-push verify: clean. Proceed with push.');
     process.exit(0);

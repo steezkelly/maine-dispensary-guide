@@ -30,11 +30,6 @@ function runPrePush(env = {}, extraArgs = []) {
     [
       'scripts/git/pre-push-verify.cjs',
       ...extraArgs,
-      '--skip-sitemap-postprocess',
-      '--skip-docs-vs-code',
-      '--skip-compressed-frontmatter',
-      '--skip-hero-image-naming',
-      '--skip-autoRelated-freshness',
     ],
     { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } },
   );
@@ -73,7 +68,7 @@ try {
     "#!/usr/bin/env node\nconsole.error('\\u001b[96msrc/pages/guides/index.astro\\u001b[0m:12:5 - error ts(2322): Type number is not assignable to string.');\nprocess.exit(1);\n",
     { mode: 0o755 },
   );
-  const astroFixture = path.join(ROOT, 'apps/maine-cannabis/src/pages/blog/index.astro');
+  const astroFixture = path.join(ROOT, 'apps/maine-cannabis/src/layouts/Layout.astro');
   withFixture(astroFixture, '---\nconst title = \'Fixture\';\n---\n<h1>{title}</h1>\n', () => {
     const result = runPrePush({ PATH: `${binDir}${path.delimiter}${process.env.PATH}` }, ['--ref=HEAD']);
     const output = (result.stdout || '') + (result.stderr || '');
