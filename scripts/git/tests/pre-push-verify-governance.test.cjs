@@ -126,6 +126,24 @@ function readFileSafe(file) {
   try { return fs.readFileSync(file, 'utf8'); } catch { return ''; }
 }
 
+function writeMaintainedCheckerStubs(root, { withAutoRelated = false } = {}) {
+  const stubs = {
+    'scripts/check/sitemap-postprocess.test.mjs': 'process.exit(0);\n',
+    'scripts/check/docs-vs-code.cjs': 'process.exit(0);\n',
+    'scripts/check/check-compressed-frontmatter.cjs': 'process.exit(0);\n',
+    'apps/maine-cannabis/scripts/image/check-hero-naming.cjs': 'process.exit(0);\n',
+  };
+  if (withAutoRelated) {
+    stubs['apps/maine-cannabis/src/data/autoRelatedData.json'] = '{}\n';
+    stubs['scripts/data/regen-auto-related.cjs'] = "if (process.argv.includes('--stdout')) process.stdout.write('{}\\n');\n";
+  }
+  for (const [relativePath, content] of Object.entries(stubs)) {
+    const destination = path.join(root, relativePath);
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    fs.writeFileSync(destination, content);
+  }
+}
+
 function containsNoVerifyToken(source) {
   const normalized = String(source)
     .replace(/\\\r?\n/g, '')
@@ -326,7 +344,7 @@ function testExactRangeArgumentsFailClosedAndUseBaseToHead() {
       return;
     }
 
-    const commonArgs = ['--fast-only', '--skip-autoRelated-freshness'];
+    const commonArgs = ['--fast-only'];
     const invalidCases = [
       ['--ref=refs/heads/definitely-missing', ...commonArgs],
       ['--ref=', ...commonArgs],
@@ -405,6 +423,7 @@ function testMissingEsbuildUsesEnvironmentExitCode() {
     fs.copyFileSync(VERIFIER, verifierPath);
     fs.copyFileSync(SURFACE_INVENTORY, inventoryPath);
     fs.copyFileSync(path.join(ROOT, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs'), dataOnlyAssertPath);
+    writeMaintainedCheckerStubs(tempRoot, { withAutoRelated: true });
     fs.writeFileSync(astroPath, "---\nconst title = 'baseline';\n---\n<h1>{title}</h1>\n");
 
     const gitCommands = [
@@ -426,7 +445,6 @@ function testMissingEsbuildUsesEnvironmentExitCode() {
     fs.writeFileSync(astroPath, "---\nconst title = 'changed';\n---\n<h1>{title}</h1>\n");
     const result = spawnSync('node', [
       'scripts/git/pre-push-verify.cjs',
-      '--skip-autoRelated-freshness',
       '--fast-only',
     ], { cwd: tempRoot, encoding: 'utf8' });
     const output = `${result.stdout || ''}${result.stderr || ''}`;
@@ -852,6 +870,7 @@ function testPublicVerifierSeesDeletedRequiredInputs() {
     fs.copyFileSync(VERIFIER, verifierPath);
     fs.copyFileSync(SURFACE_INVENTORY, inventoryPath);
     fs.copyFileSync(path.join(ROOT, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs'), dataOnlyAssertPath);
+    writeMaintainedCheckerStubs(tempRoot);
     fs.writeFileSync(heroCheckerPath, "process.exit(0);\n");
     fs.writeFileSync(dataPath, '{}\n');
 
@@ -874,10 +893,6 @@ function testPublicVerifierSeesDeletedRequiredInputs() {
     fs.rmSync(heroCheckerPath);
     const heroResult = spawnSync('node', [
       'scripts/git/pre-push-verify.cjs',
-      '--skip-autoRelated-freshness',
-      '--skip-sitemap-postprocess',
-      '--skip-docs-vs-code',
-      '--skip-compressed-frontmatter',
     ], { cwd: tempRoot, encoding: 'utf8' });
     const heroOutput = `${heroResult.stdout || ''}${heroResult.stderr || ''}`;
 
@@ -913,12 +928,7 @@ function testPublicVerifierSeesRenamedRequiredInputs() {
       source: 'apps/maine-cannabis/scripts/image/check-hero-naming.cjs',
       destination: 'apps/maine-cannabis/scripts/image/check-hero-naming-retired.cjs',
       expectedStatus: 9,
-      args: [
-        '--skip-autoRelated-freshness',
-        '--skip-sitemap-postprocess',
-        '--skip-docs-vs-code',
-        '--skip-compressed-frontmatter',
-      ],
+      args: [],
     },
     {
       source: 'apps/maine-cannabis/src/data/autoRelatedData.json',
@@ -930,7 +940,7 @@ function testPublicVerifierSeesRenamedRequiredInputs() {
       source: '.githooks/pre-push',
       destination: '.githooks/pre-push-retired',
       expectedStatus: 16,
-      args: ['--fast-only', '--skip-autoRelated-freshness'],
+      args: ['--fast-only'],
     },
   ];
 
@@ -955,6 +965,7 @@ function testPublicVerifierSeesRenamedRequiredInputs() {
         fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
         fs.writeFileSync(absolutePath, content);
       }
+      writeMaintainedCheckerStubs(tempRoot);
       const setup = [
         ['init', '-q'],
         ['config', 'user.name', 'Governance Contract'],
@@ -1250,7 +1261,7 @@ function verifierRunsBlockingGovernanceFirst(verifier) {
   const callNeedle = 'const governance = governanceCheck(files);';
   const blockNeedle = 'if (!governance.ok) process.exit(16);';
   const callIndex = mainBody.indexOf(callNeedle);
-  const freshnessIndex = mainBody.indexOf("if (!args.includes('--skip-autoRelated-freshness'))");
+  const freshnessIndex = mainBody.indexOf('const autoRelatedFreshness = autoRelatedFreshnessCheck(files);');
   const callCount = [...mainBody.matchAll(/\bgovernanceCheck\(files\)/g)].length;
   const blockingPair = new RegExp(`${callNeedle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*${blockNeedle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)
     .test(mainBody);
@@ -1594,6 +1605,61 @@ function testActiveReleaseCommandsUseShellSafePlaceholders() {
 // ----------------------------------------------------------------------------
 // Merge-command head binding (OPS-06B-P1.1 / t_f7d0ec21)
 // ----------------------------------------------------------------------------
+function testMaintainedGateSkipFlagsAreRejectedByPublicCli() {
+  const maintainedSkips = [
+    '--skip-autoRelated-freshness',
+    '--skip-sitemap-postprocess',
+    '--skip-docs-vs-code',
+    '--skip-compressed-frontmatter',
+    '--skip-hero-image-naming',
+  ];
+  const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mdg-maintained-skip-fixture-'));
+  const accepted = [];
+  try {
+    const fixtureVerifier = path.join(fixtureRoot, 'scripts/git/pre-push-verify.cjs');
+    const fixtureInventory = path.join(fixtureRoot, 'scripts/git/release-governance-surfaces.cjs');
+    const fixtureDataOnly = path.join(fixtureRoot, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs');
+    fs.mkdirSync(path.dirname(fixtureVerifier), { recursive: true });
+    fs.mkdirSync(path.dirname(fixtureDataOnly), { recursive: true });
+    fs.copyFileSync(VERIFIER, fixtureVerifier);
+    fs.copyFileSync(SURFACE_INVENTORY, fixtureInventory);
+    fs.copyFileSync(path.join(ROOT, 'apps/maine-cannabis/scripts/analytics/data-only-assert.cjs'), fixtureDataOnly);
+    fs.writeFileSync(path.join(fixtureRoot, 'package.json'), JSON.stringify({ workspaces: [] }));
+    for (const args of [
+      ['init', '-q'],
+      ['config', 'user.name', 'Maintained gate fixture'],
+      ['config', 'user.email', 'fixture@example.invalid'],
+      ['add', '.'],
+      ['commit', '-qm', 'fixture baseline'],
+    ]) {
+      const setup = spawnSync('git', args, { cwd: fixtureRoot, encoding: 'utf8' });
+      if (setup.status !== 0) throw new Error(setup.stderr || setup.stdout || `git ${args.join(' ')} failed`);
+    }
+    for (const flag of maintainedSkips) {
+      const result = spawnSync('node', [
+        'scripts/git/pre-push-verify.cjs',
+        '--fast-only',
+        '--ref=HEAD',
+        flag,
+      ], { cwd: fixtureRoot, encoding: 'utf8', timeout: 120_000 });
+      const output = (result.stdout || '') + (result.stderr || '');
+      if (result.status === 0 || !/Unknown option/.test(output)) {
+        accepted.push(`${flag} (exit ${result.status})`);
+      }
+    }
+  } catch (error) {
+    accepted.push(`fixture setup failed: ${error.message}`);
+  } finally {
+    fs.rmSync(fixtureRoot, { recursive: true, force: true });
+  }
+  if (accepted.length > 0) {
+    logFail('maintained-check skip flags are rejected by the public verifier CLI',
+      `Maintained gates must not be bypassable. Accepted or misdiagnosed flags: ${accepted.join(', ')}.`);
+    return;
+  }
+  logPass('maintained-check skip flags are rejected by the public verifier CLI');
+}
+
 function testDocumentedMergeCommandRequiresMatchHeadCommit() {
   const docs = [
     'docs/governance/templates/mdg-integrator-checklist.md',
@@ -1657,6 +1723,7 @@ function runAll() {
   testContinuityGuidanceDoesNotFreezeOperationalTime();
   testMigrationNotesAndHookDescribeImplementedBehavior();
   testIntegratorChecklistClosesOutAfterProductionEvidence();
+  testMaintainedGateSkipFlagsAreRejectedByPublicCli();
   testDocumentedMergeCommandRequiresMatchHeadCommit();
   testActiveReleaseCommandsAreExecutable();
   testActiveReleaseCommandsUseShellSafePlaceholders();
