@@ -12,9 +12,9 @@
  *  - Theme toggle (calls window.toggleTheme() — defined in inline script below)
  *  - Dropdown click/keyboard handling (inline script — must run early)
  *
- * Mobile menu state is driven by a hidden checkbox + label hack (no JS
- * for show/hide — pure CSS, works with prefers-reduced-motion). Closing
- * the menu and Escape-key handling is also inline below.
+ * Mobile menu state is driven by a hidden checkbox + label hack. JavaScript
+ * synchronizes ARIA state and focus. Without JavaScript, the fallback below
+ * exposes the ordinary navigation instead of an open-only drawer.
  */
 
 import PineTree from '@network/ui/PineTree';
@@ -200,6 +200,69 @@ const siteName = siteConfig.siteName;
       <a href="/about">About</a>
     </div>
   </nav>
+  <noscript>
+    <style is:global>
+      @media (max-width: 768px) {
+        #site-nav {
+          flex-wrap: wrap !important;
+        }
+
+        #site-nav .nav-toggle-label,
+        #site-nav .nav-toggle,
+        #site-nav .mobile-close-btn {
+          display: none !important;
+        }
+
+        #site-nav .nav-links {
+          display: flex !important;
+          position: static !important;
+          inset: auto !important;
+          flex: 0 0 100% !important;
+          order: 3 !important;
+          box-sizing: border-box !important;
+          max-width: 100% !important;
+          flex-direction: column !important;
+          align-items: stretch !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+          transform: none !important;
+          width: 100% !important;
+          height: auto !important;
+          padding: 0.5rem 0 1rem !important;
+        }
+
+        #site-nav .nav-links a {
+          width: 100% !important;
+          max-width: 100% !important;
+          box-sizing: border-box !important;
+          opacity: 1 !important;
+          transform: none !important;
+        }
+
+        #site-nav .nav-dropdown .dropbtn {
+          display: none !important;
+        }
+
+        #site-nav .nav-dropdown,
+        #site-nav .nav-dropdown .dropdown-content,
+        #site-nav .nav-dropdown .dropdown-content.multi-column {
+          display: block !important;
+          position: static !important;
+          inset: auto !important;
+          top: auto !important;
+          right: auto !important;
+          bottom: auto !important;
+          left: auto !important;
+          transform: none !important;
+          min-width: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          box-sizing: border-box !important;
+        }
+      }
+    </style>
+  </noscript>
 </header>
 
 <script is:inline>
