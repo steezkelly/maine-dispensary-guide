@@ -100,6 +100,15 @@ node scripts/git/mdg-worktree-lease.cjs release --branch "$BRANCH_NAME" --worktr
 
 Feature agents push reviewed named branches. Only the integration worktree updates `origin/main`; it integrates one verified candidate at a time and performs the live-release check after deployment. A pushed branch is not a deployed release.
 
+### Live n8n state: record intent, never auto-revert unexplained state
+
+Before activating, deactivating, deleting, or reverting an n8n workflow, record the deliberate action in the private host ledger, then check it before any later restore action:
+```bash
+node scripts/operations/live-state-ledger.cjs record --workflow W14 --action activate --actor operator --reason "lead-email testing" --source n8n-cli
+node scripts/operations/live-state-ledger.cjs check --workflow W14
+```
+The ledger defaults to `~/.hermes/data/mdg-ops/live-state-ledger.jsonl` (or the absolute external `MDG_LIVE_STATE_LEDGER_PATH`) and deliberately rejects repository paths. A `check` with no recent entry exits non-zero: STOP and surface the unexplained state to the operator. The ledger records intent; it does not authorize an agent to change production state or substitute for a live-state read. Never auto-revert an unexplained activation/deactivation.
+
 ### Post-merge cleanup
 
 Run `npm run workflow:gc` from the repository root to dry-run a report of clean worktrees and local branches whose upstream pull requests merged at least seven days ago. It does not delete anything by default. Candidates must match the merged pull request's recorded head SHA, so a reused branch name is skipped rather than treated as historical work. `npm run workflow:gc:execute` removes only clean, SHA-matched merged-PR worktrees and deliberately force-deletes SHA-matched squash-merged local branches after the seven-day margin. Dirty worktrees are always skipped; inspect them and their live Kanban ownership instead of forcing cleanup.
