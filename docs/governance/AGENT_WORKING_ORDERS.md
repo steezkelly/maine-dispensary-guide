@@ -26,6 +26,21 @@ specific evidence record linked below. Never take a task merely because it is
 listed here: create/refresh a scoped Kanban contract, run preflight, and honor
 active leases.
 
+## Live n8n state safeguard
+
+Before any workflow activation, deactivation, deletion, or restore, record the
+intent in the private host ledger and check the workflow before acting:
+
+```bash
+node scripts/operations/live-state-ledger.cjs record --workflow W14 --action activate --actor operator --reason "lead-email testing" --source n8n-cli
+node scripts/operations/live-state-ledger.cjs check --workflow W14
+```
+
+The ledger is external to Git by design (`~/.hermes/data/mdg-ops/live-state-ledger.jsonl`
+by default). If `check` has no recent entry, it exits non-zero: do not infer
+that the observed state is rogue or restore a prior state. STOP, obtain the
+operator's intent, and record it before a later workflow mutation.
+
 ## Current ownership — do not duplicate
 
 | Workstream | Status | Owner / boundary | Next permitted action | Evidence |
