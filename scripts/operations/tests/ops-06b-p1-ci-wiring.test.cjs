@@ -100,12 +100,15 @@ test('Operations Suite job is its own job, distinct from the Astro Build job', (
   assert.ok(jobBlock(yaml, 'operations-suite'), 'dedicated operations-suite job must exist');
 });
 
-test('CI keeps candidate checks without duplicating the production release path', () => {
+test('CI keeps Vercel-App preview verification without a duplicate Vercel CLI deploy path', () => {
   const yaml = workflow();
-  for (const jobKey of ['build', 'deploy-preview', 'smoke-test-preview']) {
+  for (const jobKey of ['build', 'smoke-test-preview']) {
     assert.ok(jobBlock(yaml, jobKey), `${jobKey} job must remain present`);
   }
-  for (const jobKey of ['deploy-production', 'smoke-test-production']) {
+  for (const jobKey of ['deploy-preview', 'deploy-production', 'smoke-test-production']) {
     assert.equal(jobBlock(yaml, jobKey), null, `${jobKey} must not duplicate the Vercel App and post-deploy verifier`);
   }
+  const smokePreview = jobBlock(yaml, 'smoke-test-preview');
+  assert.ok(!/needs:\s*deploy-preview/.test(smokePreview), 'preview smoke must resolve the Vercel App preview directly');
+  assert.match(smokePreview, /resolve-preview-url\.cjs/, 'preview smoke must resolve the Vercel App preview URL');
 });
