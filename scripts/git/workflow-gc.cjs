@@ -47,11 +47,20 @@ function parseArgs(argv) {
 }
 
 function mergedBranches(olderThanDays) {
-  const rows = JSON.parse(output('gh', ['pr', 'list', '--state', 'merged', '--limit', '200', '--json', 'headRefName,mergedAt']));
+  const rows = JSON.parse(output('gh', ['pr', 'list', '--state', 'merged', '--limit', '200', '--json', 'headRefName,headRefOid,mergedAt']));
   const cutoff = Date.now() - olderThanDays * 24 * 60 * 60 * 1000;
   return new Map(rows
-    .filter((row) => row.headRefName && row.mergedAt && new Date(row.mergedAt).getTime() <= cutoff)
-    .map((row) => [row.headRefName, row.mergedAt]));
+    .filter((row) => row.headRefName && row.headRefOid && row.mergedAt && new Date(row.mergedAt).getTime() <= cutoff)
+    .map((row) => [row.headRefName, { headRefOid: row.headRefOid, mergedAt: row.mergedAt }]));
+}
+
+function refOid(ref, worktreePath) {
+  const args = worktreePath ? ['-C', worktreePath, 'rev-parse', 'HEAD'] : ['rev-parse', ref];
+  return output('git', args).trim();
+}
+
+function matchesMergedPullRequestHead(ref, details, worktreePath) {
+  return refOid(ref, worktreePath) === details.headRefOid;
 }
 
 function worktrees() {
@@ -82,10 +91,16 @@ function main() {
   const options = parseArgs(process.argv.slice(2));
   const merged = mergedBranches(options.olderThanDays);
   const entries = worktrees();
-  const stats = { worktreeCandidates: 0, worktreesRemoved: 0, dirtySkipped: 0, branchCandidates: 0, branchesDeleted: 0, squashSkipped: 0 };
+  const stats = { worktreeCandidates: 0, worktreesRemoved: 0, dirtySkipped: 0, unmatchedSkipped: 0, branchCandidates: 0, branchesDeleted: 0, squashSkipped: 0 };
 
   for (const entry of entries) {
-    if (!entry.branch || !merged.has(entry.branch)) continue;
+    const details = entry.branch && merged.get(entry.branch);
+    if (!details) continue;
+    if (!matchesMergedPullRequestHead(entry.branch, details, entry.path)) {
+      stats.unmatchedSkipped += 1;
+      process.stdout.write(`skipped worktree ${entry.path} (branch ${entry.branch} does not match merged pull-request head)\n`);
+      continue;
+    }
     if (!isClean(entry.path)) {
       stats.dirtySkipped += 1;
       process.stdout.write(`skipped dirty worktree ${entry.path} (branch ${entry.branch})\n`);
@@ -93,7 +108,7 @@ function main() {
     }
     stats.worktreeCandidates += 1;
     if (!options.execute) {
-      process.stdout.write(`would remove worktree ${entry.path} (branch ${entry.branch}, merged ${merged.get(entry.branch)})\n`);
+      process.stdout.write(`would remove worktree ${entry.path} (branch ${entry.branch}, merged ${details.mergedAt})\n`);
       continue;
     }
     run('git', ['worktree', 'remove', entry.path]);
@@ -105,10 +120,16 @@ function main() {
 
   const activeBranches = checkedOutBranches(worktrees());
   for (const branch of localBranches()) {
-    if (!merged.has(branch) || activeBranches.has(branch)) continue;
+    const details = merged.get(branch);
+    if (!details || activeBranches.has(branch)) continue;
+    if (!matchesMergedPullRequestHead(branch, details)) {
+      stats.unmatchedSkipped += 1;
+      process.stdout.write(`skipped branch ${branch} (current tip does not match merged pull-request head)\n`);
+      continue;
+    }
     stats.branchCandidates += 1;
     if (!options.execute) {
-      process.stdout.write(`would delete merged branch ${branch} (merged ${merged.get(branch)})\n`);
+      process.stdout.write(`would delete merged branch ${branch} (merged ${details.mergedAt})\n`);
       continue;
     }
     const deletion = run('git', ['branch', '-d', branch], { allowFailure: true });
@@ -126,7 +147,7 @@ function main() {
   }
 
   const mode = options.execute ? 'execute' : 'dry-run';
-  process.stdout.write(`summary (${mode}): worktrees: ${stats.worktreeCandidates} candidate, ${stats.worktreesRemoved} removed, ${stats.dirtySkipped} dirty skipped; branches: ${stats.branchCandidates} candidate, ${stats.branchesDeleted} deleted, ${stats.squashSkipped} require --force-merged\n`);
+  process.stdout.write(`summary (${mode}): worktrees: ${stats.worktreeCandidates} candidate, ${stats.worktreesRemoved} removed, ${stats.dirtySkipped} dirty skipped, ${stats.unmatchedSkipped} ref-mismatch skipped; branches: ${stats.branchCandidates} candidate, ${stats.branchesDeleted} deleted, ${stats.squashSkipped} require --force-merged\n`);
 }
 
 try {

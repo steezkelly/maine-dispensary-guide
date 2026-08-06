@@ -102,7 +102,7 @@ Feature agents push reviewed named branches. Only the integration worktree updat
 
 ### Post-merge cleanup
 
-Run `npm run workflow:gc` from the repository root to dry-run a report of clean worktrees and local branches whose upstream pull requests merged at least seven days ago. It does not delete anything by default. `npm run workflow:gc:execute` removes only clean merged-PR worktrees and deliberately force-deletes squash-merged local branches after the seven-day margin. Dirty worktrees are always skipped; inspect them and their live Kanban ownership instead of forcing cleanup.
+Run `npm run workflow:gc` from the repository root to dry-run a report of clean worktrees and local branches whose upstream pull requests merged at least seven days ago. It does not delete anything by default. Candidates must match the merged pull request's recorded head SHA, so a reused branch name is skipped rather than treated as historical work. `npm run workflow:gc:execute` removes only clean, SHA-matched merged-PR worktrees and deliberately force-deletes SHA-matched squash-merged local branches after the seven-day margin. Dirty worktrees are always skipped; inspect them and their live Kanban ownership instead of forcing cleanup.
 
 **File-scoped validation (use for one-off checks, not iteration):**
 ```bash

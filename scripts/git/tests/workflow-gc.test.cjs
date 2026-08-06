@@ -33,13 +33,31 @@ function makeFixture() {
   run('git', ['commit', '-m', 'fixture branch-only change'], worktree);
 
   const gh = path.join(bin, 'gh');
+  const headRefOid = run('git', ['rev-parse', 'feature/merged'], root).trim();
   fs.writeFileSync(
     gh,
-    '#!/usr/bin/env node\nprocess.stdout.write(JSON.stringify([{headRefName: "feature/merged", mergedAt: "2026-01-01T00:00:00Z"}]));\n',
+    `#!/usr/bin/env node\nprocess.stdout.write(JSON.stringify([{headRefName: "feature/merged", headRefOid: "${headRefOid}", mergedAt: "2026-01-01T00:00:00Z"}]));\n`,
     { mode: 0o755 },
   );
 
-  return { root, worktree, bin };
+  return { root, worktree, bin, gh };
+}
+
+function makeReusedBranchFixture() {
+  const fixture = makeFixture();
+  const worktree = path.join(fixture.root, 'reused-live-worktree');
+  const oldMergedHead = run('git', ['rev-parse', 'main'], fixture.root).trim();
+  run('git', ['branch', 'feature/reused', oldMergedHead], fixture.root);
+  run('git', ['worktree', 'add', worktree, 'feature/reused'], fixture.root);
+  fs.writeFileSync(path.join(worktree, 'new-live-work.txt'), 'this branch reuses an old merged PR name\n');
+  run('git', ['add', 'new-live-work.txt'], worktree);
+  run('git', ['commit', '-m', 'new unmerged branch reusing a PR name'], worktree);
+  fs.writeFileSync(
+    fixture.gh,
+    `#!/usr/bin/env node\nprocess.stdout.write(JSON.stringify([{headRefName: "feature/reused", headRefOid: "${oldMergedHead}", mergedAt: "2026-01-01T00:00:00Z"}]));\n`,
+    { mode: 0o755 },
+  );
+  return { ...fixture, worktree };
 }
 
 function runGc(fixture, args = []) {
@@ -76,6 +94,19 @@ test('execute never removes a dirty worktree, even when its branch is merged', (
     assert.match(result.stdout, /skipped dirty worktree .*merged-worktree/);
     assert.equal(fs.existsSync(fixture.worktree), true);
     assert.equal(fs.existsSync(path.join(fixture.worktree, 'WIP.txt')), true);
+  } finally {
+    cleanup(fixture.root);
+  }
+});
+
+test('execute preserves a clean unmerged worktree when its branch name was reused by an old merged PR', () => {
+  const fixture = makeReusedBranchFixture();
+  try {
+    const result = runGc(fixture, ['--execute', '--older-than-days', '0']);
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /skipped worktree .*reused-live-worktree.*does not match merged pull-request head/);
+    assert.equal(fs.existsSync(fixture.worktree), true);
+    assert.equal(fs.existsSync(path.join(fixture.worktree, 'new-live-work.txt')), true);
   } finally {
     cleanup(fixture.root);
   }
