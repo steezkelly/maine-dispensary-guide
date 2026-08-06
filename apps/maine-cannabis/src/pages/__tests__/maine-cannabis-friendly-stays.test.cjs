@@ -24,6 +24,11 @@ test('directory preserves the legal condition, review date, and visitor confirma
   assert.match(page, /confirm[^.]{0,80}(?:policy|permission)[^.]{0,80}(?:in writing|written)/i, 'must tell visitors to confirm current policy in writing');
 });
 
+test('directory keeps private residences separate from owner-permitted private property', () => {
+  assert.match(page, /private residence, including its curtilage, or on private property that is not generally accessible to the public and where the owner explicitly permits consumption/i);
+  assert.doesNotMatch(page, /private residence[^.]{0,160}only when the owner explicitly permits/i);
+});
+
 test('directory uses an honest selective-directory contract', () => {
   assert.match(page, /selective first-release directory/i);
   assert.match(page, /not paid placement/i);
