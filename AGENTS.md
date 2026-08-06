@@ -100,6 +100,10 @@ node scripts/git/mdg-worktree-lease.cjs release --branch "$BRANCH_NAME" --worktr
 
 Feature agents push reviewed named branches. Only the integration worktree updates `origin/main`; it integrates one verified candidate at a time and performs the live-release check after deployment. A pushed branch is not a deployed release.
 
+### Post-merge cleanup
+
+Run `npm run workflow:gc` from the repository root to dry-run a report of clean worktrees and local branches whose upstream pull requests merged at least seven days ago. It does not delete anything by default. `npm run workflow:gc:execute` removes only clean merged-PR worktrees and deliberately force-deletes squash-merged local branches after the seven-day margin. Dirty worktrees are always skipped; inspect them and their live Kanban ownership instead of forcing cleanup.
+
 **File-scoped validation (use for one-off checks, not iteration):**
 ```bash
 npx astro check src/pages/guides/example.astro   # Type check single file
