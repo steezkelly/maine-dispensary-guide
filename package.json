@@ -42,6 +42,8 @@
     "workflow:status": "node scripts/git/mdg-worktree-status.cjs --assert-no-conflicts",
     "workflow:status:fetch": "node scripts/git/mdg-worktree-status.cjs --fetch --assert-no-conflicts",
     "workflow:status:json": "node scripts/git/mdg-worktree-status.cjs --json",
+    "workflow:gc": "node scripts/git/workflow-gc.cjs --dry-run",
+    "workflow:gc:execute": "node scripts/git/workflow-gc.cjs --execute --force-merged",
     "workflow:lease": "node scripts/git/mdg-worktree-lease.cjs",
     "workflow:bootstrap": "node scripts/git/mdg-worktree-bootstrap.cjs",
     "workflow:preflight": "node scripts/git/mdg-worktree-status.cjs --fetch --assert-no-conflicts",
