@@ -80,6 +80,41 @@ test('check returns the most recent unexpired intentional change for a workflow'
   }
 });
 
+test('check rejects forged or future ledger rows instead of treating them as authorizing intent', () => {
+  const fixture = makeFixture();
+  try {
+    fs.mkdirSync(path.dirname(fixture.ledgerPath), { recursive: true });
+    fs.writeFileSync(fixture.ledgerPath, '{"workflow":"W14","timestamp":"2999-01-01T00:00:00.000Z"}\n');
+
+    const result = run(['check', '--workflow', 'W14', '--max-age-hours', '24'], fixture.ledgerPath);
+    assert.equal(result.status, 1);
+    assert.deepEqual(JSON.parse(result.stdout), { outcome: 'no-recent-entry', workflow: 'W14' });
+  } finally {
+    cleanup(fixture.root);
+  }
+});
+
+test('record rejects an external hard-link alias of a repository file', () => {
+  const fixture = makeFixture();
+  const repositoryTemp = path.join(REPO_ROOT, '.live-state-ledger-hardlink-test.jsonl');
+  const externalAlias = path.join(fixture.root, 'hard-link-ledger.jsonl');
+  try {
+    fs.writeFileSync(repositoryTemp, 'sentinel\n');
+    fs.linkSync(repositoryTemp, externalAlias);
+
+    const result = run([
+      'record', '--workflow', 'W14', '--action', 'activate', '--actor', 'operator',
+      '--reason', 'Must not write through an inode alias', '--source', 'ui',
+    ], externalAlias);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /LIVE_STATE_LEDGER_PATH_(INSIDE_REPO|HARDLINKED)/);
+    assert.equal(fs.readFileSync(repositoryTemp, 'utf8'), 'sentinel\n');
+  } finally {
+    fs.rmSync(repositoryTemp, { force: true });
+    cleanup(fixture.root);
+  }
+});
+
 test('check fails closed for an unexplained workflow and tail is read-only', () => {
   const fixture = makeFixture();
   try {

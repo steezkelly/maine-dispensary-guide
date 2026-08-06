@@ -79,16 +79,50 @@ function resolveLedgerPath(env = process.env) {
   return canonical;
 }
 
+function assertPrivateRegularFile(ledgerPath) {
+  if (!fs.existsSync(ledgerPath)) return;
+  const stat = fs.lstatSync(ledgerPath);
+  if (!stat.isFile()) fail('LIVE_STATE_LEDGER_PATH_NOT_REGULAR_FILE');
+  // A hard link cannot be recognized through realpath. Reject every linked
+  // inode rather than risk appending to a repository file through an alias.
+  if (stat.nlink !== 1) fail('LIVE_STATE_LEDGER_PATH_HARDLINKED');
+}
+
 function ensurePrivatePath(ledgerPath) {
   const directory = path.dirname(ledgerPath);
   fs.mkdirSync(directory, { recursive: true, mode: 0o700 });
   fs.chmodSync(directory, 0o700);
-  if (!fs.existsSync(ledgerPath)) fs.closeSync(fs.openSync(ledgerPath, 'a', 0o600));
-  fs.chmodSync(ledgerPath, 0o600);
+  assertPrivateRegularFile(ledgerPath);
+  const fd = fs.openSync(ledgerPath, fs.constants.O_APPEND | fs.constants.O_CREAT | fs.constants.O_WRONLY | fs.constants.O_NOFOLLOW, 0o600);
+  const stat = fs.fstatSync(fd);
+  if (!stat.isFile()) {
+    fs.closeSync(fd);
+    fail('LIVE_STATE_LEDGER_PATH_NOT_REGULAR_FILE');
+  }
+  if (stat.nlink !== 1) {
+    fs.closeSync(fd);
+    fail('LIVE_STATE_LEDGER_PATH_HARDLINKED');
+  }
+  fs.fchmodSync(fd, 0o600);
+  return fd;
+}
+
+function isValidEntry(entry, now = Date.now()) {
+  if (!entry || typeof entry !== 'object') return false;
+  if (typeof entry.id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(entry.id)) return false;
+  if (typeof entry.timestamp !== 'string') return false;
+  const timestamp = Date.parse(entry.timestamp);
+  if (!Number.isFinite(timestamp) || timestamp > now) return false;
+  if (typeof entry.workflow !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(entry.workflow)) return false;
+  if (!ACTIONS.has(entry.action)) return false;
+  if (typeof entry.actor !== 'string' || !/^(operator|agent:[A-Za-z0-9._:-]{1,128})$/.test(entry.actor)) return false;
+  if (typeof entry.reason !== 'string' || !entry.reason.trim() || entry.reason.length > 1000) return false;
+  return SOURCES.has(entry.source);
 }
 
 function readEntries(ledgerPath) {
   if (!fs.existsSync(ledgerPath)) return [];
+  assertPrivateRegularFile(ledgerPath);
   const contents = fs.readFileSync(ledgerPath, 'utf8').trim();
   if (!contents) return [];
   return contents.split('\n').map((line, index) => {
@@ -135,7 +169,7 @@ function record(args, ledgerPath) {
   if (!SOURCES.has(source)) fail('LIVE_STATE_LEDGER_INVALID_SOURCE');
   if (reason.length > 1000) fail('LIVE_STATE_LEDGER_REASON_TOO_LONG');
 
-  ensurePrivatePath(ledgerPath);
+  const fd = ensurePrivatePath(ledgerPath);
   const entry = {
     id: crypto.randomUUID(),
     timestamp: new Date().toISOString(),
@@ -145,8 +179,11 @@ function record(args, ledgerPath) {
     reason,
     source,
   };
-  fs.appendFileSync(ledgerPath, `${JSON.stringify(entry)}\n`, { encoding: 'utf8', mode: 0o600 });
-  fs.chmodSync(ledgerPath, 0o600);
+  try {
+    fs.writeSync(fd, `${JSON.stringify(entry)}\n`, null, 'utf8');
+  } finally {
+    fs.closeSync(fd);
+  }
   return { outcome: 'recorded', entry };
 }
 
@@ -155,8 +192,9 @@ function check(args, ledgerPath) {
   validateWorkflow(workflow);
   const maxAgeHours = parsePositiveInteger(args['max-age-hours'], 'LIVE_STATE_LEDGER_INVALID_MAX_AGE_HOURS', 24);
   const cutoff = Date.now() - (maxAgeHours * 60 * 60 * 1000);
+  const now = Date.now();
   const entry = readEntries(ledgerPath)
-    .filter((candidate) => candidate.workflow === workflow && Number.isFinite(Date.parse(candidate.timestamp)) && Date.parse(candidate.timestamp) >= cutoff)
+    .filter((candidate) => isValidEntry(candidate, now) && candidate.workflow === workflow && Date.parse(candidate.timestamp) >= cutoff)
     .sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp))[0];
   return entry ? { outcome: 'recent-entry', entry } : { outcome: 'no-recent-entry', workflow };
 }
