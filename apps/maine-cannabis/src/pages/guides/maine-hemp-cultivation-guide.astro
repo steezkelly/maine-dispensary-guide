@@ -1,0 +1,420 @@
+---
+import AutoRelated from '../../components/AutoRelated.astro';
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+
+const article = {
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  reviewer: { name: "Margaret Finch", jobTitle: "Finance & Taxation Analyst", id: "margaret-finch" },
+  authorTitle: "Licensing & Compliance Analyst",
+  publishDate: "2026-08-06",
+  modifiedDate: "2026-08-06",
+  section: "Compliance & Legal"
+};
+const topics = ["compliance", "licensing"];
+
+const hempFaqs = [
+  {
+    question: "Do I need a license to grow hemp in Maine?",
+    answer: "Yes. The Maine Department of Agriculture, Conservation and Forestry (DACF) is the licensing authority for growing hemp in Maine under its USDA-approved hemp production plan. Growing hemp for commercial purposes requires a one-year grower license issued by DACF under Title 7 M.R.S. §2231. A person may plant, grow, harvest, possess, process, sell, and buy hemp only if that person holds a grower license."
+  },
+  {
+    question: "What agency regulates hemp in Maine?",
+    answer: "The Maine Department of Agriculture, Conservation and Forestry (DACF) licenses and regulates the growing of hemp. DACF does not license or regulate high-THC cannabis (marijuana), which falls under the Maine Office of Cannabis Policy (OCP). DACF also does not regulate the processing of hemp and keeps no list of processors or markets."
+  },
+  {
+    question: "What is the hemp THC limit in Maine?",
+    answer: "All hemp licensed in Maine meets the USDA definition: total THC at or below 0.3% on a dry-weight basis. The Maine statute defines hemp as Cannabis sativa L. and its parts and derivatives with a delta-9-THC concentration of not more than 0.3% on a dry-weight basis, or as otherwise defined in federal law. Hemp containing higher levels of THC must be destroyed if remediation is not feasible, at the grower's expense."
+  },
+  {
+    question: "How much does a Maine hemp growing license cost?",
+    answer: "The DACF application fee is $100, non-refundable. License fees range from $100 (for seedlings, immature leafy greens, microgreens, or research uses) to $500 plus per-acre or per-square-foot charges for floral, viable seed, or other commercial uses, with a $250 tier for grain, fiber, and soil-remediation uses. The maximum license fee for one agreement is $20,000. Fees cover program costs including inspections, sampling, and lab analysis."
+  },
+  {
+    question: "Do Maine hemp growers need a criminal background check?",
+    answer: "Yes. USDA requires anyone applying for a hemp growing license to request an FBI criminal history report (Identity History Summary Check) and submit it to the hemp licensing authority. A person with a state or federal felony conviction relating to a controlled substance may not grow hemp for 10 years from the date of conviction, unless they were lawfully producing hemp under section 7606 of the 2014 Farm Bill before December 20, 2018 and the conviction also occurred before that date. Background checks apply to grower licensees and all key participants."
+  },
+  {
+    question: "What is a key participant for Maine hemp licensing?",
+    answer: "Under Title 7 M.R.S. §2231, a key participant is a person with a direct or indirect financial interest in an entity producing hemp, such as an owner or partner in a partnership, and includes corporate executives such as a chief executive officer, chief operating officer, and chief financial officer. It does not include other management positions such as farm, field, or shift managers. Background checks and fees apply to grower licensees and all key participants."
+  },
+  {
+    question: "What reports do Maine hemp growers have to file?",
+    answer: "Within 14 days after planting, a grower must submit a planting report to DACF listing the varieties planted and confirming the seed or clones meet the hemp definition, and must also report the crop to the USDA Farm Service Agency (FSA) using Form FSA-578 Report of Acreage. Growers must notify DACF 30 days before harvest if the crop has not yet been sampled, and complete a post-harvest report. FSA lot codes must be added to the DACF planting report or the crop cannot be sampled and tested."
+  },
+  {
+    question: "Can I sell intoxicating or potentially intoxicating hemp products to anyone under 21 in Maine?",
+    answer: "No. Under PL 2025, c. 416 (effective June 24, 2025), a potentially intoxicating hemp product may not be sold to anyone under 21. Potentially intoxicating hemp products that are not beverages, salves, or topicals must be packaged in child-resistant and tamper-evident packaging, and labeling may not violate federal trademark law or cause reasonable consumer confusion."
+  },
+  {
+    question: "What is a potentially intoxicating hemp product?",
+    answer: "Maine statute (Title 7 M.R.S. §2231, subsection 1-A) defines a potentially intoxicating hemp product as a hemp-derived product or ingestible consumer product that, in final form, does not contain both a concentration of less than 0.3% potentially intoxicating cannabinoids and a ratio of more than 10:1 of nonintoxicating to potentially intoxicating cannabinoids. In practical terms, a finished product with 0.3% or more potentially intoxicating cannabinoids, or a low ratio of nonintoxicating to intoxicating cannabinoids, falls in this category. This category was added by PL 2025, c. 416."
+  },
+  {
+    question: "Is hemp tracked as medical or adult-use cannabis in Maine?",
+    answer: "No. Under Title 7 M.R.S. §2231, subsection 10, hemp and hemp-derived products may not be tracked as part of the medical cannabis program (Title 22, chapter 558-C) or the adult-use cannabis program (Title 28-B, chapter 1)."
+  },
+  {
+    question: "Did Maine pass a law to regulate intoxicating hemp under the adult-use cannabis program?",
+    answer: "No. The governor's bill LD 1983, which would have regulated intoxicating hemp-derived products under the adult-use cannabis laws, was withdrawn (Leave to Withdraw) on January 13, 2026 and placed in the legislative files as dead. Current Maine law instead regulates potentially intoxicating hemp products under Title 7 M.R.S. §2231 and related liquor-code provisions, not the adult-use cannabis program."
+  },
+  {
+    question: "How many hemp growers are licensed in Maine?",
+    answer: "Grower numbers have fluctuated. DACF's FY2024 annual report (submitted December 2025) recorded 12 final license agreements for the 2024 season across about 32 acres licensed, with about 5.75 acres actually planted. DACF publishes a current list of licensed growers for the active year on its hemp page, updated most recently on August 3, 2026. The program has noted it needs roughly 150-200 growers to be fully self-funding and could consider handing licensing to USDA if licensed growers fall below 50."
+  },
+  {
+    question: "What does the federal hemp definition change mean for Maine growers?",
+    answer: "The federal FY2026 Agriculture appropriations law signed in November 2025 reworks the federal definition of hemp and hemp-derived cannabinoid products toward a total-THC standard that is scheduled to take effect around November 2026, effectively banning intoxicating hemp in consumer products. DACF has noted this definition may also affect full-spectrum wellness products (tinctures, topicals) that are the core market for many Maine growers. The change is contested by pending bills (including H.R. 7024 and H.R. 7010) and is a federal watch item, not current Maine law. Maine's operative definition remains the 0.3% total-THC dry-weight standard in Title 7 M.R.S. §2231."
+  }
+];
+
+const faqPageJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": hempFaqs.map(f => ({
+    "@type": "Question",
+    "name": f.question,
+    "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+  }))
+});
+---
+
+<Layout
+  title="Maine Hemp Cultivation: Regulations & Licensing Guide"
+  description="Complete Maine hemp cultivation regulations and guidelines. DACF hemp grower licenses, fees, FBI background checks, FSA reporting, THC limits, potentially intoxicating hemp rules, and consumer guidance. Reviewed 2026-08-06."
+  heroImage="/images/heroes/maine-cannabis-regulations.jpg"
+  article={article}
+  topics={topics}
+>
+  <style>
+    article { max-width: 720px; margin: 0 auto; }
+    .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); }
+    .subtitle { font-size: 1.25rem; color: var(--color-text-light); }
+    section { margin-bottom: 2rem; }
+    section h2 { margin-top: 0; color: var(--color-text); font-family: var(--font-serif); }
+    section h3 { margin-top: 1.5rem; color: var(--color-text); font-family: var(--font-serif); }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+    th { background: var(--color-background); }
+    ul, ol { padding-left: 1.5rem; }
+    li { margin-bottom: 0.5rem; }
+    .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); }
+    .further-reading { background: color-mix(in oklab, var(--color-soft-green) 5%, transparent); padding: 1.5rem; border-radius: 1rem; margin-top: 3rem; }
+    .further-reading h2 { margin-top: 0; font-size: 1.25rem; }
+    .fact-box { background: color-mix(in oklab, var(--color-soft-green) 10%, transparent); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); margin-bottom: 2rem; }
+    .fact-box h2 { margin-top: 0; font-size: 1.25rem; }
+    .fact-box table { margin: 0; width: 100%; border-collapse: collapse; }
+    .fact-box td { padding: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.95rem; }
+    .answer-capsule { background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.6; }
+    .answer-capsule strong { color: var(--color-primary); }
+    .comparison-table td, .comparison-table th { vertical-align: top; }
+  </style>
+  <script type="application/ld+json" set:html={faqPageJsonLd}></script>
+
+  <article>
+    <div class="article-header">
+      <h1>Maine Hemp Cultivation: Regulations &amp; Guidelines</h1>
+      <p class="subtitle">The complete rules for growing, licensing, reporting, and selling hemp in Maine — for consumers and the industry</p>
+    </div>
+
+    <aside class="related-callout" aria-label="Editor's note" style="background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 3px solid var(--color-primary); padding: 1rem 1.25rem; margin: 1.25rem 0; border-radius: 0 0.5rem 0.5rem 0; font-size: 0.95rem; line-height: 1.5;">
+      <strong>Hemp vs. cannabis is a hard legal line in Maine.</strong> The Department of Agriculture, Conservation and Forestry (DACF) licenses hemp growing under a USDA-approved plan at 0.3% total THC. The Office of Cannabis Policy (OCP) regulates high-THC cannabis. They are separate programs, separate agencies, and separate permits. For cannabis cultivation rules, see the <a href="/guides/maine-cannabis-cultivation-guide" style="color: var(--color-text); text-decoration: underline;">adult-use cannabis cultivation guide</a>.
+    </aside>
+
+    <section class="fact-box">
+      <h2>Maine Hemp at a Glance</h2>
+      <table aria-label="Maine hemp regulatory summary">
+        <tbody>
+          <tr><td><strong>Licensing Authority</strong></td><td>Maine DACF (not OCP)</td></tr>
+          <tr><td><strong>Legal Basis</strong></td><td>Title 7 M.R.S. §2231; DACF Ch. 274 rules; USDA-approved plan</td></tr>
+          <tr><td><strong>THC Limit</strong></td><td>0.3% total THC, dry weight</td></tr>
+          <tr><td><strong>Application Fee</strong></td><td>$100 non-refundable</td></tr>
+          <tr><td><strong>License Fee</strong></td><td>$100–$500 plus per-acre / per-sq-ft charges (max $20,000)</td></tr>
+          <tr><td><strong>Background Check</strong></td><td>FBI 10-year report required; 10-yr ban after controlled-substance felony</td></tr>
+          <tr><td><strong>FSA Reporting</strong></td><td>Form FSA-578 Report of Acreage</td></tr>
+          <tr><td><strong>Processing</strong></td><td>Not licensed by DACF</td></tr>
+          <tr><td><strong>Intoxicating Hemp</strong></td><td>21+ only; child-resistant packaging (PL 2025, c. 416)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Hemp vs. Cannabis in Maine</h2>
+      <p>Maine draws a legal distinction between hemp and high-THC cannabis (marijuana). Hemp is low-THC <em>Cannabis sativa</em> grown for CBD, fiber, grain, and related uses. It is legal to grow in the United States, but it is regulated and, in Maine, requires a license.</p>
+      <p>Under Title 7 M.R.S. §2231, hemp is defined as the plant <em>Cannabis sativa</em> L. and any part of it — including the seeds and all derivatives, extracts, cannabinoids, isomers, acids, salts, and salts of isomers — with a delta-9-tetrahydrocannabinol (THC) concentration of not more than 0.3% on a dry-weight basis, or as otherwise defined in federal law. The definition expressly excludes medical cannabis (Title 22, chapter 558-C) and adult-use cannabis (Title 28-B, chapter 1).</p>
+      <p>The agency that regulates each matters. <a href="https://www.maine.gov/dacf/php/hemp" target="_blank" rel="noopener noreferrer">DACF's hemp program</a> handles hemp growing. The <a href="https://www.maine.gov/dafs/ocp/" target="_blank" rel="noopener noreferrer">Office of Cannabis Policy</a> handles high-THC cannabis. DACF explicitly does not license or regulate high-THC cannabis, and it also does not regulate the processing of hemp.</p>
+      <p>This division creates a practical split you should understand before buying or growing anything:</p>
+      <ul>
+        <li><strong>Hemp (≤0.3% THC):</strong> licensed and inspected by DACF under the agricultural hemp program; not tracked as cannabis; not under OCP.</li>
+        <li><strong>Cannabis (high-THC):</strong> regulated by OCP under Title 28-B (adult-use) or Title 22 (medical); tracked seed-to-sale; subject to OCP licensing and testing.</li>
+        <li><strong>Potentially intoxicating hemp (THC-heavy finished hemp products):</strong> a separate category created by PL 2025, c. 416, subject to 21+ and packaging rules but still not folded into the cannabis program.</li>
+      </ul>
+      <div class="answer-capsule">
+        <strong>Key Takeaway:</strong> In Maine, hemp (≤0.3% total THC) is licensed by DACF, not OCP. High-THC cannabis is regulated by OCP. They are separate programs with separate permits, and hemp is not tracked as medical or adult-use cannabis.
+      </div>
+    </section>
+
+    <section>
+      <h2>Legal Framework: Statute and Rules</h2>
+      <p>Three layers of law govern hemp in Maine:</p>
+      <h3>1. The state statute — Title 7 M.R.S. §2231 (Chapter 406-A)</h3>
+      <p>The core statute establishes the definition of hemp, the grower-license requirement, seed-source rules, the one-year site-specific license, fee ranges, the annual report, and (as amended by PL 2025, c. 416) the potentially intoxicating hemp product category with 21+ and packaging rules. The statute directs the commissioner to adopt rules aligning Maine law with the federal hemp program (7 U.S.C. §1639p and 7 C.F.R. Part 990).</p>
+      <h3>2. The agency rules — DACF Chapter 274 (Rules for Growing Hemp)</h3>
+      <p>DACF implements the statute through <a href="https://www.maine.gov/sos/sites/maine.gov.sos/files/content/assets/001c274.docx" target="_blank" rel="noopener noreferrer">Chapter 274, Rules for Growing Hemp</a>. These rules cover application, licensing, fees, monitoring, sampling, testing, and criminal background checks for growers and key participants. DACF adopted revised licensing rules in February 2023 that reduced fees for growers who choose grain or fiber production. The rules do not license hemp processors.</p>
+      <h3>3. The federal program — USDA-approved Maine plan</h3>
+      <p>Maine operates under a USDA-approved <a href="https://www.ams.usda.gov/rules-regulations/hemp/state-and-tribal-plan-review" target="_blank" rel="noopener noreferrer">state hemp production plan</a>, with the <a href="https://www.ams.usda.gov/sites/default/files/media/StateofMaineHempProgramPlan.pdf" target="_blank" rel="noopener noreferrer">Maine Hemp Program Plan</a> on file with USDA. This is what lets Maine-licensed hemp (at ≤0.3% total THC) be marketed nationwide.</p>
+      <div class="answer-capsule">
+        <strong>Frame:</strong> Maine hemp law is a three-layer stack — the codified statute (Title 7 §2231), DACF's implementing rules (Ch. 274), and the USDA-approved state plan. All three must be read together; the statute and rules must stay aligned with federal law.
+      </div>
+    </section>
+
+    <section>
+      <h2>Who Regulates Hemp in Maine</h2>
+      <p>The Maine Department of Agriculture, Conservation and Forestry (DACF) is the licensing authority for growing hemp in Maine. It operates Maine's <a href="https://www.ams.usda.gov/rules-regulations/hemp/state-and-tribal-plan-review" target="_blank" rel="noopener noreferrer">USDA-approved hemp production plan</a>. All hemp licensed in Maine meets the USDA definition of hemp (total THC at or below 0.3% on a dry-weight basis) and can be marketed nationwide.</p>
+      <p>Three boundaries keep the program distinct:</p>
+      <ul>
+        <li><strong>DACF licenses growing only.</strong> It does not license or regulate the processing of hemp and keeps no list of processors or markets.</li>
+        <li><strong>DACF does not license high-THC cannabis.</strong> Marijuana inquiries go to the Office of Cannabis Policy.</li>
+        <li><strong>Hemp is not tracked as cannabis.</strong> Under Title 7 M.R.S. §2231, subsection 10, hemp and hemp-derived products may not be tracked as part of the medical or adult-use cannabis programs.</li>
+      </ul>
+      <p>If you are a cannabis operator or consumer, note that this page covers the DACF hemp program only. For the OCP adult-use program, see the <a href="/guides/maine-cannabis-regulations">Maine cannabis regulations guide</a>.</p>
+    </section>
+
+    <section>
+      <h2>Licensing to Grow Hemp in Maine</h2>
+      <p>Growing hemp for commercial purposes requires a DACF grower license issued under Title 7 M.R.S. §2231. The license is valid for one year and only for the site or sites specified in it. A person may plant, grow, harvest, possess, process, sell, and buy hemp only if that person holds a grower license.</p>
+      <h3>The DACF grower process — step by step</h3>
+      <ol>
+        <li><strong>Apply early.</strong> Apply at least 30 days before you intend to plant, including the $100 non-refundable application fee, so you have a signed license agreement in hand before you plant.</li>
+        <li><strong>Application review.</strong> DACF reviews and approves the application, then emails the grower a draft license agreement.</li>
+        <li><strong>Sign and pay.</strong> Agree to all conditions and sign the license agreement, then mail it to DACF with the license fees.</li>
+        <li><strong>Register grow sites with USDA-FSA.</strong> Report your hemp acreage to your local Farm Service Agency office (details below).</li>
+        <li><strong>Plant in discreet lots by variety.</strong> DACF will sample each lot.</li>
+        <li><strong>Submit a planting report within 14 days.</strong> Confirm exactly where you planted and that your varieties came from stock at no more than 0.3% total THC.</li>
+        <li><strong>Inspection.</strong> The hemp program inspects grow sites.</li>
+        <li><strong>Keep DACF informed</strong> of contact changes, crop failures, and anticipated harvest dates.</li>
+        <li><strong>Notify 30 days before harvest</strong> if your crop has not yet been sampled. Monitor THC levels.</li>
+        <li><strong>Sampling and testing.</strong> An inspector samples your lots; a lab generates a Certificate of Analysis for THC content.</li>
+        <li><strong>Post-harvest report.</strong> Complete a post-harvest report when the season ends.</li>
+      </ol>
+      <h3>Site and acreage rules</h3>
+      <p>The acreage or square footage you request cannot be increased once the license is finalized. Non-contiguous growing areas or facilities separated by more than 50 miles require a separate license application and fees. The application must include the name and address of the applicant, the legal description of the land or indoor facility, and a map, aerial photograph, or GPS coordinates to locate the fields or floor plan.</p>
+      <div class="answer-capsule">
+        <strong>Timing note:</strong> Apply at least 30 days before planting so a signed license agreement is in hand first. A planting report is due within 14 days after planting, and DACF should be notified 30 days before harvest if the crop has not yet been sampled. Planned acreage cannot be increased after the license is finalized.
+      </div>
+    </section>
+
+    <section>
+      <h2>Hemp License &amp; Application Fees</h2>
+      <p>Maine law requires DACF to cover the cost of running the hemp program through an application fee, a license fee, and a per-acre (or per-square-foot) fee. The statute (Title 7 M.R.S. §2231, subsection 7) sets fee ranges — application no less than $50 and no more than $100, license no less than $100 and no more than $500, and monitoring/sampling/testing no less than $1 and no more than $100 per acre (and no more than 25¢ per square foot indoors) — which DACF implements in its published fee schedule. DACF's current schedule includes:</p>
+      <table aria-label="Maine hemp application and license fees">
+        <thead>
+          <tr><th scope="col">Fee type / purpose</th><th scope="col">Amount</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Application fee (all applications)</td><td>$100 non-refundable</td></tr>
+          <tr><td>License — seedlings, immature leafy greens, or microgreens</td><td>$100 (no per-acre fee)</td></tr>
+          <tr><td>License — research with an educational institution (no commercial use)</td><td>$100 (no per-acre fee)</td></tr>
+          <tr><td>License — seed for food oil/grain, fiber, immature plants for food/feed, small breeding, soil remediation</td><td>$250 (no per-acre fee)</td></tr>
+          <tr><td>License — floral material, viable seed, or other commercial (outdoor)</td><td>$500 + $50/acre</td></tr>
+          <tr><td>License — floral material, viable seed, or other commercial (indoor)</td><td>$500 + $0.25/sq ft</td></tr>
+          <tr><td>Maximum license fee for one agreement</td><td>$20,000</td></tr>
+          <tr><td>Additional THC lab lot beyond the one included</td><td>$60 per lot</td></tr>
+        </tbody>
+      </table>
+      <p>All grower license fees include THC lab analysis for one hemp lot. Fees collected cover program costs including inspector travel, sample transport, lab analysis, equipment, and staff time. DACF's FY2024 annual report notes the license fee structure requires roughly 150–200 growers to fully fund the program, and that it could consider turning the licensing program over to USDA if licensed growers fall below 50.</p>
+    </section>
+
+    <section>
+      <h2>Criminal Background Checks and Key Participants</h2>
+      <p>USDA requires anyone applying to grow hemp to request a criminal background check through the FBI and submit the report to the hemp licensing authority. The Maine statute requires DACF's rules to establish a mechanism for conducting criminal background checks on grower licensees and all key participants, with the fees paid by the grower or key participant.</p>
+      <h3>The FBI criminal history process</h3>
+      <p>Per DACF's <a href="https://www.maine.gov/dacf/php/hemp/documents/2025-criminal-history-guidance.pdf" target="_blank" rel="noopener noreferrer">hemp criminal history guidance</a>:</p>
+      <ul>
+        <li>Request an FBI Identity History Summary Check from the <a href="https://www.fbi.gov/services/cjis/identity-history-summary-checks" target="_blank" rel="noopener noreferrer">FBI Identity History Summary Checks page</a>.</li>
+        <li>The report must go back 10 years, be dated within 60 days of applying, and cover state and federal criminal history. The fee is $18.</li>
+        <li>Fingerprinting is a required step. Options in Maine include Idemia/IdentoGO Print-n-Go sites (currently in Augusta, Waterville, Auburn, and Bangor) or USPS locations.</li>
+        <li>FBI sends results electronically; forward the PDF to the hemp program.</li>
+      </ul>
+      <h3>The 10-year felony rule</h3>
+      <p>A person with a state or federal felony conviction relating to a controlled substance may not grow hemp for 10 years from the date of the conviction. An exemption applies to a person lawfully producing hemp under section 7606 of the 2014 Farm Bill before December 20, 2018, whose conviction also occurred before that date.</p>
+      <h3>Who is a key participant</h3>
+      <p>Under Title 7 M.R.S. §2231, a key participant is a person with a direct or indirect financial interest in an entity producing hemp — such as an owner or partner in a partnership — and includes corporate executives such as a chief executive officer, chief operating officer, and chief financial officer. It does not include other management positions such as farm, field, or shift managers.</p>
+      <div class="answer-capsule">
+        <strong>Plan for the background check:</strong> Budget $18 plus fingerprinting for the FBI report, allow 10 years of lookback, and time it within 60 days of applying. A controlled-substance felony bans hemp growing for 10 years. Grower licensees and key participants both need background checks.
+      </div>
+    </section>
+
+    <section>
+      <h2>USDA Farm Service Agency (FSA) Reporting</h2>
+      <p>In addition to the DACF planting report, USDA requires all hemp production to be reported to the Farm Service Agency (FSA). DACF cannot transfer this information to FSA for you. You report your hemp crop to FSA when you complete planting, and you must add the FSA lot codes to the DACF planting report.</p>
+      <p>Per DACF's <a href="https://www.maine.gov/dacf/php/hemp/documents/FSA_Reporting_2024.pdf" target="_blank" rel="noopener noreferrer">FSA reporting guidance</a>, growers should:</p>
+      <ol>
+        <li>Find their local FSA office, call ahead, set up an account, and explain that they are a hemp grower needing an appointment to report acreage.</li>
+        <li>Bring a copy of the final license agreement, landowner agreement, and any incorporation documents.</li>
+        <li>Provide the identity of the hemp producer (matching the license holder), an EIN (businesses) or Social Security number (individuals), and the street address or geospatial coordinates for each field or facility.</li>
+        <li>Report the amount planted on Form FSA-578 Report of Acreage, by hemp lot, identifying on the FSA maps the location and acreage of each lot.</li>
+        <li>Include the Maine Hemp License Number for the current season, formatted with the Maine prefix "23_" (for example, license "1550" is presented as "23_1550" to USDA and FSA), the lot planting date, the variety planted, and the intended use.</li>
+      </ol>
+      <p>Keep a copy of Form FSA-578 as part of your records for at least 3 years. The FSA visit can take up to an hour, and plan ahead because the process is new for many Maine FSA offices. DACF will not sample and test your hemp lots without the FSA lot codes.</p>
+    </section>
+
+    <section>
+      <h2>Seed, Seedlings, and Clones</h2>
+      <p>Maine does not certify hemp seed and publishes no list of approved or prohibited hemp strains, varieties, or cultivars. For hemp to be hemp, its total THC concentration must not exceed 0.3% on a dry-weight basis. Genetics play the main role, but environment (plant maturity, temperature, water, soil fertility, and stressors) can influence THC expression.</p>
+      <p>Under Title 7 M.R.S. §2231, a grower licensee may plant only hemp grown from:</p>
+      <ul>
+        <li>seeds saved by the grower licensee (after independent third-party testing confirms the resulting plants meet the hemp definition),</li>
+        <li>a certified seed source,</li>
+        <li>a clone produced from seeds acquired from a certified seed source, or</li>
+        <li>tissue cultures removed from live plants grown from certified-source seeds.</li>
+      </ul>
+      <p>A grower may also acquire hemp seeds directly from a certified seed source or from a hemp seed distributor licensed in Maine. When you buy seed, seedlings, or clones, you must retain documentation that at minimum includes third-party THC test results for the variety (often a Certificate of Analysis), the test date, and the seed supplier and origin. This documentation is submitted with the planting report due within 14 days after planting. For a consumer-facing look at seed and clone sourcing, see the <a href="/resources/buy-cannabis-seeds-maine">buy cannabis seeds in Maine</a> resource.</p>
+    </section>
+
+    <section>
+      <h2>Sampling, Testing, and Crop Destruction</h2>
+      <p>DACF randomly samples plants in each hemp lot and tests for THC content. The licensee allows inspection and sampling of the crop at any time the department deems necessary, and provides unrestricted access to all hemp plants in licensed growing areas. If a crop has not been inspected and sampled within 30 days prior to the anticipated harvest date, the licensee must notify DACF of intent to harvest.</p>
+      <p><strong>Hemp cannot exceed 0.3% total THC on a dry-weight basis.</strong> Crops testing above the limit must be destroyed in a manner approved by the department if remediation is not feasible. The licensee is responsible for paying all costs associated with crop destruction. DACF's FY2024 annual report notes a grower who reported a lab error nearly destroyed a crop, underscoring why growers monitor THC early and keep their own records.</p>
+      <div class="answer-capsule">
+        <strong>What happens over the limit:</strong> Hemp above 0.3% total THC (dry weight) is destroyed in a DACF-approved manner if remediation is not feasible, at the grower's expense. Monitor THC levels as buds form and test early.
+      </div>
+    </section>
+
+    <section>
+      <h2>Consumer Rules: Intoxicating &amp; Potentially Intoxicating Hemp</h2>
+      <p>Maine's June 2025 emergency law, <a href="https://legislature.maine.gov/legis/bills/display_ps.asp?LD=1920&snum=132" target="_blank" rel="noopener noreferrer">PL 2025, c. 416</a> (LD 1920), added a "potentially intoxicating hemp product" category and set consumer-facing rules. The emergency measure took effect June 24, 2025, and also amended liquor-code provisions (Title 28-A) for registration and distribution of these products.</p>
+      <h3>What is a potentially intoxicating hemp product?</h3>
+      <p>Under Title 7 M.R.S. §2231, subsection 1-A, paragraph H, a potentially intoxicating hemp product means any product derived from hemp and ingestible consumer products that, in their final forms, do not contain both (1) a concentration of less than 0.3% potentially intoxicating cannabinoids and (2) a ratio of more than 10:1 of nonintoxicating cannabinoids to potentially intoxicating cannabinoids. In practical terms, a finished product that has 0.3% or more potentially intoxicating cannabinoids, or a low ratio of nonintoxicating to intoxicating cannabinoids, falls in this category.</p>
+      <p>The statute's definitions distinguish nonintoxicating cannabinoids (including CBD, CBG, CBC, CBN, and others) from potentially intoxicating cannabinoids (including delta-8, delta-9, delta-10, and delta-7 THC and their isomers, hydrogenated forms like HHC, and certain analogs).</p>
+      <h3>The two consumer rules that matter</h3>
+      <ul>
+        <li><strong>Age 21 restriction.</strong> A potentially intoxicating hemp product may not be sold to anyone who has not attained 21 years of age.</li>
+        <li><strong>Packaging.</strong> A potentially intoxicating hemp product that is not a beverage, salve, or topical product must be packaged in child-resistant and tamper-evident packaging. Hemp labeling may not violate federal trademark law or cause reasonable consumer confusion.</li>
+      </ul>
+      <p>This law does <strong>not</strong> move intoxicating hemp under the adult-use cannabis program. Instead, it creates a distinct hemp category with age and packaging rules, plus liquor-code (Title 28-A) registration provisions.</p>
+      <div class="answer-capsule">
+        <strong>Consumer takeaway:</strong> Potentially intoxicating hemp products are 21+ only in Maine and must be in child-resistant, tamper-evident packaging (unless a beverage, salve, or topical). These rules come from PL 2025, c. 416, effective June 24, 2025.
+      </div>
+    </section>
+
+    <section>
+      <h2>Consumer Guidelines: Buying Hemp in Maine</h2>
+      <p>For consumers buying hemp products in Maine, the practical rules and shopping guidance are:</p>
+      <h3>Know the THC standard</h3>
+      <p>Hemp-derived products should be ≤0.3% total THC on a dry-weight basis. Ask to see the <a href="/guides/cannabis-coa-maine-how-to-read">Certificate of Analysis (COA)</a> — the third-party lab report — to verify the THC content and check for a COA dated and attributable to an independent lab.</p>
+      <h3>Understand the intoxicating-hemp age gate</h3>
+      <p>Potentially intoxicating hemp products (hemp products with 0.3%+ potentially intoxicating cannabinoids or a low nonintoxicating-to-intoxicating ratio) cannot be sold to anyone under 21. If a product is THC-heavy, expect an adult-only sale.</p>
+      <h3>Check packaging</h3>
+      <p>Solid potentially intoxicating hemp products (food, ingestibles — anything not a beverage, salve, or topical) must be in child-resistant, tamper-evident packaging. Beverages, salves, and topicals have their own rules, and labeling cannot confuse consumers or violate trademark law.</p>
+      <h3>Hemp is not cannabis</h3>
+      <p>Hemp is not tracked as medical or adult-use cannabis in Maine, and DACF does not license processors, so hemp product oversight differs from OCP-regulated cannabis. Hemp-derived food, additives, and CBD products are subject to their own food-safety licensing requirements under Title 7 §2901-C and related titles, separate from the grower license.</p>
+      <h3>Where to start</h3>
+      <p>For shopping guidance and label literacy more broadly, start with the <a href="/learn">consumer guide to cannabis in Maine</a> and the <a href="/guides/cannabis-coa-maine-how-to-read">COA reading guide</a>.</p>
+    </section>
+
+    <section>
+      <h2>Guidelines for Growers &amp; Industry</h2>
+      <p>Maine's hemp program has matured but remains small. Here is what the licensing and compliance picture looks like for growers and processors.</p>
+      <h3>The market context (from DACF's FY2024 annual report)</h3>
+      <p>DACF's FY2024 annual report (submitted December 2025, the ninth year of the program) recorded 12 final license agreements for the 2024 season: 11 outdoor licenses applied for about 31.2 acres but only about 5.75 acres were planted, and one indoor licensee licensed 100 square feet but never planted a crop. The report characterizes the market as relatively flat, with the most successful business model being vertically integrated, smaller floral hemp growers making cannabinoid products for niche markets. Hemp fiber and grain markets have not materialized in Maine for lack of processing infrastructure — Maine has had only a single grain grower in recent seasons. The program publishes a <a href="https://www.maine.gov/dacf/php/hemp/documents/2026-currently-licensed.pdf" target="_blank" rel="noopener noreferrer">current list of licensed growers</a>, updated August 3, 2026.</p>
+      <h3>Grower checklist</h3>
+      <ul>
+        <li><strong>License first.</strong> Commercial hemp growing requires a one-year DACF grower license tied to specific sites. Apply at least 30 days before planting.</li>
+        <li><strong>Complete background checks</strong> for the grower and key participants before applying; budget the $18 FBI fee plus fingerprinting, and keep the report within 60 days.</li>
+        <li><strong>Know the fee structure</strong> before you apply, and note the acreage/square footage cannot be increased after the license is finalized.</li>
+        <li><strong>Register grow sites</strong> with your local USDA-FSA office and file Form FSA-578; add the "23_" license prefix and lot codes to the DACF planting report.</li>
+        <li><strong>Use certified-source genetics</strong> and keep third-party THC test documentation for everything you plant.</li>
+        <li><strong>Stay within 0.3% total THC.</strong> Destroy over-limit crop if remediation is not feasible; you pay the cost.</li>
+        <li><strong>Meet reporting deadlines:</strong> planting report within 14 days, FSA-578 at planting, 30-day pre-harvest notice if unsampled, post-harvest report.</li>
+        <li><strong>DACF does not regulate processing.</strong> If your business is extraction or manufacturing, confirm your licensing path separately — DACF keeps no processor list, and hemp-derived food/products have separate food-safety licensing requirements.</li>
+        <li><strong>Watch the federal definition change.</strong> The FY2026 federal redefinition of hemp could affect full-spectrum products and is scheduled to take effect around November 2026 unless contested legislation changes course.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Where Hemp Law Stands Now: Status Table</h2>
+      <p>The different legal states around Maine hemp should not be collapsed into one "current law" bucket. This table separates what is operative, what was enacted and is operative, what failed, and what is federal-pending.</p>
+      <table class="comparison-table" aria-label="Maine hemp legal status summary">
+        <thead>
+          <tr><th scope="col">Item</th><th scope="col">Status</th><th scope="col">Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Title 7 M.R.S. §2231 (definitions, grower license, fees, annual report)</td><td>Operative</td><td>Core Maine hemp statute; DACF implements it.</td></tr>
+          <tr><td>DACF Chapter 274 rules (Ch. 274, Rules for Growing Hemp)</td><td>Operative</td><td>Revised February 2023; reduced grain/fiber fees; no processor licensing.</td></tr>
+          <tr><td>Maine USDA-approved hemp plan</td><td>Operative</td><td>Allows Maine hemp marketed at ≤0.3% total THC nationwide.</td></tr>
+          <tr><td>PL 2025, c. 416 (LD 1920) — potentially intoxicating hemp, 21+, packaging</td><td>Operative (emergency)</td><td>Effective June 24, 2025; also amended Title 28-A liquor provisions.</td></tr>
+          <tr><td>LD 1983 — regulate intoxicating hemp under adult-use cannabis</td><td>Dead</td><td>Withdrawn (Leave to Withdraw) January 13, 2026; not law, not pending.</td></tr>
+          <tr><td>Federal FY2026 hemp definition change</td><td>Pending federal watch</td><td>Enacted in Nov 2025 appropriations; total-THC standard effective ~Nov 2026; contested by H.R. 7024 / H.R. 7010.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>What Is NOT Law: The Withdrawn LD 1983</h2>
+      <p>A common point of confusion is whether Maine folded intoxicating hemp into its adult-use cannabis program. It did not. The governor's bill <a href="https://legislature.maine.gov/legis/bills/display_ps.asp?LD=1983&snum=132" target="_blank" rel="noopener noreferrer">LD 1983</a>, "An Act to Protect Minors from Intoxicating Hemp-derived Products by Regulating Those Products Under the Adult Use Cannabis Laws," was withdrawn (Leave to Withdraw) on January 13, 2026 and placed in the legislative files as dead.</p>
+      <p>Current Maine law instead regulates potentially intoxicating hemp products under Title 7 M.R.S. §2231 and related liquor-code provisions. Because LD 1983 is dead, do not rely on it as pending law. A separate stakeholder group convened by DACF at the Legislature's request recommended age-gating all hemp products (other than fiber and grain) to 21+, but that is a recommendation, not enacted law.</p>
+    </section>
+
+    <section>
+      <h2>Federal Watch: Total-THC Definition Change</h2>
+      <p>At the federal level, hemp policy is in flux. The federal FY2026 Agriculture appropriations law signed in November 2025 significantly reworks the federal definition of hemp and hemp-derived cannabinoid products toward a total-THC standard, with an effective date around November 2026. DACF's FY2024 annual report observes this new definition will effectively ban intoxicating hemp in consumer products and may also criminalize full-spectrum hemp oil products (tinctures, topicals) that are the core market for many Maine growers.</p>
+      <p>The change is contested by pending federal bills (including H.R. 7024 and H.R. 7010) and Senate delay efforts. This is a federal watch item, not current Maine law. Maine's operative definition remains the 0.3% total-THC dry-weight standard in Title 7 M.R.S. §2231 as implemented by DACF. Recheck federal status before relying on any national hemp definition.</p>
+    </section>
+
+    <section>
+      <h2>Official Contacts and Resources</h2>
+      <ul>
+        <li><strong>DACF Hemp Licensing:</strong> <a href="https://www.maine.gov/dacf/php/hemp" target="_blank" rel="noopener noreferrer">maine.gov/dacf/php/hemp</a> — program page, applications, fee schedule, grower list.</li>
+        <li><strong>Hemp Program contact:</strong> Hemp Program, 28 State House Station, Augusta, ME 04333; State Horticulturist/Program contact Gary Fish, (207) 287-7545.</li>
+        <li><strong>Applications:</strong> <a href="https://www.maine.gov/dacf/php/documents/2025-application-instuctions.pdf" target="_blank" rel="noopener noreferrer">Application instructions</a>, <a href="https://www.maine.gov/dacf/php/documents/2025-outdoor-hemp-application.pdf" target="_blank" rel="noopener noreferrer">outdoor application</a>, <a href="https://www.maine.gov/dacf/php/documents/2025-indoor-hemp-application.pdf" target="_blank" rel="noopener noreferrer">indoor application</a>.</li>
+        <li><strong>Criminal history guidance:</strong> <a href="https://www.maine.gov/dacf/php/hemp/documents/2025-criminal-history-guidance.pdf" target="_blank" rel="noopener noreferrer">DACF hemp criminal history guidance (PDF)</a>.</li>
+        <li><strong>FSA reporting:</strong> <a href="https://www.maine.gov/dacf/php/hemp/documents/FSA_Reporting_2024.pdf" target="_blank" rel="noopener noreferrer">DACF FSA reporting guidance (PDF)</a>.</li>
+        <li><strong>Statute:</strong> <a href="https://legislature.maine.gov/legis/statutes/7/title7sec2231.html" target="_blank" rel="noopener noreferrer">Title 7 M.R.S. §2231</a>.</li>
+        <li><strong>Rules:</strong> <a href="https://www.maine.gov/sos/sites/maine.gov.sos/files/content/assets/001c274.docx" target="_blank" rel="noopener noreferrer">Chapter 274 Rules for Growing Hemp (Word)</a>.</li>
+        <li><strong>USDA:</strong> <a href="https://www.ams.usda.gov/rules-regulations/hemp/state-and-tribal-plan-review" target="_blank" rel="noopener noreferrer">USDA plan review</a>, <a href="https://www.federalregister.gov/documents/2021/01/19/2021-00967/establishment-of-a-domestic-hemp-production-program" target="_blank" rel="noopener noreferrer">USDA final hemp rule</a>.</li>
+        <li><strong>Annual report:</strong> <a href="https://legislature.maine.gov/doc/12503" target="_blank" rel="noopener noreferrer">Maine State Hemp Program Annual Report FY2024</a> (submitted December 2025).</li>
+        <li><strong>Protocol and official sites:</strong> See the <a href="/resources/maine-cannabis-official-resources">Maine cannabis official resources page</a> for the broader regulatory contact set.</li>
+      </ul>
+    </section>
+
+    <Callout title="Hemp is not a workaround for cannabis licensing" type="warning">
+      Growing high-THC cannabis under a hemp license is a violation. DACF licenses hemp at ≤0.3% total THC and clearly does not license high-THC marijuana, which requires OCP adult-use or the medical program. Over-limit hemp is destroyed at the grower's expense.
+    </Callout>
+
+    <section>
+      <h2>Key Citations</h2>
+      <ul>
+        <li><a href="https://legislature.maine.gov/legis/statutes/7/title7sec2231.html" target="_blank" rel="noopener noreferrer">Title 7 M.R.S. §2231 (Chapter 406-A, Hemp)</a> — Maine hemp statute, including definitions, fees, background checks, and the PL 2025 c. 416 provisions</li>
+        <li><a href="https://www.maine.gov/dacf/php/hemp" target="_blank" rel="noopener noreferrer">DACF Hemp Licensing</a> — program page, license process, and fee schedule (updated Aug 3, 2026)</li>
+        <li><a href="https://www.maine.gov/dacf/php/hemp/documents/2025-criminal-history-guidance.pdf" target="_blank" rel="noopener noreferrer">DACF Criminal History Guidance (Jan 2025)</a> — FBI background check process</li>
+        <li><a href="https://www.maine.gov/dacf/php/hemp/documents/FSA_Reporting_2024.pdf" target="_blank" rel="noopener noreferrer">DACF FSA Reporting Guidance</a> — Form FSA-578 and license "23_" format</li>
+        <li><a href="https://legislature.maine.gov/legis/bills/display_ps.asp?LD=1920&snum=132" target="_blank" rel="noopener noreferrer">LD 1920 (PL 2025, c. 416)</a> — emergency intoxicating-hemp law, effective June 24, 2025</li>
+        <li><a href="https://legislature.maine.gov/legis/bills/display_ps.asp?LD=1983&snum=132" target="_blank" rel="noopener noreferrer">LD 1983</a> — withdrawn intoxicating-hemp bill (dead Jan 13, 2026)</li>
+        <li><a href="https://legislature.maine.gov/doc/12503" target="_blank" rel="noopener noreferrer">Maine State Hemp Program Annual Report FY2024</a> — program scale and market context</li>
+        <li><a href="https://www.ams.usda.gov/sites/default/files/media/StateofMaineHempProgramPlan.pdf" target="_blank" rel="noopener noreferrer">Maine Hemp Program Plan (USDA-approved)</a></li>
+        <li><a href="https://www.federalregister.gov/documents/2021/01/19/2021-00967/establishment-of-a-domestic-hemp-production-program" target="_blank" rel="noopener noreferrer">USDA Final Hemp Rule</a></li>
+      </ul>
+    </section>
+
+    <section class="disclaimer">
+      <p><em>This guide is for informational purposes only. It does not constitute legal advice, and it does not replace the Maine DACF hemp program's application materials, Chapter 274 rules, or the statute. Hemp and federal definitions change. Consult DACF, USDA, and qualified legal or regulatory counsel before making decisions about growing or selling hemp. Fee and program figures are drawn from DACF's published page and its FY2024 annual report; verify current-year figures with DACF before applying.</em></p>
+    </section>
+
+    <section class="content-verification">
+      <div class="verification-badge">
+        <span class="verification-icon">◆</span>
+        <span class="verification-text"> Last reviewed <strong>2026-08-06</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the DACF Hemp Program, USDA, and Maine Legislature primary sources cited in this page. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+      </div>
+    </section>
+
+    <p class="editorial-note" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border);"><strong>Editorial note.</strong> This guide is part of the Maine Dispensary Guide editorial corpus. Every material correction to this page is documented in our public <a href="/about/corrections" style="color: var(--color-primary); text-decoration: underline;">Editorial Corrections Log</a> with the primary source that confirms the fix.</p>
+    <p class="authors-link" style="font-size: 0.875rem; color: var(--color-text-light); margin-top: 1rem;"><strong>About the authors.</strong> This guide is published under a <a href="/about/authors" style="color: var(--color-text); text-decoration: underline;">publisher-managed editorial byline</a> with reviewer attribution. See the full <a href="/about" style="color: var(--color-text); text-decoration: underline;">editorial team and methodology</a>.</p>
+
+    <AutoRelated currentPath="/guides/maine-hemp-cultivation-guide" currentTopics={topics} section="Compliance &amp; Legal" limit={6} />
+  </article>
+
+  <Faq faqs={hempFaqs} withoutSchema />
+</Layout>
