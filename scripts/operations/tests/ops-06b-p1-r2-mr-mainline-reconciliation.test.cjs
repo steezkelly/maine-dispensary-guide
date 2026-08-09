@@ -28,7 +28,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 
 test('MR-ci: PR #219 pre-push governance test remains in the Build job', () => {
   const ci = read('.github/workflows/ci.yml');
-  assert.match(ci, /Test pre-push governance and diagnostic contracts/);
+  assert.match(ci, /Test pre-push governance and worktree-hygiene contracts/);
   assert.match(ci, /node scripts\/git\/tests\/pre-push-verify-governance\.test\.cjs/);
   assert.match(ci, /node scripts\/git\/tests\/pre-push-verify-diagnostics\.test\.cjs/);
 });
