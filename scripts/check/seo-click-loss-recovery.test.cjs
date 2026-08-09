@@ -294,16 +294,16 @@ test('corrections methodology fragments map to real ledger slugs and contain no 
 });
 
 test('blog-index delivery-business date agrees with the article canonical publishDate', () => {
-  const index = read('apps/maine-cannabis/src/pages/blog/index.astro');
-  const entry = index.match(/\{[^{}]*url:\s*['"][^'"]*maine-cannabis-delivery-business-guide-2026[^'"]*['"][^{}]*\}/);
-  assert.ok(entry, 'blog-index delivery-business entry not found');
+  // The blog index is generated from the article pages (scripts/data/regen-blog-index.cjs),
+  // so the date contract lives in the generated data file, not the page source.
+  const generated = JSON.parse(read('apps/maine-cannabis/src/data/blog-index.json'));
+  const entry = generated.items.find((i) => i.slug === 'maine-cannabis-delivery-business-guide-2026');
+  assert.ok(entry, 'blog-index.json has no delivery-business entry');
 
-  const indexDate = entry[0].match(/date:\s*['"]([^'"]+)['"]/);
-  assert.ok(indexDate, 'blog-index date missing');
-  assert.equal(indexDate[1], '2026-04-18', 'blog-index date must be the canonical 2026-04-18');
+  assert.equal(entry.publishDate, '2026-04-18', 'blog-index publishDate must be the canonical 2026-04-18');
 
   const article = read('apps/maine-cannabis/src/pages/blog/maine-cannabis-delivery-business-guide-2026.astro');
   const articleDate = article.match(/publishDate:\s*['"]([^'"]+)['"]/);
   assert.ok(articleDate, 'article publishDate missing');
-  assert.equal(indexDate[1], articleDate[1], 'blog-index date must equal the article publishDate');
+  assert.equal(entry.publishDate, articleDate[1], 'blog-index publishDate must equal the article publishDate');
 });
