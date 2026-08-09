@@ -975,8 +975,10 @@ Verify today: confirm directly with the source before relying on this detail.</p
           </div>
           <div class="bingo-grid" aria-label="Cannabis SEO Slop Bingo card">
             {slopSquares.map((square) => (
-              <!-- analytics:cta-injected id=cta-inline-experiments--index-03 -->
+              <>
+              {/* analytics:cta-injected id=cta-inline-experiments--index-03 */}
 <button type="button" class="bingo-square" aria-pressed="false" data-phrase={square.phrase} data-cta-id="cta-inline-experiments--index-03">{square.phrase}</button>
+              </>
             ))}
           </div>
         </div>
