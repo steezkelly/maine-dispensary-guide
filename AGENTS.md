@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Astro 6.0 static site deployed to Vercel. High-authority cannabis business resources for Maine — 195 guide route sources and 55 blog posts (54 article posts plus the blog index). Build-output counts are generated state; re-measure them before quoting. Technical compliance maps, B2B lead-gen tools.
+Astro 6.0 static site deployed to Vercel. High-authority cannabis business resources for Maine — 195 guide route sources and 56 blog posts (55 article posts plus the blog index). Build-output counts are generated state; re-measure them before quoting. Technical compliance maps, B2B lead-gen tools.
 
 **SCOPE: Maine Only** — Do NOT propose or build state-specific hubs for other states.
 
@@ -142,7 +142,7 @@ project-1/
 │       ├── founders/             # 3 founder story pages + index
 │       ├── resources/            # Vendor directory + education/official resource hubs
 │       ├── admin/                # Admin pages (noindex)
-│       ├── blog/                 # 55 blog route sources (54 article posts plus index)
+│       ├── blog/                 # 56 blog route sources (55 article posts plus index)
 │       └── about/                # Team and author pages
 ├── scripts/                      # 43 CLI tools (search, link-architect, health checks)
 ├── .githooks/                    # Pre-push verify hook (esbuild + astro check)
