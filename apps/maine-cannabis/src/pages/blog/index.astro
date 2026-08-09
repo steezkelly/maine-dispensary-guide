@@ -37,35 +37,98 @@ const posts = [
   { url: '/blog/maine-medical-marijuana-patient-guide', title: 'How to Get a Maine Medical Cannabis Card in 2026', description: 'How to get what is commonly called a Maine medical cannabis card: provider certification, written documentation, renewals, visiting-patient rules, and official sources.', date: '2026-06-05', section: 'Medical & Wellness' },
   { url: '/blog/maine-rso-guide', title: 'RSO in Maine 2026: A Buyer\'s Guide to Rick Simpson Oil', description: 'What RSO is, how to dose it, where to buy it in Maine, and the medical research context — with buyer notes for caregivers and patients.', date: '2026-06-05', section: 'Medical & Wellness' },
   { url: '/blog/recreational-cannabis-near-acadia', title: 'Recreational Cannabis Near Acadia National Park: 2026 Visitor\'s Guide', description: 'Where to buy legal adult-use cannabis near Acadia National Park in 2026 — Bar Harbor, Trenton, and Ellsworth dispensaries plus the consumption-lounge rules.', date: '2026-06-05', section: 'Consumer Guide' },
-
   { url: '/blog/buying-cannabis-by-effect-2026', title: 'Buying Cannabis by Effect in Maine: A 2026 Consumer Guide', description: 'Maine dispensary menus by effect — relaxation, focus, sleep, and creativity. The dominant-terpene and cannabinoid mapping that Maine stores use, with caveats about Maine\'s lack of terpene testing requirements.', date: '2026-06-07', section: 'Consumer Guide' },
   { url: '/blog/how-to-read-maine-cannabis-coa-terpenes-2026', title: 'How to Read a Maine Cannabis COA: A 2026 Guide for Terpene Shoppers', description: 'Maine cannabis COAs and what they show for terpenes — what to look for, why the terpene section is often blank, and how to read cannabinoid, contaminant, and moisture panels.', date: '2026-06-07', section: 'Cannabis Science' },
   { url: '/blog/terpene-preservation-drying-curing-2026', title: 'Terpene Preservation in Maine: Drying, Curing, and Storage in High Humidity', description: 'Maine humidity, temperature swings, and the practical drying and cure protocol that preserves the terpene profile of a 2026 harvest — Boveda 62, sealed glass, and a low-temperature cure schedule.', date: '2026-06-07', section: 'Home Cultivation' }
 ];
 
-const sectionOrder = [
-  'Home Cultivation',
-  'Cannabis Science',
-  'Cultivation & Products',
-  'Market Analysis',
-  'Consumer Guide',
-  'Lifestyle & Travel',
-  'Medical & Wellness',
-  'Careers',
-  'Medical Cannabis',
-  'Policy & Legislation',
-  'Policy & Enforcement',
-  'Business Operations',
-  'Finance & Investment',
-  'Licensing',
-  'Compliance',
+// Hero images per slug. Most follow the slug name; exceptions map to the
+// actual heroImage used by each article page (verified against frontmatter).
+const heroOverrides: Record<string, string> = {
+  'ibogaine-federal-executive-order-maine-2026': 'ibogaine-executive-order-2026',
+  'terpene-preservation-drying-curing-2026': 'terpene-preservation-maine-2026',
+  'cannabis-terpenes-explained-maine-2026': 'terpene-guide-maine',
+  'maine-psilocybin-2026-guide': 'maine-psilocybin-2026',
+  'maine-cannabis-gray-market-ocp-enforcement-2026': 'ocp-license-map',
+  'how-to-read-maine-cannabis-coa-terpenes-2026': 'maine-cannabis-coa-2026',
+  'maine-medical-patient-delivery-services-2026': 'maine-medical-delivery',
+  'maine-cannabis-social-equity-program-2026': 'maine-cannabis-social-equity',
+  'how-much-weed-can-you-buy-in-maine': 'maine-cannabis-purchase-limits',
+  'maine-medical-cannabis-patient-grow-guide': 'maine-home-grow-cannabis-guide-2026',
+  'maine-dispensary-license': 'maine-dispensary-how-to-open',
+};
+
+function heroFor(url: string): string {
+  const slug = url.split('/').pop() ?? '';
+  const base = heroOverrides[slug] ?? slug;
+  return `/images/heroes/${base}-640w.jpg`;
+}
+
+// Four editorial desks — each groups related sections under one visual
+// identity so readers can tell at a glance which shelf a story sits on.
+const desks = [
+  {
+    id: 'grow',
+    klass: 'desk-grow',
+    name: 'Grow & Science Desk',
+    tagline: 'Plant limits, genetics, drying protocols, and the terpene science behind Maine menus.',
+    sections: ['Home Cultivation', 'Cannabis Science', 'Cultivation & Products'],
+  },
+  {
+    id: 'buyer',
+    klass: 'desk-buyer',
+    name: 'Buyer\'s Desk',
+    tagline: 'What to buy, what it costs, and how to travel, gift, and dose in Maine.',
+    sections: ['Consumer Guide', 'Market Analysis', 'Lifestyle & Travel'],
+  },
+  {
+    id: 'patient',
+    klass: 'desk-patient',
+    name: 'Patient Desk',
+    tagline: 'Medical cards, caregiver access, delivery rights, and patient-centered products.',
+    sections: ['Medical & Wellness', 'Medical Cannabis'],
+  },
+  {
+    id: 'operator',
+    klass: 'desk-operator',
+    name: 'Operator Desk',
+    tagline: 'Licensing, enforcement, careers, ROI, and policy that moves the trade.',
+    sections: ['Careers', 'Policy & Legislation', 'Policy & Enforcement', 'Business Operations', 'Finance & Investment', 'Licensing', 'Compliance'],
+  },
 ];
 
-const grouped = sectionOrder.reduce((acc, section) => {
-  const items = posts.filter(p => p.section === section);
-  if (items.length > 0) acc[section] = items;
-  return acc;
-}, {} as Record<string, typeof posts>);
+const deskBySection = new Map<string, string>();
+for (const desk of desks) for (const s of desk.sections) deskBySection.set(s, desk.klass);
+
+const featured = posts.find(p => p.url === '/blog/maine-cannabis-gray-market-ocp-enforcement-2026') ?? posts[0];
+const latest = [...posts]
+  .filter(p => p.url !== featured.url)
+  .sort((a, b) => b.date.localeCompare(a.date))
+  .slice(0, 6);
+
+const deskPostCount = (desk: typeof desks[number]) =>
+  posts.filter(p => desk.sections.includes(p.section)).length;
+
+const postCount = posts.length;
+const newest = posts.reduce((m, p) => (p.date > m ? p.date : m), posts[0].date);
+const newestLabel = new Date(newest + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+function formatPostDate(iso: string): string {
+  return new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+const pathways = [
+  { href: '/blog/buying-cannabis-by-effect-2026', slug: 'buying-cannabis-by-effect-2026', desk: 'desk-buyer', label: 'Consumer Guide', note: 'Match Maine menu terms to the outcome you want before you choose a strain, edible, or concentrate.' },
+  { href: '/blog/maine-dispensary-gift-cards', slug: 'maine-dispensary-gift-cards', desk: 'desk-buyer', label: 'Consumer Guide', note: 'Check which gift-card options work for Maine stores and which purchase rules matter at checkout.' },
+  { href: '/blog/maine-cannabis-budtender-careers', slug: 'maine-cannabis-budtender-careers', desk: 'desk-operator', label: 'Careers', note: 'Review pay bands, OCP worker requirements, interview signals, and retail cannabis career paths.' },
+  { href: '/blog/maine-cannabis-delivery-business-guide-2026', slug: 'maine-cannabis-delivery-business-guide-2026', desk: 'desk-operator', label: 'Business Operations', note: 'Run lawful adult-use delivery as an existing licensee — §504(9) authority, vehicle controls, manifests, ID checks, and records. No standalone courier license exists.' },
+  { href: '/blog/maine-dispensary-business-for-sale', slug: 'maine-dispensary-business-for-sale', desk: 'desk-operator', label: 'Finance & Investment', note: 'Use the acquisition checklist before underwriting a Maine dispensary listing or change-of-ownership deal.' },
+  { href: '/blog/portland-maine-cannabis-rules-2026', slug: 'portland-maine-cannabis-rules-2026', desk: 'desk-operator', label: 'Compliance', note: 'Verify local zoning, municipal approval, and operating constraints before planning in Portland.' },
+  { href: '/blog/maine-cannabis-social-equity-program-2026', slug: 'maine-cannabis-social-equity-program-2026', desk: 'desk-operator', label: 'Policy & Legislation', note: 'Understand eligibility, fee reductions, priority licensing, and support programs for applicants.' },
+  { href: '/blog/maine-cannabis-gray-market-ocp-enforcement-2026', slug: 'maine-cannabis-gray-market-ocp-enforcement-2026', desk: 'desk-operator', label: 'Policy & Legislation', note: 'Read the enforcement analysis behind caregiver leakage, out-of-state delivery, and OCP capacity limits.' },
+  { href: '/blog/maine-psilocybin-2026-guide', slug: 'maine-psilocybin-2026-guide', desk: 'desk-operator', label: 'Policy & Legislation', note: 'Track LD 1034, the state commission, federal research signals, and operational implications.' },
+  { href: '/blog/ibogaine-federal-executive-order-maine-2026', slug: 'ibogaine-federal-executive-order-maine-2026', desk: 'desk-operator', label: 'Policy & Legislation', note: 'Separate ibogaine policy signals from Maine\'s psilocybin debate and cannabis operator strategy.' },
+];
 ---
 
 <Layout
@@ -73,137 +136,537 @@ const grouped = sectionOrder.reduce((acc, section) => {
   description="Cannabis business guides, policy analysis, and industry news for Maine operators and investors. Cultivation licenses, dispensary operations, ROI, and psilocybin legislation."
   isHub={true}
 >
-  <style>
-
-  .page-header {
-    margin-bottom: 3rem;
+<style>
+  /* ============================================================
+     THE MAINE DESK — editorial magazine treatment for /blog
+     Desk colors carry both themes via var() + color-mix.
+     ============================================================ */
+  .blog-masthead {
+    position: relative;
+    padding: clamp(2rem, 5vw, 3.5rem) 0 clamp(1.5rem, 3vw, 2.5rem);
+    border-bottom: 3px double var(--color-rule, rgba(16, 24, 32, 0.25));
+    margin-bottom: 2rem;
     text-align: center;
   }
-  .page-header p {
-    font-size: 1.125rem;
-    color: var(--color-text-light);
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  .blog-section {
-    margin-bottom: 3rem;
-  }
-  .blog-section h2 {
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid var(--color-primary);
-    display: inline-block;
-    padding-bottom: 0.25rem;
-  }
-  .posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-  .post-card {
-    background: white;
-    border: 1px solid var(--color-border);
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-    text-decoration: none;
-    transition: box-shadow 0.2s, transform 0.2s;
-  }
-  .post-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-    text-decoration: none;
-  }
-  .post-date {
-    font-size: 0.8125rem;
-    color: var(--color-text-light);
+  .masthead-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    color: var(--color-accent);
   }
-  .post-card h3 {
+  .masthead-eyebrow::before,
+  .masthead-eyebrow::after {
+    content: "";
+    display: inline-block;
+    width: 2.25rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.6;
+  }
+  .blog-masthead h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+    line-height: 1.08;
+    margin: 0.75rem auto 0.9rem;
+    max-width: 22ch;
     color: var(--color-text);
-    margin: 0.5rem 0;
-    font-size: 1.125rem;
   }
-  .post-card p {
-    color: var(--color-text-light);
+  .masthead-dek {
+    font-size: var(--text-lg);
+    color: var(--color-text-light-strong, var(--color-text-light));
+    max-width: 62ch;
+    margin: 0 auto 1.25rem;
+    line-height: 1.6;
+  }
+  .masthead-stats {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.75rem;
+    font-size: var(--text-sm);
+    color: var(--color-text-light-strong, var(--color-text-light));
+  }
+  .masthead-stats strong {
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Desk palette — mid-tone accents tuned for both themes. */
+  .desk-grow { --desk: #4e7042; --desk-deep: #38522f; }
+  .desk-buyer { --desk: #a06b28; --desk-deep: #7c521e; }
+  .desk-patient { --desk: #9b5a68; --desk-deep: #77404e; }
+  .desk-operator { --desk: #2f6b6e; --desk-deep: #205052; }
+  :global(html[data-theme="dark"]) .desk-grow { --desk: #8fb37c; --desk-deep: #a9cb97; }
+  :global(html[data-theme="dark"]) .desk-buyer { --desk: #d3a45e; --desk-deep: #e2bd83; }
+  :global(html[data-theme="dark"]) .desk-patient { --desk: #d494a3; --desk-deep: #e3b2bd; }
+  :global(html[data-theme="dark"]) .desk-operator { --desk: #7db8ba; --desk-deep: #9dcecf; }
+
+  /* The theme defines --color-text-light-strong for light mode only; pin a
+     readable dark-mode value so meta/dek text never drops to dark-on-dark. */
+  :global(html[data-theme="dark"]) { --color-text-light-strong: #c8d6c2; }
+
+  /* Sticky desk navigator */
+  .desk-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    margin: 0 -1rem 2.25rem;
+    padding: 0.6rem 1rem;
+    background: color-mix(in oklab, var(--color-background) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-block: 1px solid var(--color-border);
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .desk-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-block-size: 44px;
+    padding: 0.55rem 1.25rem;
+    border-radius: 999px;
+    border: 1.5px solid color-mix(in oklab, var(--desk) 55%, var(--color-border));
+    background: color-mix(in oklab, var(--desk) 10%, var(--color-surface));
+    color: var(--desk-deep);
+    font-weight: 700;
+    font-size: var(--text-base);
+    text-decoration: none;
+    transition: transform var(--duration-interface) ease, background var(--duration-interface) ease;
+  }
+  .desk-nav a::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--desk);
+  }
+  .desk-nav a:hover {
+    background: color-mix(in oklab, var(--desk) 20%, var(--color-surface));
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+  .desk-nav a:target, .desk-nav a:focus-visible {
+    outline: 2px solid var(--desk);
+    outline-offset: 2px;
+  }
+
+  /* Featured story */
+  .featured-story {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--elev-2, 0 6px 24px rgba(16, 24, 32, 0.06));
+  }
+  .featured-story .featured-media {
+    position: relative;
+    min-height: 280px;
+  }
+  .featured-story .featured-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .featured-story .featured-body {
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .featured-kicker {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-error, #8b3a3a);
+  }
+  .featured-body h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    line-height: 1.15;
+    margin: 0.75rem 0 0.9rem;
+  }
+  .featured-body h2 a { color: var(--color-text); text-decoration: none; }
+  .featured-body h2 a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .featured-body p { color: var(--color-text-light); line-height: 1.65; margin: 0 0 1.25rem; }
+  .featured-cta {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 44px;
+    padding: 0.5rem 1.25rem;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    border-radius: var(--radius-editorial-md);
+    font-weight: 600;
+    text-decoration: none;
+    align-self: flex-start;
+  }
+  .featured-cta:hover { background: var(--color-primary-dark); color: var(--color-on-primary); text-decoration: none; }
+  /* Dark mode: --color-primary flips to pale sage, and the theme's broad
+     `html[data-theme] section a` rule would repaint this link. Pin the CTA
+     to the constant cream-ink chip pattern (both tokens stay fixed across
+     themes) at a specificity above the theme override. */
+  :global(html[data-theme]) .featured-story .featured-cta,
+  :global(html[data-theme]) .featured-story .featured-cta:hover {
+    background: var(--color-cream-ink);
+    color: var(--color-on-secondary);
+    text-decoration: none;
+  }
+
+  /* Latest strip */
+  .latest-strip { margin-bottom: 2.75rem; }
+  .strip-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.1rem;
+  }
+  .strip-head h2 {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
     margin: 0;
-    font-size: 0.9375rem;
+  }
+  .strip-head .rule { flex: 1; height: 1px; background: var(--color-rule, var(--color-border)); }
+  .latest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .latest-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 1rem 1.1rem 1.1rem;
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--desk, var(--color-primary));
+    border-radius: var(--radius-editorial-md);
+    background: color-mix(in oklab, var(--desk) 4%, var(--color-surface));
+    text-decoration: none;
+    transition: transform var(--duration-interface) ease, box-shadow var(--duration-interface) ease;
+  }
+  .latest-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(16, 24, 32, 0.09);
+    text-decoration: none;
+  }
+  .latest-item .item-meta {
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--desk-deep, var(--color-text-light));
+    font-weight: 700;
+  }
+  .latest-item h3 {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    line-height: 1.3;
+    margin: 0;
+    color: var(--color-text);
   }
 
+  /* Start-here pathway chips */
+  .pathways { margin-bottom: 3rem; }
+  .pathways h2 {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    margin-bottom: 0.4rem;
+  }
+  .pathways > p {
+    color: var(--color-text-light);
+    margin-bottom: 1.25rem;
+    max-width: 70ch;
+  }
+  .pathway-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.9rem;
+  }
+  .pathway-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1rem 1.15rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--desk, var(--color-primary));
+    border-radius: var(--radius-editorial-md);
+    text-decoration: none;
+    transition: transform var(--duration-interface) ease, box-shadow var(--duration-interface) ease;
+  }
+  .pathway-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(16, 24, 32, 0.09);
+    text-decoration: none;
+  }
+  .pathway-label {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--desk-deep, var(--color-accent));
+  }
+  .pathway-card h3 {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    margin: 0;
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+  .pathway-card p {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-light);
+    line-height: 1.55;
+  }
+
+  /* Desk sections */
+  .desk-section {
+    margin-bottom: 3.25rem;
+    scroll-margin-top: 5.5rem;
+  }
+  .desk-band {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.4rem;
+    border-radius: var(--radius-editorial-md);
+    background: color-mix(in oklab, var(--desk) 18%, var(--color-surface));
+    border-left: 6px solid var(--desk);
+    border-bottom: 1px solid color-mix(in oklab, var(--desk) 35%, var(--color-border));
+  }
+  .desk-band h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.375rem, 2.5vw, 1.75rem);
+    margin: 0;
+    color: var(--color-text);
+  }
+  .desk-band .desk-count {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--desk-deep);
+    border: 1px solid color-mix(in oklab, var(--desk) 50%, transparent);
+    border-radius: 999px;
+    padding: 0.15rem 0.65rem;
+    background: color-mix(in oklab, var(--desk) 8%, transparent);
+  }
+  .desk-band .desk-tagline {
+    flex-basis: 100%;
+    margin: 0;
+    color: var(--color-text-light);
+    font-size: var(--text-sm);
+  }
+  .desk-subhead {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--desk-deep, var(--color-accent));
+    margin: 1.75rem 0 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .desk-subhead::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--color-rule, var(--color-border));
+  }
+
+  .story-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+  .story-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    text-decoration: none;
+    transition: transform var(--duration-interface) ease, box-shadow var(--duration-interface) ease, border-color var(--duration-interface) ease;
+  }
+  .story-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 26px rgba(16, 24, 32, 0.11);
+    border-color: color-mix(in oklab, var(--desk) 55%, var(--color-border));
+    text-decoration: none;
+  }
+  .story-media {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: color-mix(in oklab, var(--desk) 14%, var(--color-surface));
+  }
+  .story-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .story-card:hover .story-media img { transform: scale(1.035); }
+  .story-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.1rem 1.2rem 1.2rem;
+  }
+  .story-eyebrow {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--desk-deep, var(--color-accent));
+  }
+  .story-body h3 {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 1.3;
+    margin: 0.45rem 0 0.55rem;
+    color: var(--color-text);
+  }
+  .story-body p {
+    margin: 0 0 0.9rem;
+    font-size: var(--text-sm);
+    color: var(--color-text-light);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .story-meta {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--text-sm);
+    color: var(--color-text-light-strong, var(--color-text-light));
+  }
+  .story-meta .read-on {
+    font-weight: 700;
+    color: var(--desk-deep, var(--color-accent));
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 860px) {
+    .featured-story { grid-template-columns: 1fr; }
+    .featured-story .featured-media { min-height: 220px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .story-card, .latest-item, .pathway-card, .desk-nav a { transition: none; }
+    .story-card:hover .story-media img { transform: none; }
+  }
 </style>
-<section class="page-header">
-    <h1>Maine Cannabis Blog</h1>
-    <p>Industry news, operational guides, and policy analysis for Maine cannabis professionals.</p>
-  </section>
 
-  <section class="blog-section">
-    <h2>Need a specific Maine cannabis path?</h2>
-    <p>Use these topic pathways when you are comparing policy, operator, career, and consumer decisions across the Maine cannabis market.</p>
-    <div class="posts-grid">
-      <a href="/blog/buying-cannabis-by-effect-2026" class="post-card">
-        <span class="post-date">Consumer Guide</span>
-        <h3>{blogCrosslinks["buying-cannabis-by-effect-2026"]}</h3>
-        <p>Match Maine menu terms to the outcome you want before you choose a strain, edible, or concentrate.</p>
-      </a>
-      <a href="/blog/maine-dispensary-gift-cards" class="post-card">
-        <span class="post-date">Consumer Guide</span>
-        <h3>{blogCrosslinks["maine-dispensary-gift-cards"]}</h3>
-        <p>Check which gift-card options work for Maine stores and which purchase rules matter at checkout.</p>
-      </a>
-      <a href="/blog/maine-cannabis-budtender-careers" class="post-card">
-        <span class="post-date">Careers</span>
-        <h3>{blogCrosslinks["maine-cannabis-budtender-careers"]}</h3>
-        <p>Review pay bands, OCP worker requirements, interview signals, and retail cannabis career paths.</p>
-      </a>
-      <a href="/blog/maine-cannabis-delivery-business-guide-2026" class="post-card">
-        <span class="post-date">Business Operations</span>
-        <h3>{blogCrosslinks["maine-cannabis-delivery-business-guide-2026"]}</h3>
-        <p>Run lawful adult-use delivery as an existing licensee — §504(9) authority, vehicle controls, manifests, ID checks, and records. No standalone courier license exists.</p>
-      </a>
-      <a href="/blog/maine-dispensary-business-for-sale" class="post-card">
-        <span class="post-date">Finance & Investment</span>
-        <h3>{blogCrosslinks["maine-dispensary-business-for-sale"]}</h3>
-        <p>Use the acquisition checklist before underwriting a Maine dispensary listing or change-of-ownership deal.</p>
-      </a>
-      <a href="/blog/portland-maine-cannabis-rules-2026" class="post-card">
-        <span class="post-date">Compliance</span>
-        <h3>{blogCrosslinks["portland-maine-cannabis-rules-2026"]}</h3>
-        <p>Verify local zoning, municipal approval, and operating constraints before planning in Portland.</p>
-      </a>
-      <a href="/blog/maine-cannabis-social-equity-program-2026" class="post-card">
-        <span class="post-date">Policy & Legislation</span>
-        <h3>{blogCrosslinks["maine-cannabis-social-equity-program-2026"]}</h3>
-        <p>Understand eligibility, fee reductions, priority licensing, and support programs for applicants.</p>
-      </a>
-      <a href="/blog/maine-cannabis-gray-market-ocp-enforcement-2026" class="post-card">
-        <span class="post-date">Policy & Legislation</span>
-        <h3>{blogCrosslinks["maine-cannabis-gray-market-ocp-enforcement-2026"]}</h3>
-        <p>Read the enforcement analysis behind caregiver leakage, out-of-state delivery, and OCP capacity limits.</p>
-      </a>
-      <a href="/blog/maine-psilocybin-2026-guide" class="post-card">
-        <span class="post-date">Policy & Legislation</span>
-        <h3>{blogCrosslinks["maine-psilocybin-2026-guide"]}</h3>
-        <p>Track LD 1034, the state commission, federal research signals, and operational implications.</p>
-      </a>
-      <a href="/blog/ibogaine-federal-executive-order-maine-2026" class="post-card">
-        <span class="post-date">Policy & Legislation</span>
-        <h3>{blogCrosslinks["ibogaine-federal-executive-order-maine-2026"]}</h3>
-        <p>Separate ibogaine policy signals from Maine's psilocybin debate and cannabis operator strategy.</p>
-      </a>
-    </div>
-  </section>
+<header class="blog-masthead">
+  <p class="masthead-eyebrow">The Maine Desk</p>
+  <h1>Maine Cannabis Blog</h1>
+  <p class="masthead-dek">Industry news, operational guides, and policy analysis for Maine cannabis professionals — reported against OCP records, state statute, and operator interviews.</p>
+  <p class="masthead-stats">
+    <span><strong>{postCount}</strong> field guides &amp; dispatches</span>
+    <span><strong>4</strong> editorial desks</span>
+    <span>Latest filing <strong>{newestLabel}</strong></span>
+  </p>
+</header>
 
-  {Object.entries(grouped).map(([section, sectionPosts]) => (
-    <section class="blog-section">
-      <h2>{section}</h2>
-      <div class="posts-grid">
-        {sectionPosts.map((post) => (
-          <a href={post.url} class="post-card">
-            <span class="post-date">{post.date}</span>
-            <h3>{post.title}</h3>
-            <p>{post.description}</p>
-          </a>
-        ))}
-      </div>
-    </section>
+<nav class="desk-nav" aria-label="Editorial desks">
+  {desks.map((desk) => (
+    <a href={`#desk-${desk.id}`} class={desk.klass}>{desk.name}</a>
   ))}
+</nav>
+
+<section class="featured-story desk-operator" aria-label="Featured story">
+  <div class="featured-media">
+    <img src="/images/heroes/ocp-license-map-640w.jpg" alt="Maine Office of Cannabis Policy license map graphic" width="640" height="360" loading="eager" fetchpriority="high" />
+  </div>
+  <div class="featured-body">
+    <p class="featured-kicker">Featured investigation · Policy Desk</p>
+    <h2><a href={featured.url}>{featured.title}</a></h2>
+    <p>{featured.description}</p>
+    <a class="featured-cta" href={featured.url}>Read the analysis →</a>
+  </div>
+</section>
+
+<section class="latest-strip" aria-label="Latest stories">
+  <div class="strip-head">
+    <h2>Fresh off the desks</h2>
+    <span class="rule" aria-hidden="true"></span>
+  </div>
+  <div class="latest-grid">
+    {latest.map((post) => (
+      <a href={post.url} class={`latest-item ${deskBySection.get(post.section) ?? ''}`}>
+        <span class="item-meta">{post.section} · {formatPostDate(post.date)}</span>
+        <h3>{post.title}</h3>
+      </a>
+    ))}
+  </div>
+</section>
+
+<section class="pathways" aria-label="Start here">
+  <h2>Need a specific Maine cannabis path?</h2>
+  <p>Use these topic pathways when you are comparing policy, operator, career, and consumer decisions across the Maine cannabis market.</p>
+  <div class="pathway-grid">
+    {pathways.map((pw) => (
+      <a href={pw.href} class={`pathway-card ${pw.desk}`}>
+        <span class="pathway-label">{pw.label}</span>
+        <h3>{blogCrosslinks[pw.slug as keyof typeof blogCrosslinks] ?? pw.slug}</h3>
+        <p>{pw.note}</p>
+      </a>
+    ))}
+  </div>
+</section>
+
+{desks.map((desk) => {
+  const deskPosts = posts.filter(p => desk.sections.includes(p.section));
+  const subSections = desk.sections.filter(s => deskPosts.some(p => p.section === s));
+  return (
+    <section id={`desk-${desk.id}`} class={`desk-section ${desk.klass}`} aria-label={desk.name}>
+      <div class="desk-band">
+        <h2>{desk.name}</h2>
+        <span class="desk-count">{deskPostCount(desk)} stories</span>
+        <p class="desk-tagline">{desk.tagline}</p>
+      </div>
+      {subSections.map((sub) => (
+        <Fragment>
+          <h3 class="desk-subhead">{sub}</h3>
+          <div class="story-grid">
+            {deskPosts.filter(p => p.section === sub).map((post) => (
+              <a href={post.url} class="story-card">
+                <div class="story-media">
+                  <img src={heroFor(post.url)} alt="" width="640" height="360" loading="lazy" decoding="async" />
+                </div>
+                <div class="story-body">
+                  <span class="story-eyebrow">{post.section}</span>
+                  <h3>{post.title}</h3>
+                  <p>{post.description}</p>
+                  <span class="story-meta">
+                    <time datetime={post.date}>{formatPostDate(post.date)}</time>
+                    <span class="read-on">Read →</span>
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </Fragment>
+      ))}
+    </section>
+  );
+})}
 </Layout>
