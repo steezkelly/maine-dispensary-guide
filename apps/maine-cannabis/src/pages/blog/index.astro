@@ -1,115 +1,81 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import blogCrosslinks from '../../data/blog-crosslinks.json';
+import blogIndex from '../../data/blog-index.json';
 
-const posts = [
-  { url: '/blog/how-much-weed-can-you-buy-in-maine', title: 'How Much Weed Can You Buy in Maine? 2026 Limits', description: 'Maine adult-use purchase and possession limits: 2.5 ounces total, no more than 10 grams of concentrate, mixed-product carts, and official sources.', date: '2026-07-22', section: 'Consumer Guide' },
-  { url: '/blog/maine-medical-cannabis-patient-grow-guide', title: 'Can Maine Medical Cannabis Patients Grow Their Own?', description: 'Maine medical patient grow rules explained: plant limits, cultivation areas, caregiver designation, possession, and official Title 22 sources.', date: '2026-07-16', section: 'Medical Cannabis' },
-  { url: '/blog/maine-medical-patient-delivery-services-2026', title: 'Maine Medical Marijuana Patient Delivery Services 2026', description: 'How Maine medical cannabis patients lawfully access delivery through the responsible caregiver or registered dispensary — Title 22 rules, visiting-patient requirements, documentation, and what is not permitted.', date: '2026-05-13', section: 'Medical Cannabis' },
-  { url: '/blog/maine-cannabis-social-equity-program-2026', title: 'Maine Cannabis Social Equity Program Guide 2026', description: 'Maine\'s Social Equity Program offers fee reductions, priority licensing, and grant funding for cannabis entrepreneurs from communities harmed by prohibition. Eligibility rules and application process.', date: '2026-05-13', section: 'Policy & Legislation' },
-  { url: '/blog/maine-psilocybin-2026-guide', title: 'Maine Psilocybin Guide 2026: Law, Research & Ops', description: "Maine's psilocybin decriminalization effort (LD 1034), the state commission studying regulated services, federal EO fast-tracking, and what it means for the Maine cannabis industry.", date: '2026-04-20', section: 'Policy & Legislation' },
-  { url: '/blog/trump-psychedelic-executive-order-maine-psilocybin-2026', title: 'Trump Psychedelic Executive Order & Maine Psilocybin', description: 'How the federal executive order on psychedelics intersects with Maine LD 1034 and what operators should know about emerging opportunities.', date: '2026-04-18', section: 'Policy & Legislation' },
-  { url: '/blog/maine-cannabis-delivery-business-guide-2026', title: 'Maine Cannabis Delivery Business Guide 2026', description: 'Source-backed operator guide to lawful Maine adult-use delivery by existing licensees — there is no standalone courier license. Covers §504(9) authority, vehicle controls, manifests, ID checks, and OCP records.', date: '2026-04-18', section: 'Business Operations' },
-  { url: '/blog/portland-maine-cannabis-rules-2026', title: 'Portland Maine Cannabis Rules 2026', description: 'Local ordinances, zoning restrictions, and city-level requirements for cannabis businesses operating in Portland, Maine.', date: '2026-04-12', section: 'Compliance' },
-  { url: '/guides/maine-dispensary-license', title: 'How to Open a Maine Dispensary in 2026', description: 'Step-by-step guide to opening a cannabis dispensary in Maine — from licensing to first sale. Updated with current OCP requirements.', date: '2026-04-10', section: 'Business Operations' },
-  { url: '/blog/maine-dispensary-roi-what-to-expect-2026', title: 'Maine Dispensary ROI: What to Expect in 2026', description: 'Real revenue benchmarks, operating costs, and profit margins for Maine cannabis dispensaries based on 2025 operator data.', date: '2026-04-08', section: 'Finance & Investment' },
-  { url: '/blog/maine-cannabis-microbusiness-license-2026', title: 'Maine Microbusiness License Guide 2026', description: 'How to qualify for and operate a Maine microbusiness cannabis license — lower barriers, unique opportunities, and OCP application walkthrough.', date: '2026-04-05', section: 'Licensing' },
-  { url: '/blog/maine-cannabis-cultivation-license-2026', title: 'Maine Cultivation License Guide 2026', description: 'Complete guide to obtaining a cannabis cultivation license in Maine — facility requirements, testing protocols, and OCP licensing process.', date: '2026-04-03', section: 'Licensing' },
-  { url: '/blog/maine-home-grow-cannabis-guide-2026', title: 'How Many Cannabis Plants Can You Grow in Maine? 2026', description: 'Maine adults 21+ may grow six mature plants, 12 immature plants, and unlimited seedlings. See medical limits, lawful locations, tagging, visibility, and official sources.', date: '2026-04-18', section: 'Home Cultivation' },
-  { url: '/blog/ibogaine-federal-executive-order-maine-2026', title: 'Ibogaine & Federal Executive Order — Maine Implications 2026', description: 'How the federal executive order on ibogaine affects Maine operators and what the psychedelic medicine landscape means for the industry.', date: '2026-03-28', section: 'Policy & Legislation' },
-  { url: '/blog/maine-medical-cannabis-pesticide-advisory-2026', title: 'Maine Medical Cannabis Pesticide Advisory 2026', description: 'Critical pesticide rules for Maine medical cannabis cultivators — OCP compliance, testing requirements, and product safety standards.', date: '2026-03-25', section: 'Compliance' },
-  // 2026-06-05 + 2026-06-06 batch — touched in 2026-06-06 audit (orphan-page fix)
-  { url: '/blog/cannabis-terpenes-explained-maine-2026', title: 'Cannabis Terpenes Explained: A Maine Consumer\'s Guide to the Six Most Common', description: 'A primary-source, citation-backed guide to the six terpenes that dominate Maine dispensary menus. What the research says about effects, what users report, and what Maine consumers should actually do with terpene information given that Maine does not require terpene testing.', date: '2026-06-06', section: 'Cannabis Science' },
-  { url: '/blog/maine-cannabis-gray-market-ocp-enforcement-2026', title: 'Maine\'s Cannabis \'Gray Market\' Is Growing Because the Regulators Can\'t Keep Up', description: 'Maine\'s Office of Cannabis Policy regulates a sprawling industry with fewer than 40 compliance staff. The result: a 1,500-caregiver gray market, a thriving out-of-state delivery trade, and a patient base that is increasingly buying outside the legal system.', date: '2026-06-06', section: 'Policy & Legislation' },
-  { url: '/blog/cannabis-clones-vs-seeds-maine-2026', title: 'Cannabis Clones vs. Seeds for Maine 2026 — Maine Vendors, HLVd, OCP Rules', description: 'Cannabis clones vs. seeds for Maine 2026: 5 Maine vendors (Farmington, Waterville, Biddeford, Monroe), OCP caregiver and registered-nursery rules, HLVd pest risk, and a per-plant cost comparison.', date: '2026-06-06', section: 'Home Cultivation' },
-  { url: '/blog/indoor-cannabis-grow-setup-maine-cost-2026', title: 'Indoor Cannabis Grow Setup & Cost for Maine 2026 — Tent, Light, Electric', description: 'Indoor cannabis grow setup for Maine 2026: tent sizing, LED lights, CMP TOU electricity rates, dehumidifier sizing, and the per-ounce cost of indoor vs. outdoor vs. dispensary.', date: '2026-06-06', section: 'Home Cultivation' },
-  { url: '/blog/drying-cannabis-maine-humidity-2026', title: 'Drying Cannabis in Maine 2026 — Humidity, Equipment & Cure Protocol', description: 'Maine October humidity is 84–86% — 20+ points above the 60/60 drying target. How to dry cannabis in Maine: equipment, protocol, and the Boveda 62 cure schedule that closes the gap.', date: '2026-06-06', section: 'Home Cultivation' },
-  { url: '/blog/autoflower-vs-feminized-maine-2026', title: 'Autoflower vs Feminized Seeds for Maine 2026 — Which to Choose', description: 'Autoflower vs feminized photoperiod seeds for Maine: yield, THC, latitude-tier decision, and the buy-or-start trade-off for home growers.', date: '2026-06-06', section: 'Home Cultivation' },
-  { url: '/blog/when-to-start-cannabis-seeds-maine-2026', title: 'When to Start Cannabis Seeds in Maine 2026 — City-by-City Calendar', description: 'When to start cannabis seeds in Maine: 7-city last-frost, indoor-start, and harvest calendar for Portland, Bangor, Augusta, Bar Harbor, Lewiston, Waterville, and Presque Isle.', date: '2026-06-06', section: 'Home Cultivation' },
-  { url: '/blog/best-cannabis-strains-maine-outdoor-2026', title: 'Best Cannabis Strains for Maine Outdoor 2026 — Mold-Resistant & Fast-Finishing Picks', description: '7 best cannabis strains for Maine outdoor growing in 2026: mold-resistant, fast-finishing, cold-tolerant genetics that finish before October rain.', date: '2026-06-05', section: 'Home Cultivation' },
-  { url: '/blog/best-live-rosin-maine', title: 'Best Live Rosin in Maine 2026: A Solventless Buyer\'s Guide', description: 'The best live rosin in Maine in 2026 — what makes it different from BHO and distillate, which operators press it, and the price-per-gram benchmarks you should know.', date: '2026-06-05', section: 'Cultivation & Products' },
-  { url: '/blog/best-maine-dispensaries-2026', title: 'Best Maine Dispensaries in 2026: 12 Stores Worth the Drive by Region', description: 'A region-by-region guide to the best adult-use and medical dispensaries in Maine in 2026 — what each store does well, pricing, and the unique-to-Maine angle.', date: '2026-06-05', section: 'Market Analysis' },
-  { url: '/blog/best-maine-edibles-2026', title: 'Best Edibles in Maine 2026: A Buyer\'s Guide by Effect and Form', description: 'Maine\'s best cannabis edibles in 2026: gummies, chocolates, and beverages by dose tier, effect, and the operators that consistently ship clean extractions.', date: '2026-06-05', section: 'Consumer Guide' },
-  { url: '/blog/cheapest-maine-dispensary-2026', title: 'Cheapest Dispensary in Maine 2026: Where to Find the Best Ounce & Eighth Prices', description: 'A buyer\'s guide to the cheapest legal dispensary prices in Maine in 2026 — ounces, eighths, and pre-roll price benchmarks with the daily-deal timing that wins the lowest price.', date: '2026-06-05', section: 'Market Analysis' },
-  { url: '/blog/cannabis-friendly-maine-travel', title: 'Cannabis-Friendly Maine Travel Guide: Buy and Consume Legally', description: 'Can tourists buy cannabis in Maine, and where can they consume it? Current guidance on ID, private-property rules, vehicles, lodging, medical visitors, and borders.', date: '2026-06-05', section: 'Lifestyle & Travel' },
-  { url: '/blog/maine-cannabis-budtender-careers', title: 'How to Get a Budtender Job in Maine: 2026 Career Guide', description: 'What Maine dispensaries actually look for, what they pay, how to stand out in an interview, and where the budtender career ladder leads.', date: '2026-06-05', section: 'Careers' },
-  { url: '/blog/maine-dispensary-gift-cards', title: 'Maine Dispensary Gift Cards: 2026 Buyer\'s Guide', description: 'Which Maine dispensaries sell gift cards, where to buy them online, and the gotchas that catch first-time buyers (no expiry vs. per-session use, store-only vs. online).', date: '2026-06-05', section: 'Consumer Guide' },
-  { url: '/blog/maine-medical-marijuana-patient-guide', title: 'How to Get a Maine Medical Cannabis Card in 2026', description: 'How to get what is commonly called a Maine medical cannabis card: provider certification, written documentation, renewals, visiting-patient rules, and official sources.', date: '2026-06-05', section: 'Medical & Wellness' },
-  { url: '/blog/maine-rso-guide', title: 'RSO in Maine 2026: A Buyer\'s Guide to Rick Simpson Oil', description: 'What RSO is, how to dose it, where to buy it in Maine, and the medical research context — with buyer notes for caregivers and patients.', date: '2026-06-05', section: 'Medical & Wellness' },
-  { url: '/blog/recreational-cannabis-near-acadia', title: 'Recreational Cannabis Near Acadia National Park: 2026 Visitor\'s Guide', description: 'Where to buy legal adult-use cannabis near Acadia National Park in 2026 — Bar Harbor, Trenton, and Ellsworth dispensaries plus the consumption-lounge rules.', date: '2026-06-05', section: 'Consumer Guide' },
-  { url: '/blog/buying-cannabis-by-effect-2026', title: 'Buying Cannabis by Effect in Maine: A 2026 Consumer Guide', description: 'Maine dispensary menus by effect — relaxation, focus, sleep, and creativity. The dominant-terpene and cannabinoid mapping that Maine stores use, with caveats about Maine\'s lack of terpene testing requirements.', date: '2026-06-07', section: 'Consumer Guide' },
-  { url: '/blog/how-to-read-maine-cannabis-coa-terpenes-2026', title: 'How to Read a Maine Cannabis COA: A 2026 Guide for Terpene Shoppers', description: 'Maine cannabis COAs and what they show for terpenes — what to look for, why the terpene section is often blank, and how to read cannabinoid, contaminant, and moisture panels.', date: '2026-06-07', section: 'Cannabis Science' },
-  { url: '/blog/terpene-preservation-drying-curing-2026', title: 'Terpene Preservation in Maine: Drying, Curing, and Storage in High Humidity', description: 'Maine humidity, temperature swings, and the practical drying and cure protocol that preserves the terpene profile of a 2026 harvest — Boveda 62, sealed glass, and a low-temperature cure schedule.', date: '2026-06-07', section: 'Home Cultivation' }
+// Single source of truth: the build-generated blog index (53 posts).
+// Never hardcode posts here — the index regenerates from the pages themselves.
+const posts = blogIndex.items.map((item) => ({
+  url: item.href,
+  title: item.title,
+  date: item.date,
+  section: item.section,
+  hero: item.heroImage ?? '/images/heroes/maine-compliance-hero.jpg',
+}));
+
+// Companion entries that live outside /blog/ but belong on this page for
+// internal-link equity (previously hardcoded; kept deliberately).
+const pinnedCompanions = [
+  { url: '/guides/maine-dispensary-license', title: 'How to Open a Maine Dispensary in 2026', date: '2026-07-21', section: 'Business Operations', hero: '/images/heroes/maine-dispensary-license-open-2026.jpg' },
 ];
 
-// Hero images per slug. Most follow the slug name; exceptions map to the
-// actual heroImage used by each article page (verified against frontmatter).
-const heroOverrides: Record<string, string> = {
-  'ibogaine-federal-executive-order-maine-2026': 'ibogaine-executive-order-2026',
-  'terpene-preservation-drying-curing-2026': 'terpene-preservation-maine-2026',
-  'cannabis-terpenes-explained-maine-2026': 'terpene-guide-maine',
-  'maine-psilocybin-2026-guide': 'maine-psilocybin-2026',
-  'maine-cannabis-gray-market-ocp-enforcement-2026': 'ocp-license-map',
-  'how-to-read-maine-cannabis-coa-terpenes-2026': 'maine-cannabis-coa-2026',
-  'maine-medical-patient-delivery-services-2026': 'maine-medical-delivery',
-  'maine-cannabis-social-equity-program-2026': 'maine-cannabis-social-equity',
-  'how-much-weed-can-you-buy-in-maine': 'maine-cannabis-purchase-limits',
-  'maine-medical-cannabis-patient-grow-guide': 'maine-home-grow-cannabis-guide-2026',
-  'maine-dispensary-license': 'maine-dispensary-how-to-open',
-};
+const allEntries = [...posts, ...pinnedCompanions];
 
-function heroFor(url: string): string {
-  const slug = url.split('/').pop() ?? '';
-  const base = heroOverrides[slug] ?? slug;
-  return `/images/heroes/${base}-640w.jpg`;
+// Card images use the 640w variant of each post's hero.
+function hero640(hero: string): string {
+  return hero.replace(/\.jpg$/, '-640w.jpg');
 }
 
-// Four editorial desks — each groups related sections under one visual
-// identity so readers can tell at a glance which shelf a story sits on.
-const desks = [
+// Four topics — each groups related sections under one accent color so
+// readers can tell at a glance which shelf a story sits on.
+const topics = [
   {
     id: 'grow',
     klass: 'desk-grow',
-    name: 'Grow & Science Desk',
-    tagline: 'Plant limits, genetics, drying protocols, and the terpene science behind Maine menus.',
+    name: 'Growing Cannabis',
+    hint: 'Guides for people who grow or want to grow cannabis — plants, soil, training, pests, drying, and the science behind it.',
     sections: ['Home Cultivation', 'Cannabis Science', 'Cultivation & Products'],
   },
   {
     id: 'buyer',
     klass: 'desk-buyer',
-    name: 'Buyer\'s Desk',
-    tagline: 'What to buy, what it costs, and how to travel, gift, and dose in Maine.',
+    name: 'Buying & Visiting',
+    hint: 'Guides for shoppers and visitors — what to buy, what it costs, travel, and gifting in Maine.',
     sections: ['Consumer Guide', 'Market Analysis', 'Lifestyle & Travel'],
   },
   {
     id: 'patient',
     klass: 'desk-patient',
-    name: 'Patient Desk',
-    tagline: 'Medical cards, caregiver access, delivery rights, and patient-centered products.',
+    name: 'Medical & Patients',
+    hint: 'Guides for medical cannabis patients — cards, caregiver delivery rights, and patient-focused products.',
     sections: ['Medical & Wellness', 'Medical Cannabis'],
   },
   {
     id: 'operator',
     klass: 'desk-operator',
-    name: 'Operator Desk',
-    tagline: 'Licensing, enforcement, careers, ROI, and policy that moves the trade.',
-    sections: ['Careers', 'Policy & Legislation', 'Policy & Enforcement', 'Business Operations', 'Finance & Investment', 'Licensing', 'Compliance'],
+    name: 'Business & Policy',
+    hint: 'Guides for operators and professionals — licensing, enforcement, careers, finance, and Maine cannabis law.',
+    sections: ['Careers', 'Policy & Legislation', 'Policy & Enforcement', 'Business & Operations', 'Business Operations', 'Finance', 'Finance & Investment', 'Licensing', 'Compliance', 'Market Data', 'Patient Safety', 'Municipal Regulations', 'Learn', 'Transactions'],
   },
 ];
 
-const deskBySection = new Map<string, string>();
-for (const desk of desks) for (const s of desk.sections) deskBySection.set(s, desk.klass);
+const topicBySection = new Map<string, string>();
+for (const topic of topics) for (const s of topic.sections) topicBySection.set(s, topic.klass);
 
-const featured = posts.find(p => p.url === '/blog/maine-cannabis-gray-market-ocp-enforcement-2026') ?? posts[0];
+// Featured story: the gray-market enforcement analysis, pinned deliberately.
+const featuredUrl = '/blog/maine-cannabis-gray-market-ocp-enforcement-2026';
+const featured = allEntries.find((p) => p.url === featuredUrl) ?? allEntries[0];
+
+// Latest: the six newest blog posts that aren't the featured story.
 const latest = [...posts]
-  .filter(p => p.url !== featured.url)
+  .filter((p) => p.url !== featured.url)
   .sort((a, b) => b.date.localeCompare(a.date))
   .slice(0, 6);
 
-const deskPostCount = (desk: typeof desks[number]) =>
-  posts.filter(p => desk.sections.includes(p.section)).length;
+const topicPostCount = (topic: typeof topics[number]) =>
+  allEntries.filter((p) => topic.sections.includes(p.section)).length;
 
-const postCount = posts.length;
+const postCount = allEntries.length;
 const newest = posts.reduce((m, p) => (p.date > m ? p.date : m), posts[0].date);
 const newestLabel = new Date(newest + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
@@ -117,12 +83,13 @@ function formatPostDate(iso: string): string {
   return new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+// "Start here" pathways keep the corrected-delivery SEO contracts.
 const pathways = [
   { href: '/blog/buying-cannabis-by-effect-2026', slug: 'buying-cannabis-by-effect-2026', desk: 'desk-buyer', label: 'Consumer Guide', note: 'Match Maine menu terms to the outcome you want before you choose a strain, edible, or concentrate.' },
   { href: '/blog/maine-dispensary-gift-cards', slug: 'maine-dispensary-gift-cards', desk: 'desk-buyer', label: 'Consumer Guide', note: 'Check which gift-card options work for Maine stores and which purchase rules matter at checkout.' },
   { href: '/blog/maine-cannabis-budtender-careers', slug: 'maine-cannabis-budtender-careers', desk: 'desk-operator', label: 'Careers', note: 'Review pay bands, OCP worker requirements, interview signals, and retail cannabis career paths.' },
   { href: '/blog/maine-cannabis-delivery-business-guide-2026', slug: 'maine-cannabis-delivery-business-guide-2026', desk: 'desk-operator', label: 'Business Operations', note: 'Run lawful adult-use delivery as an existing licensee — §504(9) authority, vehicle controls, manifests, ID checks, and records. No standalone courier license exists.' },
-  { href: '/blog/maine-dispensary-business-for-sale', slug: 'maine-dispensary-business-for-sale', desk: 'desk-operator', label: 'Finance & Investment', note: 'Use the acquisition checklist before underwriting a Maine dispensary listing or change-of-ownership deal.' },
+  { href: '/blog/maine-medical-patient-delivery-services-2026', slug: 'maine-medical-patient-delivery-services-2026', desk: 'desk-patient', label: 'Medical Cannabis', note: 'How Maine medical cannabis patients lawfully access delivery through the responsible caregiver or registered dispensary — Title 22 rules and what is not permitted.' },
   { href: '/blog/portland-maine-cannabis-rules-2026', slug: 'portland-maine-cannabis-rules-2026', desk: 'desk-operator', label: 'Compliance', note: 'Verify local zoning, municipal approval, and operating constraints before planning in Portland.' },
   { href: '/blog/maine-cannabis-social-equity-program-2026', slug: 'maine-cannabis-social-equity-program-2026', desk: 'desk-operator', label: 'Policy & Legislation', note: 'Understand eligibility, fee reductions, priority licensing, and support programs for applicants.' },
   { href: '/blog/maine-cannabis-gray-market-ocp-enforcement-2026', slug: 'maine-cannabis-gray-market-ocp-enforcement-2026', desk: 'desk-operator', label: 'Policy & Legislation', note: 'Read the enforcement analysis behind caregiver leakage, out-of-state delivery, and OCP capacity limits.' },
@@ -139,13 +106,13 @@ const pathways = [
 <style>
   /* ============================================================
      THE MAINE DESK — editorial magazine treatment for /blog
-     Desk colors carry both themes via var() + color-mix.
+     Topic accent colors carry both themes via var() + color-mix.
      ============================================================ */
   .blog-masthead {
     position: relative;
-    padding: clamp(2rem, 5vw, 3.5rem) 0 clamp(1.5rem, 3vw, 2.5rem);
+    padding: clamp(2rem, 5vw, 3.25rem) 0 clamp(1.25rem, 3vw, 2rem);
     border-bottom: 3px double var(--color-rule, rgba(16, 24, 32, 0.25));
-    margin-bottom: 2rem;
+    margin-bottom: 1.75rem;
     text-align: center;
   }
   .masthead-eyebrow {
@@ -194,8 +161,44 @@ const pathways = [
     color: var(--color-text);
     font-variant-numeric: tabular-nums;
   }
+  /* Small ⓘ affordance that explains editorial terms on hover/focus. */
+  .term-tip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: help;
+    border-bottom: 1px dotted color-mix(in oklab, currentColor 60%, transparent);
+  }
+  .term-tip .tip-bubble {
+    position: absolute;
+    bottom: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(30ch, 80vw);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(16, 24, 32, 0.16);
+    padding: 0.6rem 0.75rem;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--color-text);
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--duration-interface) ease;
+    z-index: 30;
+    pointer-events: none;
+  }
+  .term-tip:hover .tip-bubble,
+  .term-tip:focus .tip-bubble,
+  .term-tip:focus-within .tip-bubble {
+    opacity: 1;
+    visibility: visible;
+  }
 
-  /* Desk palette — mid-tone accents tuned for both themes. */
+  /* Topic palette — mid-tone accents tuned for both themes. */
   .desk-grow { --desk: #4e7042; --desk-deep: #38522f; }
   .desk-buyer { --desk: #a06b28; --desk-deep: #7c521e; }
   .desk-patient { --desk: #9b5a68; --desk-deep: #77404e; }
@@ -209,12 +212,12 @@ const pathways = [
      readable dark-mode value so meta/dek text never drops to dark-on-dark. */
   :global(html[data-theme="dark"]) { --color-text-light-strong: #c8d6c2; }
 
-  /* Sticky desk navigator */
+  /* Sticky topic navigator */
   .desk-nav {
     position: sticky;
     top: 0;
     z-index: 50;
-    margin: 0 -1rem 2.25rem;
+    margin: 0 -1rem 2rem;
     padding: 0.6rem 1rem;
     background: color-mix(in oklab, var(--color-background) 92%, transparent);
     backdrop-filter: blur(8px);
@@ -251,7 +254,7 @@ const pathways = [
     transform: translateY(-1px);
     text-decoration: none;
   }
-  .desk-nav a:target, .desk-nav a:focus-visible {
+  .desk-nav a:focus-visible {
     outline: 2px solid var(--desk);
     outline-offset: 2px;
   }
@@ -299,7 +302,7 @@ const pathways = [
   }
   .featured-body h2 a { color: var(--color-text); text-decoration: none; }
   .featured-body h2 a:hover { text-decoration: underline; text-underline-offset: 3px; }
-  .featured-body p { color: var(--color-text-light); line-height: 1.65; margin: 0 0 1.25rem; }
+  .featured-body p { color: var(--color-text-light-strong, var(--color-text-light)); line-height: 1.65; margin: 0 0 1.25rem; }
   .featured-cta {
     display: inline-flex;
     align-items: center;
@@ -324,7 +327,7 @@ const pathways = [
     text-decoration: none;
   }
 
-  /* Latest strip */
+  /* Latest strip — horizontal image cards */
   .latest-strip { margin-bottom: 2.75rem; }
   .strip-head {
     display: flex;
@@ -340,18 +343,17 @@ const pathways = [
   .strip-head .rule { flex: 1; height: 1px; background: var(--color-rule, var(--color-border)); }
   .latest-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem;
   }
   .latest-item {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    padding: 1rem 1.1rem 1.1rem;
     border: 1px solid var(--color-border);
     border-left: 3px solid var(--desk, var(--color-primary));
     border-radius: var(--radius-editorial-md);
-    background: color-mix(in oklab, var(--desk) 4%, var(--color-surface));
+    background: var(--color-surface);
+    overflow: hidden;
     text-decoration: none;
     transition: transform var(--duration-interface) ease, box-shadow var(--duration-interface) ease;
   }
@@ -360,12 +362,25 @@ const pathways = [
     box-shadow: 0 6px 18px rgba(16, 24, 32, 0.09);
     text-decoration: none;
   }
+  .latest-item .latest-media {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: color-mix(in oklab, var(--desk) 14%, var(--color-surface));
+  }
+  .latest-item .latest-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .latest-item .latest-body { padding: 0.9rem 1rem 1rem; }
   .latest-item .item-meta {
+    display: block;
     font-size: var(--text-xs);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--desk-deep, var(--color-text-light));
     font-weight: 700;
+    margin-bottom: 0.35rem;
   }
   .latest-item h3 {
     font-family: var(--font-serif);
@@ -383,7 +398,7 @@ const pathways = [
     margin-bottom: 0.4rem;
   }
   .pathways > p {
-    color: var(--color-text-light);
+    color: var(--color-text-light-strong, var(--color-text-light));
     margin-bottom: 1.25rem;
     max-width: 70ch;
   }
@@ -426,11 +441,11 @@ const pathways = [
   .pathway-card p {
     margin: 0;
     font-size: var(--text-sm);
-    color: var(--color-text-light);
+    color: var(--color-text-light-strong, var(--color-text-light));
     line-height: 1.55;
   }
 
-  /* Desk sections */
+  /* Topic sections */
   .desk-section {
     margin-bottom: 3.25rem;
     scroll-margin-top: 5.5rem;
@@ -467,7 +482,7 @@ const pathways = [
   .desk-band .desk-tagline {
     flex-basis: 100%;
     margin: 0;
-    color: var(--color-text-light);
+    color: var(--color-text-light-strong, var(--color-text-light));
     font-size: var(--text-sm);
   }
   .desk-subhead {
@@ -541,16 +556,6 @@ const pathways = [
     margin: 0.45rem 0 0.55rem;
     color: var(--color-text);
   }
-  .story-body p {
-    margin: 0 0 0.9rem;
-    font-size: var(--text-sm);
-    color: var(--color-text-light);
-    line-height: 1.6;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
   .story-meta {
     margin-top: auto;
     display: flex;
@@ -580,40 +585,60 @@ const pathways = [
   <h1>Maine Cannabis Blog</h1>
   <p class="masthead-dek">Industry news, operational guides, and policy analysis for Maine cannabis professionals — reported against OCP records, state statute, and operator interviews.</p>
   <p class="masthead-stats">
-    <span><strong>{postCount}</strong> field guides &amp; dispatches</span>
-    <span><strong>4</strong> editorial desks</span>
-    <span>Latest filing <strong>{newestLabel}</strong></span>
+    <span>
+      <span class="term-tip" tabindex="0">
+        <strong>{postCount}</strong> guides &amp; articles
+        <span class="tip-bubble" role="tooltip">Every entry below is a standalone guide or news article we wrote and maintain for Maine readers.</span>
+      </span>
+    </span>
+    <span>
+      <span class="term-tip" tabindex="0">
+        <strong>{topics.length}</strong> topics
+        <span class="tip-bubble" role="tooltip">We group articles into four topics — Growing, Buying &amp; Visiting, Medical, and Business &amp; Policy — so you can jump straight to what you need.</span>
+      </span>
+    </span>
+    <span>
+      <span class="term-tip" tabindex="0">
+        Latest article published <strong>{newestLabel}</strong>
+        <span class="tip-bubble" role="tooltip">The publish date of our most recent article. New guides and updates land here as we write them.</span>
+      </span>
+    </span>
   </p>
 </header>
 
-<nav class="desk-nav" aria-label="Editorial desks">
-  {desks.map((desk) => (
-    <a href={`#desk-${desk.id}`} class={desk.klass}>{desk.name}</a>
+<nav class="desk-nav" aria-label="Blog topics">
+  {topics.map((topic) => (
+    <a href={`#topic-${topic.id}`} class={topic.klass}>{topic.name}</a>
   ))}
 </nav>
 
 <section class="featured-story desk-operator" aria-label="Featured story">
   <div class="featured-media">
-    <img src="/images/heroes/ocp-license-map-640w.jpg" alt="Maine Office of Cannabis Policy license map graphic" width="640" height="360" loading="eager" fetchpriority="high" />
+    <img src={featured.hero} alt="Maine Office of Cannabis Policy license map graphic" width="640" height="360" loading="eager" fetchpriority="high" />
   </div>
   <div class="featured-body">
-    <p class="featured-kicker">Featured investigation · Policy Desk</p>
+    <p class="featured-kicker">Featured story · Business &amp; Policy</p>
     <h2><a href={featured.url}>{featured.title}</a></h2>
-    <p>{featured.description}</p>
+    <p>Maine's Office of Cannabis Policy regulates a sprawling industry with fewer than 40 compliance staff. The result: a 1,500-caregiver gray market, a thriving out-of-state delivery trade, and a patient base that is increasingly buying outside the legal system.</p>
     <a class="featured-cta" href={featured.url}>Read the analysis →</a>
   </div>
 </section>
 
-<section class="latest-strip" aria-label="Latest stories">
+<section class="latest-strip" aria-label="Latest articles">
   <div class="strip-head">
-    <h2>Fresh off the desks</h2>
+    <h2>Latest articles</h2>
     <span class="rule" aria-hidden="true"></span>
   </div>
   <div class="latest-grid">
     {latest.map((post) => (
-      <a href={post.url} class={`latest-item ${deskBySection.get(post.section) ?? ''}`}>
-        <span class="item-meta">{post.section} · {formatPostDate(post.date)}</span>
-        <h3>{post.title}</h3>
+      <a href={post.url} class={`latest-item ${topicBySection.get(post.section) ?? ''}`}>
+        <div class="latest-media">
+          <img src={hero640(post.hero)} alt="" width="640" height="360" loading="lazy" decoding="async" />
+        </div>
+        <div class="latest-body">
+          <span class="item-meta">{post.section} · {formatPostDate(post.date)}</span>
+          <h3>{post.title}</h3>
+        </div>
       </a>
     ))}
   </div>
@@ -633,29 +658,28 @@ const pathways = [
   </div>
 </section>
 
-{desks.map((desk) => {
-  const deskPosts = posts.filter(p => desk.sections.includes(p.section));
-  const subSections = desk.sections.filter(s => deskPosts.some(p => p.section === s));
+{topics.map((topic) => {
+  const topicPosts = allEntries.filter(p => topic.sections.includes(p.section));
+  const subSections = topic.sections.filter(s => topicPosts.some(p => p.section === s));
   return (
-    <section id={`desk-${desk.id}`} class={`desk-section ${desk.klass}`} aria-label={desk.name}>
+    <section id={`topic-${topic.id}`} class={`desk-section ${topic.klass}`} aria-label={topic.name}>
       <div class="desk-band">
-        <h2>{desk.name}</h2>
-        <span class="desk-count">{deskPostCount(desk)} stories</span>
-        <p class="desk-tagline">{desk.tagline}</p>
+        <h2>{topic.name}</h2>
+        <span class="desk-count">{topicPostCount(topic)} articles</span>
+        <p class="desk-tagline">{topic.hint}</p>
       </div>
       {subSections.map((sub) => (
         <Fragment>
           <h3 class="desk-subhead">{sub}</h3>
           <div class="story-grid">
-            {deskPosts.filter(p => p.section === sub).map((post) => (
+            {topicPosts.filter(p => p.section === sub).map((post) => (
               <a href={post.url} class="story-card">
                 <div class="story-media">
-                  <img src={heroFor(post.url)} alt="" width="640" height="360" loading="lazy" decoding="async" />
+                  <img src={hero640(post.hero)} alt="" width="640" height="360" loading="lazy" decoding="async" />
                 </div>
                 <div class="story-body">
                   <span class="story-eyebrow">{post.section}</span>
                   <h3>{post.title}</h3>
-                  <p>{post.description}</p>
                   <span class="story-meta">
                     <time datetime={post.date}>{formatPostDate(post.date)}</time>
                     <span class="read-on">Read →</span>

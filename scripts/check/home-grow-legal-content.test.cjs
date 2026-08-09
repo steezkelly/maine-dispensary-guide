@@ -66,9 +66,13 @@ test('mandatory routing, definitions, property, and scenario sections remain pre
 test('publication metadata stays consistent and unsafe equivalence stays absent', () => {
   const pillar = read(pillarPath);
   const medical = read(medicalPath);
-  const index = read(path.join(blogDir, 'index.astro'));
+  // The blog index is generated from the article pages, so the date
+  // contract lives in blog-index.json rather than the page source.
+  const generated = JSON.parse(read(path.join(repoRoot, 'apps/maine-cannabis/src/data/blog-index.json')));
+  const homeGrow = generated.items.find((i) => i.slug === 'maine-home-grow-cannabis-guide-2026');
+  assert.ok(homeGrow, 'blog-index.json has no home-grow entry');
+  assert.equal(homeGrow.publishDate, '2026-04-18', 'home-grow publishDate must be the canonical 2026-04-18');
   const combined = `${pillar}\n${medical}`;
-  assert.match(index, /maine-home-grow-cannabis-guide-2026[^\n]*date: '2026-04-18'/);
   assert.doesNotMatch(combined, /medical (?:card|patient).{0,60}(?:allows?|may grow).{0,30}30 (?:mature )?plants/i);
   assert.doesNotMatch(combined, /adult-use and medical (?:plants|cultivation).{0,40}(?:same|identical) rules/i);
   assert.doesNotMatch(combined, /Last verified/i);
