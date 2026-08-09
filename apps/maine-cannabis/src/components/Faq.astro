@@ -20,14 +20,16 @@ interface Props {
   // JSON-LD. Use this when the calling page composes its own
   // `<script type="application/ld+json">` block to avoid duplicate schema.
   withoutSchema?: boolean;
+  citationLinks?: boolean;
+  citationSourceIds?: number[];
 }
 
-const { faqs, items, questions, withoutSchema } = Astro.props;
+const { faqs, items, questions, withoutSchema, citationLinks = false, citationSourceIds = [] } = Astro.props;
 const normalizedFaqs = faqs ?? items ?? questions?.map(({ q, a }) => ({ question: q, answer: a }));
 ---
 
 {normalizedFaqs ? (
-  <UiFaq faqs={normalizedFaqs} withoutSchema={withoutSchema}>
+  <UiFaq faqs={normalizedFaqs} withoutSchema={withoutSchema} citationLinks={citationLinks} citationSourceIds={citationSourceIds}>
     <slot />
   </UiFaq>
 ) : (

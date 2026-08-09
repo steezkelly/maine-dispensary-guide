@@ -60,7 +60,7 @@ const bgColor = {
 
 <div class="callout" style={`--callout-accent: ${accents[type]}; background-color: ${bgColor[type]};`}>
   <div class="callout-header">
-    <span class="callout-icon" style={`color: ${accents[type]};`}>{icons[type]}</span>
+    <span class="callout-icon" aria-hidden="true" style={`color: ${accents[type]};`}>{icons[type]}</span>
     {title && (level === 'h2' ? <h2 id={headingId}>{title}</h2> : <h3 id={headingId}>{title}</h3>)}
   </div>
   <div class="callout-content">
