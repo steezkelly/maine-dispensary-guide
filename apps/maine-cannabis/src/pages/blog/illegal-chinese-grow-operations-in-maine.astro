@@ -1,0 +1,439 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+import Faq from '../../components/Faq.astro';
+const article = {
+  publishDate: '2026-07-30',
+  modifiedDate: '2026-07-30',
+  section: 'Investigations',
+};
+
+const topics = ['enforcement', 'regulation', 'public-record', 'maine'];
+
+const faqItems = [
+  {
+    question: 'Are all illegal marijuana grows in Maine Chinese-run?',
+    answer: 'No. Maine has a documented illegal-grow problem, but the public record does not support assigning a Chinese connection to every operation. The strongest Chinese-linked evidence is a 2025 federal charging release describing allegations about one Northeast network; other Maine cases are documented without that allegation, and a 2024 U.S. Attorney statement warned against inferring criminal involvement from nationality or surname.',
+  },
+  {
+    question: 'Is Chinese government involvement in Maine grow operations proven?',
+    answer: 'Not in the public Maine-specific record reviewed for this article. Congressional testimony and national reporting may describe broader transnational patterns, but they do not prove that the Chinese government directed Maine operations. That claim should not be presented as an established fact without a Maine-specific finding from a competent authority or court.',
+  },
+  {
+    question: 'Were workers at Maine grow houses trafficked?',
+    answer: 'The public record contains worker accounts and reported allegations of coercion, withheld passports, and inability to leave. It also contains counter-evidence: in May 2024, the U.S. Attorney for Maine said investigators had not found evidence of human trafficking in more than 40 searches, and local officials later disputed whether one reported tip was authentic. The available sources do not justify treating trafficking as a settled statewide conclusion.',
+  },
+  {
+    question: 'How many illegal grows are there in Maine right now?',
+    answer: 'I did not identify a reliable public 2026 count of illegal Chinese-linked grows in the sources reviewed for this article. USAO-ME reported approximately 100 identified illicit grows in May 2024; the Portland Press Herald later reported more than 60 home searches and nearly 40 arrests in 2024, plus fewer than 10 suspected grows searched in the prior 12 months as of March 2026. Those figures measure different things and cannot be added or treated as a current statewide total.',
+  },
+  {
+    question: 'Does a Maine cannabis registration prove that a property is lawful?',
+    answer: 'No. An OCP registration or license is evidence of a regulatory status at a point in time, not a complete finding about every activity at a property. A license roster also does not identify ethnicity, beneficial control, or whether a particular site was operating within its authorization. Verify a current license through OCP and do not treat a database match as proof of criminality or innocence by itself.',
+  },
+  {
+    question: 'What should a resident do about a suspected illegal grow?',
+    answer: 'Do not enter the property, confront occupants, or investigate it yourself. Call 911 if there is an immediate danger such as fire, violence, or a medical emergency. Otherwise, contact local law enforcement through its non-emergency channel and provide only what you directly observed. Regulatory questions should go to the Maine Office of Cannabis Policy.',
+  },
+];
+
+const sources = [
+  {
+    label: 'Maine criminal statute: unauthorized cultivation',
+    href: 'https://legislature.maine.gov/statutes/17-A/title17-Asec1117.html',
+    date: 'Statute page; accessed July 30, 2026',
+    establishes: 'The criminal boundary for cultivating marijuana outside an express legal authorization.',
+    limit: 'Does not identify any specific operation or operator.',
+  },
+  {
+    label: 'Maine adult-use cultivation statute',
+    href: 'https://legislature.maine.gov/statutes/28-B/title28-Bsec1502.html',
+    date: 'Statute page; accessed July 30, 2026',
+    establishes: 'Personal cultivation limits and restrictions for adult use.',
+    limit: 'Personal limits are not a statewide count of commercial or illicit sites.',
+  },
+  {
+    label: 'Maine medical-use cultivation statute',
+    href: 'https://legislature.maine.gov/statutes/22/title22sec2423-A.html',
+    date: 'Statute page; accessed July 30, 2026',
+    establishes: 'Medical caregiver cultivation permissions, plant limits, and canopy rules.',
+    limit: 'The medical framework has additional patient and operational conditions.',
+  },
+  {
+    label: 'USAO-ME: 2024 illicit-grow statement',
+    href: 'https://www.justice.gov/usao-me/pr/us-attorney-darcie-n-mcelwee-provides-statement-illicit-marijuana-grow-operations-maine',
+    date: 'Published May 3, 2024',
+    establishes: 'A dated federal snapshot: 40-plus operations shut down and approximately 100 identified; no evidence of human trafficking to that date.',
+    limit: 'Not a current 2026 count or a finding about every later case.',
+  },
+  {
+    label: 'Maine State Police: Parsonsfield search',
+    href: 'https://www.maine.gov/dps/msp/media-center/public-releases/msp-investigates-illegal-marijuana-grow-parsonsfield',
+    date: 'Published October 16, 2025; search June 7, 2024',
+    establishes: 'A documented search involving more than 2,500 plants, fire hazards, pesticides, and grow infrastructure.',
+    limit: 'One case; no arrests had been made as of that release.',
+  },
+  {
+    label: 'Maine AG Drug Task Force written testimony',
+    href: 'https://legislature.maine.gov/legis/bills/getTestimonyDoc.asp?id=181527',
+    date: 'Written testimony; date not stated; accessed July 30, 2026',
+    establishes: 'The state enforcement framing around rural-property conversion, illegal cultivation, and interstate export.',
+    limit: 'Testimony is an attributed policy position, not an independently audited prevalence estimate.',
+  },
+  {
+    label: 'USAO-MA: seven Chinese nationals charged',
+    href: 'https://www.justice.gov/usao-ma/pr/seven-chinese-nationals-charged-alleged-roles-multi-million-dollar-money-laundering',
+    date: 'Published July 8, 2025; updated July 9, 2025',
+    establishes: 'The federal charging document alleges one Northeast network with Maine and Massachusetts grow houses, money laundering, and alien smuggling.',
+    limit: 'The release states that the details are allegations and the defendants are presumed innocent.',
+  },
+  {
+    label: 'USAO-ME: Liang and Deng guilty pleas',
+    href: 'https://www.justice.gov/usao-me/pr/new-york-men-plead-guilty-mortgage-fraud-conspiracy-buy-illegal-marijuana-grow-houses',
+    date: 'Published January 21, 2026',
+    establishes: 'Two defendants pleaded guilty to mortgage-fraud conduct involving Maine properties used for illegal grows; DOJ said the properties were not OCP-licensed.',
+    limit: 'A concluded case involving named defendants; it is not evidence that all Maine grows share the same ownership or nationality.',
+  },
+  {
+    label: 'USAO-ME: Xisen Guo sentencing',
+    href: 'https://www.justice.gov/usao-me/pr/brooklyn-new-york-man-sentenced-maintaining-drug-involved-premises',
+    date: 'Published July 20, 2026',
+    establishes: 'A concluded Maine drug-involved-premises case involving a Passadumkeag residence, processed marijuana, and a sentence of time served plus supervised release.',
+    limit: 'The release does not establish a Chinese-linked network or a statewide pattern.',
+  },
+  {
+    label: 'OCP medical-use registrant search',
+    href: 'https://www.maine.gov/dafs/ocp/open-data/medical-use/registrant-search',
+    date: 'Portal updated July 8, 2026; accessed July 30, 2026',
+    establishes: 'Where current medical-use registrant data can be checked.',
+    limit: 'A roster does not prove property-level compliance, ethnicity, beneficial control, or criminality.',
+  },
+  {
+    label: 'Portland Press Herald: enforcement slowdown',
+    href: 'https://www.pressherald.com/2026/03/11/why-has-enforcement-slowed-against-maines-chinese-marijuana-grows/',
+    date: 'Published March 11, 2026; updated March 14, 2026',
+    establishes: 'Reported search and arrest counts, county concentration, and attributed sheriff comments about the prosecution challenge.',
+    limit: 'Secondary reporting; its counts use a different methodology and date range from USAO-ME.',
+  },
+  {
+    label: 'Portland Press Herald: worker accounts',
+    href: 'https://www.pressherald.com/2024/08/12/layers-of-invisibility-workers-at-maines-illegal-cannabis-grow-sites-show-signs-of-human-trafficking/',
+    date: 'Published August 12, 2024; updated August 13, 2024',
+    establishes: 'Reported worker allegations, a recorded call, and the local law-enforcement response.',
+    limit: 'The reported account is not a trafficking conviction; the same report includes official counter-evidence.',
+  },
+  {
+    label: 'Portland Press Herald: Turner investigation',
+    href: 'https://www.pressherald.com/2025/06/04/how-a-former-lawmaker-grew-weed-with-alleged-chinese-crime-groups-in-rural-maine/',
+    date: 'Published June 4, 2025; updated June 7, 2025',
+    establishes: 'Reported details about a Turner-related licensing and consulting arrangement and allegations of Chinese organized-crime ties.',
+    limit: 'The report includes denials and no-charge status; it is not a conviction or official finding against every person named.',
+  },
+  {
+    label: 'Congressional hearing testimony on transnational grow networks',
+    href: 'https://homeland.house.gov/wp-content/uploads/2025/09/2025-09-18-OIA-HRG-Testimony.pdf',
+    date: 'Hearing/testimony date September 18, 2025',
+    establishes: 'What witnesses asserted about national and multi-state patterns.',
+    limit: 'National testimony does not prove Chinese-government direction of Maine operations.',
+  },
+];
+---
+
+<Layout
+  title="Chinese-Linked Grow Operations in Maine: Cases & Evidence"
+  description="A source-backed Maine explainer on illegal grow houses, Chinese-linked cases in federal records, worker accounts, enforcement data, and what the public record still does not prove."
+  heroImage="/images/heroes/illegal-chinese-grow-operations-in-maine.jpg"
+  article={article}
+  topics={topics}
+>
+  <style>
+    .blog-post {
+      max-width: 48rem;
+      margin: 0 auto;
+    }
+
+    .article-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid var(--color-accent);
+    }
+
+    .eyebrow {
+      margin: 0 0 0.75rem;
+      color: var(--color-text-light);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .article-header h1 {
+      margin: 0 0 1rem;
+      color: var(--color-primary);
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      line-height: 1.08;
+    }
+
+    .subtitle {
+      max-width: 43rem;
+      margin: 0;
+      color: var(--color-text-light);
+      font-size: 1.2rem;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    .intro,
+    .article-section {
+      margin-bottom: 3rem;
+    }
+
+    .intro {
+      font-size: 1.13rem;
+      line-height: 1.82;
+    }
+
+    .blog-post p,
+    .blog-post li {
+      line-height: 1.75;
+    }
+
+    .blog-post h2 {
+      margin: 2.75rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--color-accent);
+      color: var(--color-primary);
+      font-size: 1.85rem;
+      line-height: 1.2;
+    }
+
+    .blog-post h3 {
+      margin: 1.75rem 0 0.65rem;
+      color: var(--color-primary);
+      font-size: 1.25rem;
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin: 1.75rem 0 2rem;
+    }
+
+    .evidence-card {
+      padding: 1.25rem;
+      border: 1px solid var(--color-accent);
+      border-radius: 0.55rem;
+      background: color-mix(in oklab, var(--color-soft-green) 7%, transparent);
+    }
+
+    .evidence-card strong {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--color-primary);
+      font-size: 1.55rem;
+      line-height: 1;
+    }
+
+    .evidence-card span {
+      color: var(--color-text-light);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .boundary-callout {
+      margin: 2rem 0;
+      padding: 1.35rem 1.5rem;
+      border-left: 4px solid var(--color-primary);
+      background: color-mix(in oklab, var(--color-soft-green) 10%, transparent);
+    }
+
+    .boundary-callout p:last-child {
+      margin-bottom: 0;
+    }
+
+    .table-wrap {
+      margin: 1.5rem 0 2rem;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.94rem;
+    }
+
+    th,
+    td {
+      padding: 0.8rem 0.75rem;
+      border-bottom: 1px solid var(--color-accent);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--color-primary);
+      color: var(--color-background);
+      font-weight: 700;
+    }
+
+    td:first-child {
+      min-width: 13rem;
+    }
+
+    .method-note,
+    .safety-note {
+      padding: 1.25rem 1.4rem;
+      border: 1px solid var(--color-accent);
+      border-radius: 0.5rem;
+      background: color-mix(in oklab, var(--color-soft-green) 5%, transparent);
+    }
+
+    .safety-note {
+      border-left: 4px solid var(--color-primary);
+    }
+
+    .source-matrix a {
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-decoration-thickness: 0.08em;
+      text-underline-offset: 0.15em;
+    }
+
+    .source-matrix small {
+      color: var(--color-text-light);
+    }
+
+    .content-verification {
+      margin: 2.5rem 0 1rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--color-border);
+      color: var(--color-text-light);
+      font-size: 0.9rem;
+    }
+
+    .editorial-note,
+    .authors-link {
+      color: var(--color-text-light);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 760px) {
+      .evidence-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <article class="blog-post">
+    <header class="article-header">
+      <p class="eyebrow">Public-record explainer · Reporting cutoff: 2026-07-30</p>
+      <h1>Chinese-Linked Grow Operations in Maine: What the Public Record Shows in 2026</h1>
+      <p class="subtitle">Maine has documented illegal grow houses. The evidence for Chinese-linked operations is real in some federal cases, but broader claims about every grow, worker trafficking, or Chinese-government direction go beyond what the public record currently proves.</p>
+    </header>
+
+    <section class="intro" aria-labelledby="answer-heading">
+      <h2 id="answer-heading">The short answer</h2>
+      <p>As of July 30, 2026, the public record supports three separate conclusions. First, Maine has documented large-scale, unauthorized marijuana grows, including operations that created fire, chemical, mortgage-fraud, and public-safety concerns. Second, a July 2025 federal charging release describes allegations that a Chinese-national network operated interconnected grow houses in Maine and Massachusetts. Third, the available sources do not support turning that case-specific allegation into a claim about every illegal grow in Maine, every Chinese person in the state, or the direction of Maine operations by the Chinese government.</p>
+      <p>That distinction matters because the search phrase <em>illegal Chinese grow operations in Maine</em> combines two questions: whether a particular cultivation site operated outside Maine law, and whether a specific person or network had a documented Chinese connection. Those questions require different evidence.</p>
+    </section>
+
+    <section class="article-section" aria-labelledby="documented-heading">
+      <h2 id="documented-heading">What is documented in Maine</h2>
+      <p>Maine criminal law draws the legal line around unauthorized cultivation. Adult-use and medical-use statutes authorize specific forms of home and caregiver cultivation, with limits and conditions. Cultivation outside those authorizations can be prosecuted under <a href="https://legislature.maine.gov/statutes/17-A/title17-Asec1117.html" target="_blank" rel="noopener noreferrer">Title 17-A</a>. “Illegal” therefore describes a legal status established by the facts of a particular operation; it is not a synonym for a nationality, a language, or a property type.</p>
+      <p>For the broader licensing framework, see the <a href="/guides/maine-cannabis-regulations">Maine cannabis regulations guide</a> and our separate <a href="/blog/maine-cannabis-gray-market-ocp-enforcement-2026">gray-market enforcement analysis</a>. This article stays focused on the public record around illegal grow operations and the limits of the available evidence.</p>
+
+      <div class="evidence-grid" aria-label="Dated public-record snapshots">
+        <div class="evidence-card"><strong>40+</strong><span>Operations USAO-ME said had been shut down by May 2024.</span></div>
+        <div class="evidence-card"><strong>~100</strong><span>Illicit grows USAO-ME said had been identified in that 2024 snapshot.</span></div>
+        <div class="evidence-card"><strong>2,500+</strong><span>Plants Maine State Police reported finding in a June 7, 2024 Parsonsfield search.</span></div>
+      </div>
+
+      <p>In May 2024, the <a href="https://www.justice.gov/usao-me/pr/us-attorney-darcie-n-mcelwee-provides-statement-illicit-marijuana-grow-operations-maine" target="_blank" rel="noopener noreferrer">U.S. Attorney's Office for the District of Maine</a> said federal, state, and local agencies had shut down more than 40 operations and identified approximately 100 illicit grows. That was a dated investigative snapshot, not a current 2026 census. The same statement said investigators had not found evidence of illegal border crossings or human trafficking associated with the grows to that date, and it expressly warned that a property owner should not be assumed to be part of a criminal enterprise because of a surname or nationality.</p>
+
+      <p>In a separate case, <a href="https://www.maine.gov/dps/msp/media-center/public-releases/msp-investigates-illegal-marijuana-grow-parsonsfield" target="_blank" rel="noopener noreferrer">Maine State Police reported</a> that a 2024 search in Parsonsfield found more than 2,500 plants, unsafe living conditions, fire hazards, harmful pesticides, and an intricate lighting and hydroponic system. The October 2025 release said no arrests had been made at that point. It is a concrete example of an illegal grow investigation, not evidence that every operation has the same scale or risk profile.</p>
+
+      <p>More recent federal cases show different kinds of conduct. In January 2026, Tony Liang and Yongliang Deng <a href="https://www.justice.gov/usao-me/pr/new-york-men-plead-guilty-mortgage-fraud-conspiracy-buy-illegal-marijuana-grow-houses" target="_blank" rel="noopener noreferrer">pleaded guilty</a> to mortgage-fraud conduct used to acquire Maine properties in Bucksport, Eddington, and Canaan for illegal grows. The U.S. Attorney's Office said the associated properties were not licensed through OCP. In July 2026, Xisen Guo was <a href="https://www.justice.gov/usao-me/pr/brooklyn-new-york-man-sentenced-maintaining-drug-involved-premises" target="_blank" rel="noopener noreferrer">sentenced</a> after pleading guilty to maintaining a drug-involved premises in Passadumkeag. That concluded case belongs in the documented enforcement record, but the DOJ release does not turn it into proof of a Chinese-linked statewide network.</p>
+    </section>
+
+    <section class="article-section" aria-labelledby="counts-heading">
+      <h2 id="counts-heading">Why the public counts do not line up</h2>
+      <p><a href="https://www.pressherald.com/2026/03/11/why-has-enforcement-slowed-against-maines-chinese-marijuana-grows/" target="_blank" rel="noopener noreferrer">Portland Press Herald reporting</a> in March 2026 said police had executed search warrants at more than 60 single-family homes across Maine since 2023, with nearly 40 people arrested in 2024. The same report said fewer than 10 suspected grows had been searched in the preceding 12 months. It also reported that roughly two-thirds of the more-than-60 searches were in Penobscot, Piscataquis, and Somerset counties and quoted Penobscot County Sheriff Troy Morton describing investigation as possible but prosecution as the challenge.</p>
+      <p>Those figures are useful context, but they cannot be added to the 2024 USAO-ME estimate. “Identified,” “searched,” “shut down,” “arrested,” and “charged” are different units. A search can produce no arrest; an arrest can involve more than one property; a property can be abandoned, reoccupied, licensed, or tied to a later federal case. The reviewed public record therefore does not provide a defensible current total for <em>Chinese grow operations</em> in Maine.</p>
+    </section>
+
+    <section class="article-section" aria-labelledby="chinese-heading">
+      <h2 id="chinese-heading">Where the Chinese-linked evidence is strongest</h2>
+      <p>The clearest Maine-specific Chinese-linked source in this review is the <a href="https://www.justice.gov/usao-ma/pr/seven-chinese-nationals-charged-alleged-roles-multi-million-dollar-money-laundering" target="_blank" rel="noopener noreferrer">July 2025 U.S. Attorney's Office for the District of Massachusetts charging release</a>. Federal prosecutors charged seven Chinese nationals over an <em>alleged</em> Northeast conspiracy that they said used interconnected grow houses in Massachusetts and Maine. The release alleged marijuana distribution, money laundering, and alien smuggling; it also alleged that Chinese nationals were recruited or smuggled to work at grow houses and that passports were retained until alleged debts were repaid.</p>
+      <div class="boundary-callout">
+        <p><strong>What that source establishes:</strong> federal prosecutors brought a specific case and publicly described allegations connecting named defendants, a network, and Maine properties.</p>
+        <p><strong>What it does not prove:</strong> that every Maine illegal grow was part of that network, that every worker experienced the same conditions, or that the Chinese government directed the operation. The charging release says the allegations are not proof and that the defendants are presumed innocent.</p>
+      </div>
+      <p>Local investigative reporting also described a Turner-related licensing and consulting arrangement that was allegedly connected to Chinese organized crime. The <a href="https://www.pressherald.com/2025/06/04/how-a-former-lawmaker-grew-weed-with-alleged-chinese-crime-groups-in-rural-maine/" target="_blank" rel="noopener noreferrer">Portland Press Herald report</a> included denials and noted that the people discussed had not been charged. That makes the story relevant to the public conversation, but it remains reported and alleged rather than a conviction or an official finding against every person or business mentioned.</p>
+      <p>The January and July 2026 federal cases are important for a different reason: they show concluded Maine enforcement actions involving illegal cultivation, mortgage fraud, and a drug-involved premises. They should not be retroactively recast as Chinese-linked cases without a source that makes that connection.</p>
+    </section>
+
+    <section class="article-section" aria-labelledby="testimony-heading">
+      <h2 id="testimony-heading">What workers, investigators, and officials have said</h2>
+      <p>The reported worker account is serious, but the public record is mixed rather than conclusive. The <a href="https://www.pressherald.com/2024/08/12/layers-of-invisibility-workers-at-maines-illegal-cannabis-grow-sites-show-signs-of-human-trafficking/" target="_blank" rel="noopener noreferrer">Portland Press Herald reported</a> a 2024 Kennebec County call in which a worker alleged abduction, withheld passports, no pay, beatings, and an inability to leave. Deputies found three people and nearly 1,000 plants. The same reporting said officials found no one in distress and that the sheriff later said there was no indication the tip was authentic. A reported account can justify investigation without establishing a trafficking offense.</p>
+      <p>That account should be read alongside the May 2024 USAO-ME statement, which said investigators had executed more than 40 search warrants without finding evidence of human trafficking at that time. It should also be read alongside later reporting about worker vulnerability and recruitment. The responsible conclusion is not “nothing happened” or “all workers were trafficked”; it is that worker conditions remain an evidence question requiring case-specific investigation, corroboration, and due process.</p>
+      <p><a href="https://legislature.maine.gov/legis/bills/getTestimonyDoc.asp?id=181527" target="_blank" rel="noopener noreferrer">Written testimony from the Maine Attorney General's Drug Task Force Coordinator</a> described rural-property conversion, illegal cultivation, and interstate export, while arguing for enforcement of existing law rather than nationality-based property restrictions. That is a useful statement of the state's enforcement frame. It is not an independently audited statewide prevalence estimate.</p>
+      <p><a href="https://homeland.house.gov/wp-content/uploads/2025/09/2025-09-18-OIA-HRG-Testimony.pdf" target="_blank" rel="noopener noreferrer">Witness testimony in a September 2025 congressional hearing</a> discussed national and multi-state patterns. Those witnesses' assertions may help explain why federal agencies are interested in transnational networks, but testimony is not a congressional finding and cannot establish that the Chinese government directed Maine operations. The article's source matrix links the hearing record so readers can distinguish what was said from what has been proved in Maine.</p>
+    </section>
+
+    <section class="article-section" aria-labelledby="unknown-heading">
+      <h2 id="unknown-heading">What the public record still cannot answer</h2>
+      <ul>
+        <li><strong>The current number of Chinese-linked grows:</strong> the sources reviewed did not provide an official 2026 count using that definition and methodology.</li>
+        <li><strong>Who ultimately controls every property:</strong> a deed, mortgage, license, or arrest record may identify one participant without proving beneficial control.</li>
+        <li><strong>How many workers were coerced:</strong> accounts and allegations require corroboration; the available releases do not establish a statewide trafficking rate.</li>
+        <li><strong>Whether a property is lawful today:</strong> a past search, a current OCP registration, or a neighbor's observation is not a complete property-level compliance finding.</li>
+        <li><strong>Government direction:</strong> the sources reviewed do not establish Chinese-government direction of Maine grows.</li>
+      </ul>
+      <p>The <a href="https://www.maine.gov/dafs/ocp/open-data/medical-use/registrant-search" target="_blank" rel="noopener noreferrer">OCP registrant portal</a> is useful for checking published medical-use data, and Maine's licensing records matter. But a roster is not a property search, a nationality database, or a criminal finding. It cannot by itself prove that a grow was lawful or unlawful, and it should never be used to infer criminality from ethnicity or a surname.</p>
+    </section>
+
+    <section class="article-section" aria-labelledby="response-heading">
+      <h2 id="response-heading">What residents should do</h2>
+      <div class="safety-note">
+        <p><strong>Do not confront occupants or enter a suspected property.</strong> Indoor cultivation can involve electrical modifications, chemicals, fire hazards, and people whose circumstances you cannot assess from outside.</p>
+        <p>If there is an immediate fire, violence, medical emergency, or other danger, call 911. Otherwise, contact local law enforcement through its non-emergency channel and report only what you directly observed. For licensing or regulatory questions, use the Maine Office of Cannabis Policy. This article is informational and does not constitute legal advice.</p>
+      </div>
+    </section>
+
+    <section class="article-section source-matrix" aria-labelledby="sources-heading">
+      <h2 id="sources-heading">Sources and method</h2>
+      <p>This article was reviewed against the linked public records and reporting on July 30, 2026. Primary government and legal sources are listed alongside secondary reporting so readers can see the evidence type and its limit. Search snippets, social posts, and anonymous allegations without an official record were not used as sole support for material claims.</p>
+      <div class="table-wrap">
+        <table>
+          <caption>Evidence map for this article</caption>
+          <thead><tr><th scope="col">Source</th><th scope="col">Date / status</th><th scope="col">What it establishes</th><th scope="col">Limit</th></tr></thead>
+          <tbody>
+            {sources.map((source) => (
+              <tr>
+                <td><a href={source.href} target="_blank" rel="noopener noreferrer">{source.label}</a></td>
+                <td><small>{source.date}</small></td>
+                <td>{source.establishes}</td>
+                <td>{source.limit}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="article-section" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      <Faq faqs={faqItems} />
+    </section>
+
+    <section class="content-verification">
+      <p>Last reviewed <strong>2026-07-30</strong>. Calvin Waters is a publisher-managed editorial pseudonym used by Maine Dispensary Guide. This page reports a public-record evidence map, not an independent law-enforcement investigation or legal opinion. Material corrections belong in the <a href="/about/corrections">Editorial Corrections Log</a>.</p>
+    </section>
+
+    <p class="editorial-note"><strong>Editorial note.</strong> This post is part of the Maine Dispensary Guide editorial corpus. It does not make a finding about any person, property, ethnicity, nationality, or business beyond the source-qualified claims stated above.</p>
+    <p class="authors-link"><strong>About the authors.</strong> See the <a href="/about/authors">publisher-managed editorial byline disclosures</a> and the site's <a href="/about">editorial team and methodology</a>.</p>
+
+    <AutoRelated currentPath="/blog/illegal-chinese-grow-operations-in-maine" currentTopics={['enforcement', 'regulation', 'public-record', 'maine']} section="Investigations" limit={6} />
+  </article>
+</Layout>
