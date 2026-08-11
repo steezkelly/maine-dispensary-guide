@@ -64,6 +64,29 @@ export interface Correction {
 
 export const CORRECTIONS: Correction[] = [
   {
+    date: "2026-08-11",
+    slug: "bar-harbor-dispensary-guide",
+    title: "Bar Harbor guide — corrected license status of every operator (420 Mules medical-only delivery; Snare Creek medical-only; no active adult-use license in Bar Harbor) and possession limits",
+    severity: "critical",
+    category: "operator-data",
+    what_was_wrong:
+      "The guide (as corrected 2026-07-29) still carried four material license-status errors. (1) It listed 420 Mules as 'Recreational (21+) and Medical (MMMP)' with a storefront on Main Street; the OCP adult-use roster (2026-07-01) contains no adult-use license for 420 Mules anywhere, and the operator's own site describes a medical delivery service — it is a registered caregiver (Michael J. Adelmann, dba 420 Mules, active through Jan 2027). (2) It listed Snare Creek Farms as 'Recreational and Medical'; the operator's own site and the OCP medical caregiver roster say medical-only (adult-use application AMS1850 is Pending Conditional). (3) The quick-facts row 'Recreational Legal — Yes, town permits adult-use retail' and the FAQ answer 'Bar Harbor permits adult-use cannabis retail' implied a licensed Bar Harbor storefront exists; the OCP roster shows zero active adult-use store licenses in Bar Harbor (the town opted in 2019 but no store is licensed). (4) The possession-limits FAQ said '5 g of concentrate, and edibles totaling 100 mg THC'; the statute (28-B M.R.S. §1501(1)(B), per OCP's consumer FAQ) is 2.5 oz of cannabis or a combination thereof including no more than 10 grams of concentrate, with no 100 mg edibles rule in that provision. The guide also said Acadia draws '~4 million visitors annually' and Bar Harbor has '~5,500 year-round residents (2020 Census)' — the precise NPS figure is 3.96M recreation visits in 2024 and the 2020 Census count is 5,089.",
+    what_is_correct:
+      "420 Mules — registered Maine medical caregiver (delivery, no public storefront), serves MMMP patients on MDI; call 207-801-0839. The Meristem — 11 Seal Cove Rd, Southwest Harbor, the only active adult-use store license in Hancock County (OCP AMS600, active through Jun 2027), Tue–Sat 10am–6pm. Snare Creek Farms — 211 Bar Harbor Rd, Trenton, medical-only dispensary (MMMP required); adult-use AMS1850 still Pending Conditional. The Happier Choice — medical caregiver retail in Trenton (OCP caregiver roster). Bar Harbor opted into adult-use in 2019 but holds no active adult-use store license per the 2026-07-01 OCP roster. Possession limit: 2.5 oz cannabis, incl. up to 10 g concentrate (28-B M.R.S. §1501(1)(B)). Acadia: 3.96M recreation visits 2024 (NPS, 7th most-visited NPS unit). Bar Harbor population: 5,089 (2020 Census), 5,352 est. 2025 (Census Bureau).",
+    verified_via: [
+      { label: "OCP adult-use licensee roster (2026-07-01): AMS600 Meristem active; AMS1850 Snare Creek Pending Conditional; no 420 Mules; no Bar Harbor stores", url: "https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/Adult_Use_Establishments_And_Contacts_2026_07_01.csv" },
+      { label: "OCP registered-caregiver roster (2026-06-01): Michael J. Adelmann dba 420 Mules active; Carolee D. Batson dba Snare Creek Farms (Trenton) active; Judson M. Strang dba The Happier Choice (Trenton) active", url: "https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/Maine_Medical_Use_Caregivers_2026_06_01%20.csv" },
+      { label: "Snare Creek Farms official site — 'medical cannabis dispensary', Medical ID required, hours Mon–Sat 10–6, Sun 10–4", url: "https://www.snarecreekcannabis.com/" },
+      { label: "420 Mules official site — 'Delivering Quality Medicinal Cannabis' (medical delivery)", url: "https://www.420mules.com/" },
+      { label: "OCP consumer FAQ — 2.5 oz possession incl. no more than 10 g concentrate, per 28-B M.R.S. §1501(1)(B)", url: "https://www1.maine.gov/dafs/ocp/resources/faq" },
+      { label: "U.S. Census Bureau QuickFacts — Bar Harbor town population 5,089 (2020), 5,352 (2025 est.)", url: "https://www.census.gov/quickfacts/fact/table/barharbortownhancockcountymaine/POP060210" },
+      { label: "National Park Service via LendingTree/CNN 2024 visitation analysis — Acadia 3,961,661 recreation visits (2024), 7th nationally", url: "https://www.lendingtree.com/credit-cards/study/nps-statistics/" },
+    ],
+    published_in: [
+      { name: "Bar Harbor dispensary guide", href: "/guides/bar-harbor-dispensary-guide" },
+    ],
+  },
+  {
     date: "2026-07-30",
     slug: "biddeford-dispensary-guide",
     title: "Biddeford guide — restored source-backed FAQ, corrected OCP roster count and state retail fee",
