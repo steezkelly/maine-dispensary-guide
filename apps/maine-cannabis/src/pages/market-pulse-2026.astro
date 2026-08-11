@@ -123,7 +123,7 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
 
 <section id="opt-in-timeline">
   <h2>Opt-In Timeline — 2017 to 2026</h2>
-  <p>The municipal opt-in pattern shows clear phases. The first wave (2017-2019) was the major cities — Portland, Bangor, Lewiston, Auburn — driven by the original adult-use legalization push. The second wave (2020-2021) was smaller cities and towns that had watched the early results. The third wave (2022-2026) is smaller still, mostly the rural and suburban towns revisiting the question.</p>
+  <p>The municipal opt-in pattern shows clear phases. The first wave (2017–2019) was the major cities — Portland, Bangor, Lewiston, Auburn — driven by the original adult-use legalization push. The second wave (2020–2021) was smaller cities and towns that had watched the early results. Since 2021, few additional towns have completed retail authorization, and some that tried reversed course: Bar Harbor voters rejected retail ordinances in 2022 and Wells voters rejected retail in 2025.</p>
 
   <div class="bar-chart">
     {yearEntries.map(([year, count]) => (
@@ -157,16 +157,16 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
     <li><strong>Median fee:</strong> ${towns.filter(t => t.license_fee_usd).map(t => t.license_fee_usd!).sort((a, b) => a - b)[Math.floor(towns.length / 2)].toLocaleString()}</li>
     <li><strong>Average fee:</strong> ${Math.round(totalFeeRevenue / towns.filter(t => t.license_fee_usd).length).toLocaleString()}</li>
     <li><strong>Total one-time fee revenue across all opted-in towns:</strong> ${totalFeeRevenue.toLocaleString()} (assuming one license per town)</li>
-    <li><strong>Most expensive:</strong> Portland ($5,000) — also the most dispensaries (12+)</li>
+    <li><strong>Most expensive:</strong> Portland ($5,000) — also the most dispensaries (27 active adult-use store licenses, OCP roster 2026-07-01)</li>
     <li><strong>Least expensive:</strong> Dover-Foxcroft, Skowhegan ($500 each) — minimal competition</li>
   </ul>
 
-  <p>For perspective: a $1,500 license fee in a market like Bangor (6 dispensaries, $2,500 fee) is significantly more cost-prohibitive than a $1,000 fee in Sanford (1 dispensary). The fee structure does not always match market saturation.</p>
+  <p>For perspective: a $2,500 license fee in a market like Bangor (10 active adult-use store licenses) is a very different cost equation than a $1,000 fee in Sanford (4 licenses). The fee structure does not always match market saturation.</p>
 </section>
 
 <section id="county-breakdown">
   <h2>County Breakdown — Opt-Ins by County</h2>
-  <p>Maine's 16 counties vary widely in cannabis opt-in activity. Cumberland County (Portland, Brunswick, etc.) leads with the most opted-in towns, while several northern and Downeast counties have no opted-in municipalities at all.</p>
+  <p>Maine's 16 counties vary widely in cannabis opt-in activity. York and Kennebec counties lead with four opted-in towns each, Cumberland and Penobscot follow with three, while several northern and Downeast counties have no opted-in municipalities at all.</p>
 
   <div class="bar-chart">
     {topCounties.map(([county, count]) => (
@@ -213,7 +213,7 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
 
   <p class="citation">Nash, E. &amp; Finch, M. (2026). <em>Maine Cannabis Market Pulse 2026.</em> Maine Dispensary Guide. mainedispensaryguide.com/market-pulse-2026</p>
 
-  <p class="citation">Maine Dispensary Guide's 2026 Market Pulse report finds that {meta.town_count} Maine municipalities have opted in to allow adult-use cannabis businesses, with {totalOperating}+ operating dispensaries and ${totalFeeRevenue.toLocaleString()} in cumulative municipal license fees (mainedispensaryguide.com, July 2026).</p>
+  <p class="citation">Maine Dispensary Guide's 2026 Market Pulse report finds that {meta.town_count} Maine municipalities have opted in to allow adult-use cannabis businesses, with {totalOperating}+ operating dispensaries and ${totalFeeRevenue.toLocaleString()} in cumulative municipal license fees (mainedispensaryguide.com, August 2026).</p>
 
   <p class="citation">According to the 2026 Maine Cannabis Market Pulse, an annual original-research report from Maine Dispensary Guide, {meta.town_count} of Maine's 488 municipalities have formally opted in to allow adult-use cannabis businesses. The opted-in towns — representing {meta.counties_covered} of the state's 16 counties — host {totalOperating}+ operating dispensaries and have generated ${totalFeeRevenue.toLocaleString()} in cumulative municipal license fee revenue. The report, which synthesizes GSC search analytics, OCP public filings, and municipal records, is the first of its kind for the Maine market.</p>
 
