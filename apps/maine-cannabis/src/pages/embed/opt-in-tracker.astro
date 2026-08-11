@@ -63,9 +63,9 @@ const totalDispensaries: number = towns.reduce((sum: number, t) => sum + (t.disp
     </div>
   </div>
   <div class="stats">
-    <div class="stat"><div class="stat-num">{meta.town_count}</div><div class="stat-label">Towns opted in</div></div>
-    <div class="stat"><div class="stat-num">{totalDispensaries}+</div><div class="stat-label">Dispensaries operating</div></div>
-    <div class="stat"><div class="stat-num">{meta.counties_covered}</div><div class="stat-label">Counties</div></div>
+    <div class="stat"><div class="stat-num">{meta.town_count}</div><div class="stat-label">Authorized municipalities</div></div>
+    <div class="stat"><div class="stat-num">{totalDispensaries}</div><div class="stat-label">Linked active Store licenses</div></div>
+    <div class="stat"><div class="stat-num">{meta.counties_covered}</div><div class="stat-label">Counties represented</div></div>
   </div>
   <table>
     <thead>
@@ -74,7 +74,7 @@ const totalDispensaries: number = towns.reduce((sum: number, t) => sum + (t.disp
         <th>County</th>
         <th>Year</th>
         <th>Fee</th>
-        <th>Dispo</th>
+        <th>Active Store licenses</th>
       </tr>
     </thead>
     <tbody>
@@ -84,13 +84,13 @@ const totalDispensaries: number = towns.reduce((sum: number, t) => sum + (t.disp
           <td>{t.county}</td>
           <td>{t.year_opted_in || '—'}</td>
           <td>{t.license_fee_usd ? `$${t.license_fee_usd.toLocaleString()}` : '—'}</td>
-          <td>{t.dispensaries_operating || '—'}</td>
+          <td>{t.dispensaries_operating ?? '—'}</td>
         </tr>
       ))}
     </tbody>
   </table>
   <div class="footer">
-    Data: CC BY 4.0 · Cite mainedispensaryguide.com · <a href="https://mainedispensaryguide.com/for-journalists" target="_blank" rel="noopener">Embed this widget</a>
+    Statewide authorization + Store-count data: CC BY 4.0 · Fee/year fields verified for 21 rows; “—” means not yet verified · <a href="https://mainedispensaryguide.com/for-journalists" target="_blank" rel="noopener">Methodology &amp; embed</a>
   </div>
 </body>
 </html>

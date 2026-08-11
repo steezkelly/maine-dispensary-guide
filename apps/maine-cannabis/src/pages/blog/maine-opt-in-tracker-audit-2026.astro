@@ -27,6 +27,9 @@ type Town = {
 const meta = optInData.meta as { as_of: string; town_count: number; counties_covered: number; source: string; source_url: string; license: string; last_updated: string };
 const towns: Town[] = optInData.towns as Town[];
 const totalDispensaries = towns.reduce((sum: number, t) => sum + (t.dispensaries_operating || 0), 0);
+const retainedRows = towns.filter(t => t.year_opted_in !== null || t.license_fee_usd !== null);
+const retainedStoreCount = retainedRows.reduce((sum: number, t) => sum + (t.dispensaries_operating || 0), 0);
+const statewideNoRecordedCount = 407;
 
 const removedNoRecord = [
   "Westbrook", "Scarborough", "Saco", "Topsham", "Camden",
@@ -49,16 +52,16 @@ const faqItems = [
   { question: "Why did you remove 13 towns from the Opt-In Tracker?", answer: "Because the Maine Office of Cannabis Policy's municipal opt-in model (refreshed 2026-07-09) records no adult-use retail authorization for any of them. Our prior dataset listed them as opted-in without primary-source support, and because the dataset is cited by journalists under CC BY 4.0, we removed every town we could not verify against OCP's own records." },
   { question: "Did Bar Harbor opt in to recreational cannabis?", answer: "No. Bar Harbor voters rejected citizen-initiated adult-use retail ordinances at town meeting in June 2022 and again at the ballot in November 2022. Our previous dataset incorrectly listed Bar Harbor as opted-in with two operating dispensaries; that entry has been removed and is documented in our corrections log." },
   { question: "Did Wells, Maine opt in to recreational cannabis?", answer: "No. Wells voters rejected adult-use retail on June 10, 2025 (Article 17 at town meeting). The previous dataset listed Wells as opted-in; that entry has been removed." },
-  { question: "How do you count operating dispensaries per town?", answer: "dispensaries_operating counts distinct active adult-use Store licenses in the OCP licensee roster (2026-07-01 snapshot) whose host municipality is that town. Pending, conditional, and non-Store license types are excluded. Ellsworth, for example, is retail-authorized but shows 0 because it has no active store license in the current roster." },
-  { question: "I cited the old '34 towns' figure. What should I do?", answer: "Update to the current dataset: 21 OCP-verified opted-in towns across 10 counties, with " + totalDispensaries + "+ active adult-use store licenses as of 2026-08-11. The live dataset at mainedispensaryguide.com/guides/maine-cannabis-opt-in-tracker carries a CC BY 4.0 license and a dated methodology note; citing the live page rather than a static snapshot keeps your figure current." },
-  { question: "How is this tracker different from your 485-municipality tracker?", answer: "The Opt-In Tracker (maine-opt-in-towns.json) tracks the towns where retail is authorized AND counts operating stores — it is the journalist-facing dataset. The Municipal Authorization Tracker covers all 485 of Maine's incorporated cities, towns, and plantations with authorization status (authorized, opted-out, or no recorded decision), but not store counts. Both are derived from OCP open data." },
+  { question: "How do you count active Store licenses per municipality?", answer: "dispensaries_operating counts distinct active adult-use Store license IDs in the OCP licensee roster retrieved 2026-08-11 whose host municipality is that town. Active license status does not independently prove that a storefront is open in real time. Pending, conditional, and non-Store license types are excluded. Ellsworth, for example, is retail-authorized but shows 0 because it has no active Store license in the retrieved roster." },
+  { question: "I cited the old '34 towns' figure. What should I do?", answer: "Update to the complete statewide dataset: " + meta.town_count + " OCP-authorized municipalities across " + meta.counties_covered + " counties, with " + totalDispensaries + " active adult-use Store licenses linked to those municipalities as of 2026-08-11. The earlier 34-row file was a partial fee-and-store detail table, not the statewide authorization universe. Cite the live tracker and its dated methodology note rather than a static snapshot." },
+  { question: "How is this tracker different from your 485-municipality tracker?", answer: "The Opt-In Tracker (maine-opt-in-towns.json) covers every incorporated municipality where the canonical model records retail authorization and counts linked active Store licenses — it is the journalist-facing dataset. The Municipal Authorization Tracker covers all 485 of Maine's incorporated cities, towns, and plantations with authorization status (retail-authorized, evidence-backed explicit opt-out where documented, or no recorded retail authorization), but not Store counts. Both are derived from OCP open data." },
   { question: "How often is the dataset refreshed?", answer: "When the OCP publishes a new opt-in communities model or licensee roster. Each refresh is dated in the dataset metadata and, when figures change, documented in our public corrections log at mainedispensaryguide.com/about/corrections." }
 ];
 ---
 
 <Layout
-  title="We Removed 13 Towns From Maine's Cannabis Opt-In Tracker. Here's Why."
-  description="We audited our journalist-cited Opt-In Tracker against OCP primary sources and removed 13 of 34 towns — including Bar Harbor and Wells, where voters rejected retail. Full methodology and corrected counts."
+  title="Maine Cannabis Opt-In Tracker Audit: 13 Removed, 57 Added"
+  description="We audited our journalist-cited Opt-In Tracker against OCP primary sources: 13 unsupported towns removed, 57 missing authorized municipalities added, and active-store counts rebuilt."
   heroImage="/images/heroes/opt-in-tracker-audit-2026.jpg"
   article={article}
   topics={topics}
@@ -91,8 +94,8 @@ const faqItems = [
 
 <article>
   <div class="article-header">
-    <h1>We Removed 13 Towns From Maine's Cannabis Opt-In Tracker. Here's Why.</h1>
-    <p class="subtitle">A primary-source audit of our CC BY 4.0 opt-in dataset found 13 of 34 towns with no recorded retail authorization — and store counts that lagged OCP's own roster by years.</p>
+    <h1>We Removed 13 Towns—and Added 57 Missing Ones—to Maine's Cannabis Opt-In Tracker</h1>
+    <p class="subtitle">A primary-source audit found unsupported rows, 57 missing OCP-authorized municipalities, and store counts that lagged the state's own roster.</p>
     <div class="byline">
       <p>By <a href="/about/authors#steve-kelly"><strong>Steve Kelly</strong></a>, Founder &amp; Publisher and publisher of record for the Maine Opt-In Tracker. <strong>Data reviewed by the Maine Cannabis editorial team.</strong></p>
       <p>Published {article.publishDate} · Updated {article.modifiedDate}</p>
@@ -100,13 +103,13 @@ const faqItems = [
   </div>
 
   <p class="answer-capsule">
-    <strong>On August 11, 2026, we rebuilt our Opt-In Tracker dataset from scratch against the Maine Office of Cannabis Policy's own records.</strong> The result: 13 of the 34 towns we had listed as opted-in do not appear in the OCP's retail-authorization model, so we removed them. Store counts for the remaining {meta.town_count} verified towns were re-derived from the OCP licensee roster — in most cases, significantly upward. The dataset journalists have been citing since April now lists <strong>{meta.town_count} verified towns across {meta.counties_covered} counties, with {totalDispensaries}+ active adult-use store licenses</strong>.
+    <strong>On August 11, 2026, we audited our Opt-In Tracker against the Maine Office of Cannabis Policy's own records.</strong> The old 34-row file was neither accurate nor complete: 13 listed towns lacked OCP-recorded retail authorization, while 57 authorized municipalities were missing. We removed the unsupported rows, added the missing authorized municipalities, and re-derived store counts from the OCP licensee roster. The corrected statewide dataset now covers <strong>{meta.town_count} OCP-authorized municipalities across {meta.counties_covered} counties, with {totalDispensaries} active adult-use Store licenses linked to those municipalities</strong>.
   </p>
 
   <section>
     <h2>Why we audited a dataset we already published</h2>
     <p>Our <a href="/embed/opt-in-tracker">Opt-In Tracker</a> is licensed CC BY 4.0 and built to be cited. Reporters pull town counts, license-fee figures, and aggregate totals from it; our <a href="/for-journalists">press kit</a> points them at those numbers directly. That is exactly why the dataset has to survive contact with the primary sources behind it.</p>
-    <p>On August 11 we reconciled the dataset, last updated 2026-04-15, against two OCP records: the municipal opt-in model (refreshed 2026-07-09) and the adult-use licensee roster snapshot of 2026-07-01. It failed on both axes — which towns are opted in, and how many stores operate in each. The full record of what was wrong and what replaced it is in our public <a href="/about/corrections">corrections log</a>, filed at critical severity.</p>
+    <p>On August 11 we reconciled the dataset, last updated 2026-04-15, against two OCP records: the municipal opt-in model (refreshed 2026-07-09) and the adult-use licensee roster retrieved 2026-08-11 (from OCP's filename-dated 2026-07-01 URL, HTTP Last-Modified 2026-08-10). It failed on three axes — which towns were included, which authorized towns were omitted, and how many active Store license IDs were linked to each municipality. The full record of what was wrong and what replaced it is in our public <a href="/about/corrections">corrections log</a>, filed at critical severity.</p>
   </section>
 
   <section>
@@ -123,11 +126,17 @@ const faqItems = [
   </section>
 
   <section>
+    <h2>The old file also omitted 57 authorized municipalities</h2>
+    <p>Removing unsupported rows was only half the correction. The OCP's statewide model records <strong>{meta.town_count} retail-authorized incorporated municipalities</strong>, not 21 or 34. The old journalist-facing file was a partial detail table whose gaps had been mistaken for a statewide count.</p>
+    <p>Before this narrative shipped, exact-head review caught that universe error. We expanded the dataset to all {meta.town_count} authorized municipalities. The 21 retained rows keep their previously reviewed opt-in-year and municipal-fee details; the 57 additions use <code>null</code> for those fields until each value is independently verified. A missing fee or year is now labeled as missing data instead of making the municipality disappear.</p>
+  </section>
+
+  <section>
     <h2>The store counts were wrong too — mostly low</h2>
-    <p>For the 21 towns that survived verification, not a single count held up: every town was undercounted or stale, some dramatically:</p>
+    <p>Within the 21 rows retained from the old file, not a single count held up: every count was underreported or stale, some dramatically:</p>
     <table aria-label="Store count corrections in the Maine Opt-In Tracker audit, old dataset versus OCP roster">
       <thead>
-        <tr><th>Town</th><th class="num">Old count</th><th class="num">Verified (OCP roster 2026-07-01)</th></tr>
+        <tr><th>Town</th><th class="num">Old count</th><th class="num">Verified (OCP roster retrieved 2026-08-11)</th></tr>
       </thead>
       <tbody>
         {countCorrections.map(c => (
@@ -139,7 +148,7 @@ const faqItems = [
         ))}
       </tbody>
     </table>
-    <p>Portland's true count is 27 active store licenses, not 12. South Portland had zero listed against 12 operating. Augusta showed zero against five. Aggregate across the verified towns: <strong>{totalDispensaries} active adult-use store licenses</strong> as of the 2026-07-01 roster.</p>
+    <p>The roster-derived Portland count is 27 active Store licenses, not 12. South Portland had zero listed against 12 active Store licenses. Augusta showed zero against five active Store licenses. The 21 retained rows account for <strong>{retainedStoreCount} active Store licenses</strong>; after adding the 57 authorized municipalities the statewide authorized-municipality dataset links <strong>{totalDispensaries} active Store licenses</strong> as of the roster retrieved 2026-08-11. Active license status does not independently prove a storefront is open in real time.</p>
     <p>Ellsworth deserves a footnote: it is retail-authorized and stays in the dataset, but its verified store count is 0 — authorization and an operating storefront are different facts, and this rebuild keeps them separate.</p>
   </section>
 
@@ -148,11 +157,13 @@ const faqItems = [
     <div class="stat-block">
       <h3>How the rebuilt dataset works</h3>
       <ul>
-        <li><strong>Opt-in status:</strong> a town is listed only where the OCP municipal opt-in model (refreshed 2026-07-09) records retail authorization.</li>
-        <li><strong>Store counts:</strong> distinct <em>active</em> adult-use Store license IDs per the OCP licensee roster of 2026-07-01, grouped by host municipality. Pending, conditional, expired, and non-Store license types excluded.</li>
-        <li><strong>Cross-check:</strong> aggregate counts validated against our generated statewide retail-license product before publication.</li>
+        <li><strong>Authorization universe:</strong> all {meta.town_count} incorporated municipalities where the OCP model (refreshed 2026-07-09) records retail authorization — not only the 21 rows inherited from the old detail table.</li>
+        <li><strong>Store counts:</strong> distinct <em>active</em> adult-use Store license IDs per the OCP licensee roster retrieved 2026-08-11, grouped by canonical host municipality. Pending, conditional, expired, and non-Store license types excluded.</li>
+        <li><strong>Place-name normalization:</strong> known roster aliases Stratton→Eustis, Hollis Center→Hollis, and Greenville Junction→Greenville.</li>
+        <li><strong>Excluded conflicts:</strong> the retrieved roster contains 189 distinct active Store IDs; 184 link to the 78 authorized municipalities. Five are excluded pending reconciliation and enumerated in the JSON metadata: AMS1486 (Warren), AMS1558 (Guilford), AMS1692 (West Paris), AMS1770 (Baring Plt), and AMS1783 (Baring Plantation).</li>
+        <li><strong>Fee and year fields:</strong> retained only for the 21 previously reviewed rows; <code>null</code> means not yet independently verified.</li>
         <li><strong>License:</strong> CC BY 4.0 — free to cite with attribution to mainedispensaryguide.com.</li>
-        <li><strong>Current figures:</strong> {meta.town_count} towns, {meta.counties_covered} counties, {totalDispensaries}+ active store licenses, as of {meta.as_of}.</li>
+        <li><strong>Current figures:</strong> {meta.town_count} authorized municipalities, {meta.counties_covered} counties, {totalDispensaries} linked active Store licenses, as of {meta.as_of}.</li>
       </ul>
     </div>
     <p>The methodology now lives inside the dataset itself, in the <code>meta.method</code> field, so anyone who downloads the JSON gets the counting rules with the numbers.</p>
@@ -160,13 +171,13 @@ const faqItems = [
 
   <section>
     <h2>What this means if you cited us</h2>
-    <p>If a story published between April and August 2026 used our old figures — "34 municipalities," "41+-town patchwork," or per-town counts — those figures should be updated. The corrected aggregate is <strong>{meta.town_count} OCP-verified opted-in towns across {meta.counties_covered} counties</strong>.</p>
+    <p>If a story published between April and August 2026 used our old figures — "34 municipalities," "41+-town patchwork," or the interim 21-row subset — those figures should be updated. The corrected statewide aggregate is <strong>{meta.town_count} OCP-authorized incorporated municipalities across {meta.counties_covered} counties</strong>.</p>
     <p>Two structural fixes protect future citations:</p>
     <ol>
       <li><strong>Cite the live page, not a snapshot.</strong> The <a href="/guides/maine-cannabis-opt-in-tracker">tracker</a> and <a href="/embed/opt-in-tracker">embeddable widget</a> always render the current dataset with its as-of date.</li>
       <li><strong>Every change gets a dated record.</strong> This audit is entry <code>maine-opt-in-towns-dataset</code> in the <a href="/about/corrections">public corrections log</a>, with the full before/after and every primary source linked.</li>
     </ol>
-    <p>Journalists working on municipal opt-in politics can also use our full-state picture: <a href="/blog/which-towns-allow-dispensaries-in-maine">78 of Maine's 485 municipalities</a> have authorized retail, 20 have explicitly opted out, and the rest have no recorded decision.</p>
+    <p>Across all 485 incorporated cities, towns, and plantations in our canonical authorization model, {meta.town_count} are retail-authorized and {statewideNoRecordedCount} have no OCP-recorded retail authorization. We currently classify <strong>zero</strong> municipalities as evidence-backed explicit opt-outs; an OCP activity flag of <code>N</code> is not enough, by itself, to prove a local rejection vote.</p>
   </section>
 
   <section>
@@ -175,7 +186,7 @@ const faqItems = [
   </section>
 
   <section class="disclaimer">
-    <p><em>Figures derive from the Maine Office of Cannabis Policy's opt-in communities model (refreshed 2026-07-09) and adult-use licensee roster (2026-07-01 snapshot). Municipal authorization and license status change between snapshots; verify with the OCP and the relevant town clerk before relying on any figure here. This is not legal advice.</em></p>
+    <p><em>Figures derive from the Maine Office of Cannabis Policy's opt-in communities model (refreshed 2026-07-09) and adult-use licensee roster retrieved 2026-08-11 (source URL filename dated 2026-07-01; HTTP Last-Modified 2026-08-10). Municipal authorization and license status change between snapshots; verify with the OCP and the relevant town clerk before relying on any figure here. This is not legal advice.</em></p>
   </section>
 
   <AutoRelated currentPath="/blog/maine-opt-in-tracker-audit-2026" currentTopics={topics} section="Press & Media" limit={6} />

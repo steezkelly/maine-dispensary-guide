@@ -73,7 +73,7 @@ const activityClass = (value: string) => value === 'Y' ? 'yes' : value === 'unkn
       <div class="summary-grid" aria-label="Municipal authorization summary">
         <div class="summary-card"><strong>{meta.status_counts.retail_authorized}</strong><span>Retail authorized by OCP</span></div>
         <div class="summary-card"><strong>{meta.status_counts.explicit_opt_out}</strong><span>Explicit opt-outs with primary evidence</span></div>
-        <div class="summary-card"><strong>{meta.status_counts.no_recorded_retail_authorization}</strong><span>No recorded retail authorization / no decision</span></div>
+        <div class="summary-card"><strong>{meta.status_counts.no_recorded_retail_authorization}</strong><span>No recorded retail authorization</span></div>
       </div>
       <p class="metadata">OCP report model refresh: <strong>{formatOcpRefresh(meta.ocp_model_refreshed_at)}</strong> (timezone not supplied by OCP). Directory retrieved: <strong>{formatDate(meta.retrieved_at)}</strong>. Geography: <a href={meta.geography_source_url} target="_blank" rel="noopener noreferrer">Maine GeoLibrary</a>. Authorization source: <a href={meta.source_url} target="_blank" rel="noopener noreferrer">Maine Office of Cannabis Policy</a>.</p>
     </section>
@@ -115,7 +115,7 @@ const activityClass = (value: string) => value === 'Y' ? 'yes' : value === 'unkn
     </section>
 
     <section>
-      <h2>No recorded retail authorization / no decision ({statusGroups.no_recorded_retail_authorization.length})</h2>
+      <h2>No recorded retail authorization ({statusGroups.no_recorded_retail_authorization.length})</h2>
       <p>These alphabetically ordered municipalities have no OCP-recorded retail authorization in this snapshot. A <strong>Y</strong> in another column means OCP records authorization for that separate activity. Contact the town clerk for the current local position.</p>
       <div class="table-wrap">
         <table aria-label="Maine municipalities without OCP-recorded adult-use retail authorization">
@@ -136,7 +136,7 @@ const activityClass = (value: string) => value === 'Y' ? 'yes' : value === 'unkn
       </ol>
     </section>
 
-    <p class="editorial-note"><strong>Correction note.</strong> This page supersedes the former partial opt-in and opt-out tables. It is generated from the primary sources linked above and will be refreshed when the OCP source changes.</p> <span class="editorial-note" style="display:block; margin-top:.75rem;"><strong>Material corrections on file:</strong> <a href="/about/corrections#wells-dispensary-guide">2026-07-04</a> (see full entries for primary-source citations). <a href="/blog/maine-opt-in-tracker-audit-2026">2026-08-11: Opt-In Tracker dataset rebuilt against OCP primary sources — 13 towns removed, store counts re-derived</a>.</span>
+    <p class="editorial-note"><strong>Correction note.</strong> This page supersedes the former partial opt-in and opt-out tables. It is generated from the primary sources linked above and will be refreshed when the OCP source changes.</p> <span class="editorial-note" style="display:block; margin-top:.75rem;"><strong>Material corrections on file:</strong> <a href="/about/corrections#wells-dispensary-guide">2026-07-04</a> (see full entries for primary-source citations). <a href="/blog/maine-opt-in-tracker-audit-2026">2026-08-11: Opt-In Tracker rebuilt to the complete statewide OCP-authorized universe — 13 unsupported rows removed, 57 missing authorized municipalities added, active Store counts re-derived</a>.</span>
   </article>
 
   <script>

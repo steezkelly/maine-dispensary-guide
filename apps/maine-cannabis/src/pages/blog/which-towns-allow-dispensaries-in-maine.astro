@@ -5,13 +5,14 @@ import Faq from '../../components/Faq.astro';
 import AutoRelated from '../../components/AutoRelated.astro';
 import authors from '../../data/authors.json';
 import municipalData from '../../data/maine-municipal-authorization.json';
+import optInData from '../../data/maine-opt-in-towns.json';
 
 const article = {
   author: "Calvin Waters",
   authorId: "calvin-waters",
   authorTitle: "Licensing & Compliance Analyst",
   publishDate: "2026-07-21",
-  modifiedDate: "2026-07-21",
+  modifiedDate: "2026-08-11",
   section: "Policy & Legislation"
 };
 const topics = ["policy", "legislation", "municipal", "operator-guide"];
@@ -20,11 +21,12 @@ const topics = ["policy", "legislation", "municipal", "operator-guide"];
 const municipalities = municipalData.municipalities;
 const totalMunicipalities = municipalities.length;
 const authorized = municipalities.filter(m => m.status === 'retail_authorized');
-const optedOut = municipalities.filter(m => m.retail === 'N');
-const unknown = municipalities.filter(m => m.retail === 'unknown');
+const optedOut = municipalities.filter(m => m.status === 'explicit_opt_out');
+const unknown = municipalities.filter(m => m.status === 'no_recorded_retail_authorization');
 const authorizedCount = authorized.length;
 const optedOutCount = optedOut.length;
 const unknownCount = unknown.length;
+const linkedActiveStoreCount = optInData.towns.reduce((sum, town) => sum + town.dispensaries_operating, 0);
 const authorizedPct = Math.round((authorizedCount / totalMunicipalities) * 100);
 
 // Group authorized towns by county
@@ -39,13 +41,13 @@ const countyEntries = Object.entries(byCounty).sort((a, b) => b[1].length - a[1]
 const topCounties = countyEntries.slice(0, 10);
 
 const faqItems = [
-  { question: "How many towns in Maine allow dispensaries?", answer: `As of the OCP opt-in data refreshed ${municipalData.meta.ocp_model_refreshed_at.split('T')[0]}, ${authorizedCount} of Maine's ${totalMunicipalities} municipalities (${authorizedPct}%) have authorized adult-use retail cannabis sales. Another ${optedOutCount} have explicitly opted out, and ${unknownCount} have no recorded authorization decision.` },
-  { question: "Does my town allow a dispensary?", answer: "Check our Municipal Authorization Tracker, which lists every Maine municipality's retail authorization status. If your town shows 'no recorded retail authorization,' it has not affirmatively opted in — you cannot open a dispensary there until the town votes to allow it." },
-  { question: "Can a town ban dispensaries after allowing them?", answer: "Yes. Maine municipalities can reverse their opt-in decision through a local vote or ordinance change. However, existing licensed operators are typically grandfathered or given a transition period. Always confirm current authorization status before signing a lease." },
-  { question: "What does 'no recorded authorization' mean?", answer: "It means the OCP has no record of the municipality affirmatively voting to allow retail cannabis sales. This is NOT the same as an explicit ban — the town simply hasn't taken action. Many of these towns may allow dispensaries if an applicant petitions the local government." },
+  { question: "How many towns in Maine allow dispensaries?", answer: `As of the OCP opt-in data refreshed ${municipalData.meta.ocp_model_refreshed_at.split('T')[0]}, ${authorizedCount} of Maine's ${totalMunicipalities} incorporated municipalities (${authorizedPct}%) are recorded as authorized for adult-use retail. The canonical model has ${optedOutCount} evidence-backed explicit opt-outs and ${unknownCount} municipalities with no recorded retail authorization; an OCP N activity flag alone is not treated as proof of an opt-out.` },
+  { question: "Does my town allow a dispensary?", answer: "Check our Municipal Authorization Tracker, then confirm the current local record with the municipal clerk. If the tracker shows 'no recorded retail authorization,' the OCP model does not establish the municipality's present local position; do not treat that status as authorization to open." },
+  { question: "Can a town change its dispensary rules after authorizing retail?", answer: "Municipal authorization and local ordinances can change, but the effect on existing licensees depends on current state law and the municipality's ordinance. Do not assume grandfathering or a transition period; verify the current rule with the municipal clerk and OCP." },
+  { question: "What does 'no recorded authorization' mean?", answer: "It means only that the OCP model does not record adult-use retail authorization for that municipality. It does not establish whether the municipality took no action, rejected a proposal, adopted a prohibition, or acted in some other way. Verify the current local record with the municipal clerk." },
   { question: "Which county has the most dispensary-friendly towns?", answer: `York County leads with ${byCounty['York']?.length || 0} authorized municipalities, followed by Kennebec (${byCounty['Kennebec']?.length || 0}), Penobscot (${byCounty['Penobscot']?.length || 0}), and Oxford (${byCounty['Oxford']?.length || 0}). Southern and central Maine counties are generally more permissive than rural northern counties.` },
-  { question: "Do I need both town approval AND a state license?", answer: "Yes. Maine requires dual authorization: (1) written municipal authorization from your host town, AND (2) a state OCP adult-use dispensary license. Operating without both is a criminal offense. The municipal letter must be submitted with your OCP application." },
-  { question: "How do I get my town to opt in?", answer: "Petition your local planning board or town council. Most towns require a formal application, public hearing, and vote. Some towns have pre-written cannabis ordinances; others evaluate case-by-case. Budget 4-12 weeks for the municipal approval process, and consider hiring a local land-use attorney." },
+  { question: "Do I need both town approval AND a state license?", answer: "Yes. Maine's adult-use licensing process requires written municipal authorization from the host municipality and the applicable state OCP license. Confirm the current municipal and state requirements before signing a lease or beginning operations." },
+  { question: "How do I ask a town to authorize adult-use retail?", answer: "Start with the municipal clerk. Local procedures are ordinance-specific and may involve a council, select board, planning board, public hearing, town meeting, referendum, or another process. Ask for the current ordinance, application requirements, meeting schedule, and decision timeline rather than relying on a statewide estimate." },
   { question: "Are there towns with moratoriums on dispensaries?", answer: "Some Maine towns have enacted temporary moratoriums while they develop cannabis regulations. A moratorium is not a permanent ban — it pauses new applications until the town adopts rules. Check with your town clerk for current moratorium status." }
 ];
 ---
@@ -98,7 +100,7 @@ const faqItems = [
   </div>
 
   <p class="answer-capsule">
-    <strong>{authorizedCount} of Maine's {totalMunicipalities} municipalities ({authorizedPct}%) have authorized adult-use retail cannabis sales</strong> as of the OCP opt-in data refreshed {municipalData.meta.ocp_model_refreshed_at.split('T')[0]}. Another {optedOutCount} have explicitly opted out, and {unknownCount} have no recorded authorization decision. Maine is an opt-in state — a dispensary can only open in a town that has affirmatively voted to allow it.
+    <strong>{authorizedCount} of Maine's {totalMunicipalities} incorporated municipalities ({authorizedPct}%) are recorded as authorized for adult-use retail cannabis sales</strong> as of the OCP opt-in data refreshed {municipalData.meta.ocp_model_refreshed_at.split('T')[0]}. The canonical model has {optedOutCount} evidence-backed explicit opt-outs and {unknownCount} municipalities with no recorded retail authorization. An OCP <code>N</code> activity flag alone is not treated as proof of a local rejection vote.
   </p>
 
   <section>
@@ -108,9 +110,9 @@ const faqItems = [
       <ul>
         <li><strong>Total municipalities tracked:</strong> {totalMunicipalities} (23 cities, 431 towns, 31 plantations)</li>
         <li><strong>Retail authorized:</strong> {authorizedCount} ({authorizedPct}%)</li>
-        <li><strong>Explicitly opted out:</strong> {optedOutCount} ({Math.round((optedOutCount / totalMunicipalities) * 100)}%)</li>
-        <li><strong>No recorded decision:</strong> {unknownCount} ({Math.round((unknownCount / totalMunicipalities) * 100)}%)</li>
-        <li><strong>Active adult-use stores:</strong> ~180 (OCP 2025 Annual Report)</li>
+        <li><strong>Evidence-backed explicit opt-outs in canonical model:</strong> {optedOutCount} ({Math.round((optedOutCount / totalMunicipalities) * 100)}%)</li>
+        <li><strong>No recorded retail authorization:</strong> {unknownCount} ({Math.round((unknownCount / totalMunicipalities) * 100)}%)</li>
+        <li><strong>Active adult-use Store licenses linked to authorized municipalities:</strong> {linkedActiveStoreCount} (OCP roster retrieved 2026-08-11)</li>
         <li><strong>Data source:</strong> <a href="https://www.maine.gov/dafs/ocp/open-data/adult-use/opt-in-communities" target="_blank" rel="noopener noreferrer">OCP Opt-In Communities Open Data</a></li>
       </ul>
     </div>
@@ -119,9 +121,9 @@ const faqItems = [
   <section>
     <h2>How Maine's Opt-In System Works</h2>
     <p>Maine's adult-use cannabis framework (Title 28-B, Chapter 1) gives municipalities the power to decide whether cannabis businesses can operate within their borders. This is an <strong>opt-in system</strong>: a town must affirmatively vote to allow retail cannabis sales before any dispensary can open there.</p>
-    <p>The practical implication: <strong>you cannot open a dispensary in a town that hasn't opted in</strong>, regardless of whether you hold a state license. The OCP will not process your application without written municipal authorization.</p>
+    <p>The practical implication: municipal authorization is required before OCP can issue an active establishment license. OCP's published sequence is conditional licensure, then local authorization, then active licensure. A "no recorded retail authorization" status in this snapshot is not proof of the municipality's current local position; confirm it with the municipal clerk.</p>
     <Callout title="No Recorded Authorization ≠ Banned" type="info">
-      {unknownCount} municipalities ({Math.round((unknownCount / totalMunicipalities) * 100)}% of Maine) show "no recorded retail authorization." This does NOT mean they've banned cannabis — it means they haven't taken a formal vote. Many of these towns will approve a dispensary if an applicant petitions the local planning board or town council.
+      {unknownCount} municipalities ({Math.round((unknownCount / totalMunicipalities) * 100)}% of Maine) show "no recorded retail authorization." This status means only that the OCP model does not record authorization; it does not establish whether the municipality took no action, rejected a proposal, adopted a prohibition, or acted in some other way. Confirm the current local record with the municipal clerk.
     </Callout>
   </section>
 
@@ -165,19 +167,19 @@ const faqItems = [
       <li><strong>Search our tracker:</strong> The <a href="/guides/maine-cannabis-opt-in-tracker">Municipal Authorization Tracker</a> lists all {totalMunicipalities} municipalities with their current retail authorization status.</li>
       <li><strong>Verify with the town clerk:</strong> OCP data can lag behind local votes. Call or email your town clerk to confirm current status.</li>
       <li><strong>Check for pending votes:</strong> Some towns have cannabis ordinances on upcoming town meeting agendas. A "no recorded authorization" town may vote within weeks.</li>
-      <li><strong>Confirm zoning:</strong> Even in an authorized town, your specific address must meet zoning requirements (commercial zone, 500-foot buffer from schools, etc.).</li>
+      <li><strong>Confirm zoning and school setbacks:</strong> Even in an authorized municipality, the address must satisfy local zoning and state requirements. Maine's default school setback is 1,000 feet; a municipality may adopt a smaller setback, but not less than 500 feet. Verify the current ordinance and measurement method for the specific site.</li>
     </ol>
   </section>
 
   <section>
-    <h2>How to Get Your Town to Opt In</h2>
-    <p>If your town hasn't authorized retail cannabis, you can petition for a vote:</p>
+    <h2>How to Ask a Municipality About Authorization</h2>
+    <p>If the current local record does not authorize adult-use retail, start with the municipal clerk. Maine municipalities use ordinance-specific procedures, so there is no single statewide petition path or reliable statewide timeline.</p>
     <ol>
-      <li><strong>Research local process:</strong> Some towns require a citizen petition; others let the planning board initiate. Ask your town clerk.</li>
-      <li><strong>Prepare a proposal:</strong> Include your business plan, security plan, community impact statement, and proposed location.</li>
-      <li><strong>Attend a public hearing:</strong> Most towns require at least one public hearing before voting.</li>
-      <li><strong>Budget 4-12 weeks:</strong> Municipal approval timelines range from one month to six months depending on the town's process and hearing schedule.</li>
-      <li><strong>Consider legal counsel:</strong> A Maine land-use attorney experienced in cannabis can navigate local ordinances and represent you at hearings.</li>
+      <li><strong>Request the governing documents:</strong> Ask for the current cannabis ordinance, zoning map, application requirements, fee schedule, and any moratorium.</li>
+      <li><strong>Identify the decision-maker:</strong> Depending on the municipality, authority may involve a council, select board, planning board, town meeting, referendum, or another local process.</li>
+      <li><strong>Check the official schedule:</strong> Ask which meetings, notices, hearings, or votes apply and when a complete request would be considered.</li>
+      <li><strong>Confirm state sequencing:</strong> OCP's published process places conditional licensure before municipal authorization and active licensure after it.</li>
+      <li><strong>Consider legal counsel:</strong> A Maine land-use attorney can interpret the specific ordinance and advise on the proposed site.</li>
     </ol>
     <p>For the full step-by-step process, see our <a href="/guides/maine-cannabis-municipal-opt-in-guide">Municipal Opt-In Guide</a>.</p>
   </section>
