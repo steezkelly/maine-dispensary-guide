@@ -4,11 +4,11 @@ import Callout from '../../components/Callout.astro';
 import Faq from '../../components/Faq.astro';
 import Layout from '../../layouts/Layout.astro';
 
-export const title = 'Maine Cannabis Tax Rate 2026: 14% Sales Tax, 280E & Deductions';
+export const title = 'Maine Weed & Cannabis Tax 2026: 14% Rate, Excise, 280E';
 
 const article = {
   publishDate: '2026-01-19',
-  modifiedDate: '2026-07-21',
+  modifiedDate: '2026-08-11',
   section: 'Compliance & Legal',
 };
 
@@ -16,19 +16,39 @@ const topics = ['finance', 'compliance', 'business'];
 
 const faqs = [
   {
-    question: 'What tax rate applies to adult-use cannabis in Maine in 2026?',
+    question: 'How much is the weed tax in Maine?',
     answer:
-      'For retail sales on or after January 1, 2026, Maine applies a 14% sales-tax rate to adult-use cannabis and adult-use cannabis products. This is the applicable state sales-tax rate for those items, not a separate cannabis tax added on top of the general sales-tax rate.',
+      '14%. For retail sales on or after January 1, 2026, 36 M.R.S. §1811 makes 14% the applicable state sales-tax rate for adult-use cannabis and adult-use cannabis products. Maine statute taxes “adult use cannabis”; “weed” and “marijuana” are informal terms for the same products, so the same 14% rate applies.',
+  },
+  {
+    question: 'Is Maine’s weed tax charged on top of regular sales tax?',
+    answer:
+      'No. 36 M.R.S. §1811 sets 14% as the applicable state sales-tax rate for adult-use cannabis and adult-use cannabis products — it replaces, rather than stacks on, the general 5.5% rate for the same item. General merchandise sold by a dispensary, such as paraphernalia and apparel, remains subject to the general sales-tax rate under Maine Revenue Services guidance.',
+  },
+  {
+    question: 'What tax do medical marijuana patients pay in Maine?',
+    answer:
+      'Medical sales are not subject to the 14% adult-use rate. Under 36 M.R.S. §1811(1)(D)(5), the elevated rate applies to cannabis and cannabis products sold to an individual who is not a qualifying patient; sales of medical marijuana to registered qualifying patients fall under the general 5.5% sales-tax rate. Confirm your transaction treatment with a Maine tax professional.',
+  },
+  {
+    question: 'Did Maine’s marijuana tax go up in 2026?',
+    answer:
+      'Yes. The adult-use cannabis sales-tax rate rose from 10% to 14% for sales occurring on or after January 1, 2026, per 36 M.R.S. §1811 as amended by PL 2025, c. 87 and PL 2025, c. 388, Pt. F. The same budget also revised cultivation-level excise-tax rates under 36 M.R.S. §4923.',
   },
   {
     question: 'Are Maine cannabis edibles taxed at 14% or at the prepared-food rate?',
     answer:
-      'Adult-use cannabis edibles are adult-use cannabis products and are taxed at the 14% adult-use cannabis sales-tax rate. Maine Revenue Services distinguishes them from prepared food that does not contain cannabis.',
+      'Adult-use cannabis edibles are adult-use cannabis products and are taxed at the 14% adult-use cannabis sales-tax rate. Maine Revenue Services Instructional Bulletin 61 distinguishes them from prepared food that does not contain cannabis, which is classified separately.',
   },
   {
     question: 'What are Maine’s 2026 adult-use cannabis excise-tax rates?',
     answer:
       'Beginning January 1, 2026, Title 36 §4923 sets rates of $223 per pound of flower, $63 per pound of trim, $1 per immature plant or seedling, $23 per mature plant, and 20 cents per seed. The excise tax is a cultivation-level tax, distinct from the 14% retail sales tax.',
+  },
+  {
+    question: 'Do consumers pay the Maine cannabis excise tax at the register?',
+    answer:
+      'No. The excise tax in 36 M.R.S. §4923 is imposed on specified sales or transfers by adult-use cultivation facility licensees, not on retail customers. A consumer buying adult-use cannabis pays the 14% sales-tax rate; the excise tax is settled at the cultivation level.',
   },
   {
     question: 'Does IRC §280E still matter to a Maine cannabis business?',
@@ -39,26 +59,33 @@ const faqs = [
 ---
 
 <Layout
-  title="Maine Cannabis Tax Rate 2026: 14% Sales Tax & 280E Rules"
-  description="Current Maine cannabis tax facts for 2026: the 14% adult-use sales-tax rate, cultivation excise rates, and a cautious overview of IRC §280E."
+  title="Maine Weed & Cannabis Tax 2026: 14% Rate, Excise, 280E"
+  description="Maine weed tax in 2026: 14% sales tax on adult-use cannabis (36 M.R.S. §1811, effective Jan 1 2026), the 5.5% medical rate, excise taxes, and §280E."
   heroImage="/images/heroes/maine-cannabis-taxes-2026.jpg"
   article={article}
   topics={topics}
 >
   <article>
     <header class="article-header">
-      <h1>Maine Cannabis Tax Rate in 2026: 14% Sales Tax &amp; 280E</h1>
-      <p class="subtitle">What the 14% retail rate covers, how excise tax differs, and where §280E fits</p>
+      <h1>Maine Weed &amp; Cannabis Tax in 2026: 14% Rate &amp; 280E</h1>
+      <p class="subtitle">What the 14% adult-use rate covers, the 5.5% medical rate, how excise differs, and where §280E fits</p>
     </header>
 
     <Callout title="The short answer" type="info">
-      Maine does not stack a 14% “retail cannabis tax” on top of the general sales-tax rate. For sales on or after January 1, 2026, <a href="https://legislature.maine.gov/legis/statutes/36/title36sec1811.html" target="_blank" rel="noopener noreferrer">36 M.R.S. §1811</a> makes <strong>14% the applicable state sales-tax rate</strong> for adult-use cannabis and adult-use cannabis products. A separate excise tax applies at the cultivation level.
+      Maine’s weed tax is <strong>14% for adult-use cannabis</strong> on sales on or after January 1, 2026 — and it does not stack on top of the general sales-tax rate. <a href="https://legislature.maine.gov/legis/statutes/36/title36sec1811.html" target="_blank" rel="noopener noreferrer">36 M.R.S. §1811</a> makes 14% the applicable state sales-tax rate for adult-use cannabis and adult-use cannabis products. Medical marijuana sold to registered qualifying patients is taxed at the general 5.5% rate instead, and a separate excise tax applies at the cultivation level.
     </Callout>
 
     <section>
       <h2>Retail sales: one 14% adult-use rate</h2>
       <p><a href="https://www.maine.gov/revenue/sites/maine.gov.revenue/files/inline-files/IB61%20FINAL%20Sales%20of%20Adult%20Use%20Cannabis_2025_12_22.pdf" target="_blank" rel="noopener noreferrer">Maine Revenue Services Instructional Bulletin 61</a>, last revised December 22, 2025, says retail sales of adult-use cannabis and adult-use cannabis products are taxed at 14% beginning January 1, 2026. The rate applies to flower, concentrates, edibles, tinctures, topicals, plants, seedlings, and seeds sold as adult-use cannabis or adult-use cannabis products.</p>
+      <p>“Maine weed tax” and “Maine marijuana tax” are informal names for this same rate: the statute taxes adult-use cannabis regardless of the label. The 14% replaces the general 5.5% sales-tax rate on those items rather than adding to it.</p>
       <p>Edibles do not receive a second prepared-food tax. MRS states that an edible cannabis product is taxed at the adult-use cannabis rate. Prepared food without cannabis and unrelated merchandise are classified separately under the sales-tax rules.</p>
+    </section>
+
+    <section>
+      <h2>Medical marijuana sales: the general 5.5% rate</h2>
+      <p>The 14% adult-use rate does not reach every cannabis sale. <a href="https://legislature.maine.gov/legis/statutes/36/title36sec1811.html" target="_blank" rel="noopener noreferrer">36 M.R.S. §1811(1)(D)(5)</a> applies the elevated rate to cannabis and cannabis products “if sold by a person to an individual who is not a qualifying patient.” Medical marijuana sold to registered qualifying patients — through registered dispensaries or caregivers under Title 22 — therefore falls under the general 5.5% sales-tax rate rather than the 14% adult-use rate.</p>
+      <p>This distinction is why outdated summaries that stack “10% + 5.5%” or apply a single rate to all cannabis are wrong: the rate depends on whether the sale is adult-use or to a qualifying patient.</p>
     </section>
 
     <section>
@@ -88,6 +115,7 @@ const faqs = [
       <h2>Practical compliance boundary</h2>
       <ul>
         <li>Use 14% as the adult-use cannabis sales-tax rate; do not add 5.5% or a prepared-food rate to the same cannabis item.</li>
+        <li>Apply the general 5.5% rate to medical marijuana sold to registered qualifying patients.</li>
         <li>Classify non-cannabis merchandise separately under MRS guidance.</li>
         <li>For cultivation transfers, check the current §4923 transaction rule and exemptions.</li>
         <li>Keep federal §280E treatment distinct from any Maine subtraction and have a qualified tax professional apply the correct return instructions.</li>
@@ -100,13 +128,13 @@ const faqs = [
     </section>
 
     <section class="disclaimer">
-      <p><strong>Tax information, not tax advice.</strong> This page summarizes current public authorities as reviewed on July 21, 2026. It does not determine a taxpayer’s classification, liability, deductions, or filing position. Confirm the current statute, MRS instructions, and IRS guidance with a qualified Maine tax professional.</p>
+      <p><strong>Tax information, not tax advice.</strong> This page summarizes current public authorities as reviewed on August 11, 2026. It does not determine a taxpayer’s classification, liability, deductions, or filing position. Confirm the current statute, MRS instructions, and IRS guidance with a qualified Maine tax professional.</p>
     </section>
 
     <section class="content-verification">
       <div class="verification-badge">
         <span class="verification-icon">◆</span>
-        <span class="verification-text">Editorially reviewed against the cited primary sources by <strong>Maine Dispensary Guide</strong> on <strong>2026-07-21</strong>. This is organizational editorial review, not legal, tax, medical, or other professional review. Methodology at <a href="/about/corrections">/about/corrections</a>.</span>
+        <span class="verification-text">Editorially reviewed against the cited primary sources by <strong>Maine Dispensary Guide</strong> on <strong>2026-08-11</strong>. This is organizational editorial review, not legal, tax, medical, or other professional review. Methodology at <a href="/about/corrections">/about/corrections</a>.</span>
       </div>
     </section>
 
@@ -126,7 +154,6 @@ const faqs = [
       <li><a href="/guides/maine-cannabis-cultivation-guide">Maine Cannabis Cultivation Guide</a></li>
       <li><a href="/guides/maine-cannabis-real-estate">Maine Cannabis Real Estate Guide</a></li>
       <li><a href="/blog/maine-medical-marijuana-patient-guide">Maine Medical Marijuana Patient Guide</a></li>
-      <li><a href="/blog/is-weed-legal-in-maine">Is Weed Legal in Maine? 2026 Laws & Key Rules</a></li>
       <li><a href="/blog/maine-cannabis-delivery-business-guide-2026">Maine Cannabis Delivery Business Guide 2026</a></li>
       <li><a href="/blog/cannabis-friendly-maine-travel">Cannabis-Friendly Maine Travel Guide</a></li>
     </ul>

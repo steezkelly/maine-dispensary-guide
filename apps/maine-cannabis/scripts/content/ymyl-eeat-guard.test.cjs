@@ -19,6 +19,7 @@ const cohort = [
   {
     path: 'apps/maine-cannabis/src/pages/guides/maine-cannabis-taxes-2026.astro',
     source: 'https://www.maine.gov/revenue/sites/maine.gov.revenue/files/inline-files/IB61%20FINAL%20Sales%20of%20Adult%20Use%20Cannabis_2025_12_22.pdf',
+    reviewDate: '2026-08-11',
   },
   {
     path: 'apps/maine-cannabis/src/pages/blog/best-maine-edibles-2026.astro',
@@ -47,9 +48,14 @@ for (const page of cohort) {
       /\b(?:professionally|expert|independently)\s+reviewed\b|\b(?:licensed|qualified)\s+(?:professional|expert)[^.\n]{0,80}\b(?:reviewer|reviewed)\b/i,
       `${page.path} must not imply professional, expert, or independent review`,
     );
-    assert.match(source, /Editorially reviewed against the cited primary sources by <strong>Maine Dispensary Guide<\/strong> on <strong>2026-07-21<\/strong>/);
+    const reviewDate = page.reviewDate ?? '2026-07-21';
+    const reviewDateEscaped = reviewDate.replace(/-/g, '\\-');
+    assert.match(
+      source,
+      new RegExp(`Editorially reviewed against the cited primary sources by <strong>Maine Dispensary Guide<\\/strong> on <strong>${reviewDateEscaped}<\\/strong>`),
+    );
     assert.match(source, /organizational editorial review, not (?:legal|medical)/i);
-    assert.match(article, /modifiedDate:\s*['"]2026-07-21['"]/);
+    assert.match(article, new RegExp(`modifiedDate:\\s*['"]${reviewDateEscaped}['"]`));
     assert.ok(source.includes(page.source), `missing contextual primary source: ${page.source}`);
   });
 }
