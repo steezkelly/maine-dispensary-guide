@@ -8,7 +8,7 @@ const article = {
   authorId: "eliot-nash",
   authorTitle: "Market & Real Estate Analyst",
   publishDate: "2026-07-07",
-  modifiedDate: "2026-07-07",
+  modifiedDate: "2026-08-11",
   section: "Press & Media"
 };
 
@@ -88,6 +88,10 @@ const latestYear = Math.max(...(towns.map(t => t.year_opted_in).filter((y): y is
   Need a stat for a story <em>right now</em>? Skip to the <a href="#key-statistics">Key Statistics</a> section. Everything below is free to cite with attribution.
 </Callout>
 
+<Callout title="Dataset update — August 11, 2026" type="info">
+  We audited the Opt-In Tracker against OCP primary sources: 13 unsupported rows removed, 57 missing authorized municipalities added, and active-store counts rebuilt from the OCP licensee roster. The statewide dataset now covers all {meta.town_count} OCP-authorized incorporated municipalities; fee and opt-in-year details remain verified for 21 rows and are null elsewhere rather than guessed. Full methodology: <a href="/blog/maine-opt-in-tracker-audit-2026">Maine Cannabis Opt-In Tracker Audit: 13 Removed, 57 Added</a> · correction record: <a href="/about/corrections">corrections log</a>.
+</Callout>
+
 <nav class="toc" aria-label="On this page">
   <h2>On This Page</h2>
   <ul>
@@ -109,11 +113,11 @@ const latestYear = Math.max(...(towns.map(t => t.year_opted_in).filter((y): y is
   <div class="stat-grid">
     <div class="stat-card">
       <div class="num">{meta.town_count}</div>
-      <div class="label">Maine towns that have opted in to allow cannabis businesses</div>
+      <div class="label">OCP-authorized incorporated municipalities statewide</div>
     </div>
     <div class="stat-card">
-      <div class="num">{totalDispensaries}+</div>
-      <div class="label">Operating adult-use dispensaries across opted-in towns</div>
+      <div class="num">{totalDispensaries}</div>
+      <div class="label">Active adult-use Store licenses linked to authorized municipalities</div>
     </div>
     <div class="stat-card">
       <div class="num">{meta.counties_covered}</div>
@@ -121,19 +125,19 @@ const latestYear = Math.max(...(towns.map(t => t.year_opted_in).filter((y): y is
     </div>
     <div class="stat-card">
       <div class="num">{earliestYear}–{latestYear}</div>
-      <div class="label">Opt-in window (first town to most recent)</div>
+      <div class="label">Verified opt-in years in the 21-row detail subset</div>
     </div>
   </div>
 
   <h3>Suggested citation formats</h3>
-  <p class="citation">According to Maine Dispensary Guide's 2026 Opt-In Tracker, {meta.town_count} Maine municipalities have formally opted in to allow adult-use cannabis businesses, with {totalDispensaries}+ operating dispensaries across {meta.counties_covered} counties (mainedispensaryguide.com, August 2026).</p>
+  <p class="citation">According to Maine Dispensary Guide's OCP-derived 2026 Opt-In Tracker, {meta.town_count} of Maine's 485 incorporated municipalities are recorded as authorized for adult-use retail, with {totalDispensaries} active adult-use Store licenses linked to those municipalities across all {meta.counties_covered} counties (mainedispensaryguide.com, August 2026).</p>
   
-  <p class="citation">The Maine cannabis market is structured as a {meta.town_count}-town patchwork. Of Maine's 488 municipalities, {meta.town_count} have opted in since {earliestYear}, leaving roughly 90% of the state's land area without authorized cannabis retail. Source: Maine Dispensary Guide.</p>
+  <p class="citation">Maine Dispensary Guide's statewide authorization model records {meta.town_count} retail-authorized incorporated municipalities and 407 with no OCP-recorded retail authorization. It currently classifies zero municipalities as evidence-backed explicit opt-outs; an OCP activity flag of N is not treated as proof of a local rejection vote. Source: Maine Dispensary Guide, August 2026.</p>
 </section>
 
 <section id="opt-in-data">
   <h2>Opt-In Tracker Data — Full Table</h2>
-  <p>This is the structured data behind our <a href="/guides/maine-cannabis-opt-in-tracker">Opt-In Tracker guide</a>. Use it for maps, charts, or as the basis for deeper analysis.</p>
+  <p>This is the complete OCP-authorized municipality universe behind our <a href="/guides/maine-cannabis-opt-in-tracker">Opt-In Tracker guide</a>. Store counts cover every row; opt-in year and license-fee fields are populated only for the 21 previously reviewed detail rows and show “—” elsewhere rather than an estimate. Use it for maps, charts, or deeper analysis with that field-level caveat.</p>
   
   <table class="data-table">
     <thead>
@@ -143,7 +147,7 @@ const latestYear = Math.max(...(towns.map(t => t.year_opted_in).filter((y): y is
         <th>Type</th>
         <th>Year Opted In</th>
         <th>License Fee</th>
-        <th>Dispensaries</th>
+        <th>Active Store licenses</th>
       </tr>
     </thead>
     <tbody>
@@ -154,7 +158,7 @@ const latestYear = Math.max(...(towns.map(t => t.year_opted_in).filter((y): y is
           <td>{t.type}</td>
           <td>{t.year_opted_in || '—'}</td>
           <td>{t.license_fee_usd ? `$${t.license_fee_usd.toLocaleString()}` : '—'}</td>
-          <td>{t.dispensaries_operating || '—'}</td>
+          <td>{t.dispensaries_operating ?? '—'}</td>
         </tr>
       ))}
     </tbody>
@@ -180,12 +184,12 @@ const latestYear = Math.max(...(towns.map(t => t.year_opted_in).filter((y): y is
   <pre class="code-block"><code>GET https://mainedispensaryguide.com/data/maine-opt-in-towns.json
 
 Returns {`{`}
-  "meta": {`{`} "as_of": "2026-04-15", "town_count": 34, ... {`}`},
+  "meta": {`{`} "as_of": "2026-08-11", "town_count": 78, "counties_covered": 16, ... {`}`},
   "towns": [ {`{`} "town": "Portland", "county": "Cumberland", 
             "year_opted_in": 2017, "license_fee_usd": 5000, ... {`}`}, ... ]
 {`}`}</code></pre>
 
-  <p>Use the JSON for your own visualizations, maps, or analysis. The embed iframe pulls from this same JSON.</p>
+  <p>Use the JSON for your own visualizations, maps, or analysis. The embed iframe is generated from the same source dataset.</p>
 
   <h3>Live preview</h3>
   <div class="embed-demo">
@@ -195,7 +199,7 @@ Returns {`{`}
         <tr>
           <th>Town</th>
           <th>Year</th>
-          <th>Dispensaries</th>
+          <th>Active Store licenses</th>
         </tr>
       </thead>
       <tbody>
@@ -203,7 +207,7 @@ Returns {`{`}
           <tr>
             <td>{t.town}, {t.county}</td>
             <td>{t.year_opted_in || '—'}</td>
-            <td>{t.dispensaries_operating || '—'}</td>
+            <td>{t.dispensaries_operating ?? '—'}</td>
           </tr>
         ))}
         <tr><td colspan="3" style="text-align: center; color: var(--color-text-light); font-style: italic;">...and {towns.length - 5} more rows in the full embed</td></tr>
@@ -217,13 +221,13 @@ Returns {`{`}
   <p>Drop-in descriptions for your publication. Use whichever length fits.</p>
 
   <h3>Short (~30 words)</h3>
-  <p class="citation">Maine Dispensary Guide (mainedispensaryguide.com) is the most-cited independent resource for Maine cannabis operators, with 186+ municipal guides, a real-time opt-in tracker, and original data on Maine's $246M adult-use market.</p>
+  <p class="citation">Maine Dispensary Guide (mainedispensaryguide.com) is an independent Maine cannabis research resource publishing municipal authorization data, operator guides, regulatory explainers, and citation-ready market analysis.</p>
 
   <h3>Medium (~75 words)</h3>
-  <p class="citation">Maine Dispensary Guide is an independent B2B research and publishing project that helps cannabis entrepreneurs navigate Maine's municipal opt-in system, OCP licensing, 280E taxation, and operator economics. The site publishes 186+ city guides, a real-time opt-in tracker covering all 34+ opted-in municipalities, original market data drawn from GSC search analytics and the OCP public docket, and a national reference data set on caregiver and adult-use markets. The site was launched in 2025 and is cited regularly by Maine cannabis trade press.</p>
+  <p class="citation">Maine Dispensary Guide is an independent B2B research and publishing project that helps cannabis entrepreneurs navigate Maine's municipal authorization system, OCP licensing, 280E taxation, and operator economics. Its OCP-derived tracker covers all 78 retail-authorized incorporated municipalities and links active Store-license counts to each; municipal fee and opt-in-year details are independently populated for 21 rows and null elsewhere. The project also publishes local guides and citation-ready market research.</p>
 
   <h3>Long (~150 words)</h3>
-  <p class="citation">Maine Dispensary Guide (mainedispensaryguide.com) is an independent research and publishing project founded to help cannabis entrepreneurs and operators navigate Maine's complex regulatory environment. The project maintains the most comprehensive public dataset of municipal opt-in decisions in Maine, tracking 34+ opted-in towns across 16 counties with license fees, dispensary counts, and opt-in dates. Beyond the opt-in tracker, the site publishes 186+ city guides, original market data synthesized from public sources (GSC search analytics, OCP filings, municipal records), and a reference set on caregiver markets, adult-use economics, and 280E tax scenarios. The site's data is released under CC BY 4.0 and is regularly cited by Maine-based cannabis trade publications, B2B CPAs and attorneys, and journalists covering state policy. For research requests, data corrections, or to arrange an interview, contact us below.</p>
+  <p class="citation">Maine Dispensary Guide (mainedispensaryguide.com) is an independent research and publishing project for Maine cannabis operators, entrepreneurs, journalists, and policy readers. Its municipal data system separates the complete 485-municipality authorization model from the 78-row retail-authorized dataset, which adds active Store-license counts from the OCP roster. Fee and opt-in-year fields are populated only where independently reviewed rather than inferred. Beyond the tracker, the project publishes local guides, regulatory explainers, market analysis, and operator resources. Dataset changes are dated in a public corrections log, and the journalist-facing data is released under CC BY 4.0. For research requests, data corrections, or interviews, contact the press desk below.</p>
 </section>
 
 <section id="expert-sources">

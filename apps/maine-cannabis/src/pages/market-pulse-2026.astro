@@ -9,7 +9,7 @@ const article = {
   authorId: "eliot-nash",
   authorTitle: "Market & Real Estate Analyst",
   publishDate: "2026-07-07",
-  modifiedDate: "2026-07-07",
+  modifiedDate: "2026-08-11",
   section: "Market Research"
 };
 
@@ -109,21 +109,21 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
 <section id="headline">
   <h2>Headline Numbers</h2>
   <div class="stat-grid">
-    <div class="stat-card"><div class="num">{meta.town_count}</div><div class="label">Maine municipalities opted in for adult-use cannabis</div></div>
-    <div class="stat-card"><div class="num">{totalOperating}+</div><div class="label">Operating adult-use dispensaries across opted-in towns</div></div>
-    <div class="stat-card"><div class="num">${totalFeeRevenue.toLocaleString()}</div><div class="label">Total municipal license fee revenue (one-time, summed across all opted-in towns)</div></div>
-    <div class="stat-card"><div class="num">{meta.counties_covered}</div><div class="label">Maine counties with at least one opted-in municipality</div></div>
+    <div class="stat-card"><div class="num">{meta.town_count}</div><div class="label">OCP-authorized incorporated municipalities statewide</div></div>
+    <div class="stat-card"><div class="num">{totalOperating}</div><div class="label">Active adult-use Store licenses linked to authorized municipalities</div></div>
+    <div class="stat-card"><div class="num">${totalFeeRevenue.toLocaleString()}</div><div class="label">Sum of known municipal fee values in the 21-row detail subset (not revenue)</div></div>
+    <div class="stat-card"><div class="num">{meta.counties_covered}</div><div class="label">Maine counties represented in the statewide authorization model</div></div>
     <div class="stat-card"><div class="num">{totalQueries.toLocaleString()}</div><div class="label">Unique queries in the multi-snapshot GSC aggregate</div></div>
     <div class="stat-card"><div class="num">{totalImpressions.toLocaleString()}</div><div class="label">Aggregate search impressions observed on MDG</div></div>
   </div>
 
   <h3>What this means in one paragraph</h3>
-  <p>Maine's adult-use cannabis market is a <strong>patchwork of {meta.town_count} opted-in municipalities</strong> that have authorized {totalOperating}+ operating dispensaries, but those towns only represent {meta.counties_covered} of Maine's 16 counties. The average license fee is <strong>${Math.round(totalFeeRevenue / towns.filter(t => t.license_fee_usd).length).toLocaleString()}</strong>, with a wide spread from $500 (Dover-Foxcroft, Skowhegan) to $5,000 (Portland). The reviewed GSC aggregate shows recurring search demand for Maine cannabis information, but does not publish individual query text or infer a single reporting-period trend.</p>
+  <p>Maine's adult-use cannabis market is a <strong>patchwork of {meta.town_count} OCP-authorized incorporated municipalities</strong> spanning all {meta.counties_covered} counties, with {totalOperating} active adult-use Store licenses linked to those municipalities in the roster retrieved 2026-08-11. Municipal fee details are independently retained for 21 rows only: within that detail subset, the average listed fee is <strong>${Math.round(totalFeeRevenue / towns.filter(t => t.license_fee_usd).length).toLocaleString()}</strong>, ranging from $750 to $5,000. The reviewed GSC aggregate shows recurring search demand for Maine cannabis information, but does not publish individual query text or infer a single reporting-period trend.</p>
 </section>
 
 <section id="opt-in-timeline">
-  <h2>Opt-In Timeline — 2017 to 2026</h2>
-  <p>The municipal opt-in pattern shows clear phases. The first wave (2017–2019) was the major cities — Portland, Bangor, Lewiston, Auburn — driven by the original adult-use legalization push. The second wave (2020–2021) was smaller cities and towns that had watched the early results. Since 2021, few additional towns have completed retail authorization, and some that tried reversed course: Bar Harbor voters rejected retail ordinances in 2022 and Wells voters rejected retail in 2025.</p>
+  <h2>Verified Opt-In Years in the 21-Row Detail Subset</h2>
+  <p>The chart below is <strong>not</strong> a statewide authorization timeline. It shows only the 21 municipalities for which this dataset retains an independently reviewed opt-in year. The other 57 authorized municipalities remain in the statewide table with a null year until that field is verified; they are not silently excluded from the authorization count.</p>
 
   <div class="bar-chart">
     {yearEntries.map(([year, count]) => (
@@ -135,12 +135,12 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
     ))}
   </div>
 
-  <p class="citation">Source: MDG 2026 Opt-In Tracker. {meta.town_count} of Maine's 488 municipalities have formally opted in. The remaining ~454 (~93%) have either explicitly opted out or taken no action.</p>
+  <p class="citation">Source: MDG 2026 Opt-In Tracker. Statewide authorization count: {meta.town_count} of Maine's 485 incorporated municipalities. Timeline coverage: 21 rows with a verified opt-in year; 57 authorized rows have year=null pending verification.</p>
 </section>
 
 <section id="license-fees">
-  <h2>License Fees — Wide Variation by Market</h2>
-  <p>Municipal license fees range from $500 (Dover-Foxcroft, Skowhegan) to $5,000 (Portland) — a 10× spread. The fee structure is set locally and has no correlation with population, county, or opt-in year.</p>
+  <h2>Known Municipal License Fees — 21-Row Detail Subset</h2>
+  <p>Independently retained municipal fee values in this dataset range from $750 to $5,000. These 21 values are a reviewed detail subset, not comprehensive statewide fee coverage; the other 57 authorized rows use <code>null</code> rather than an estimate.</p>
 
   <div class="bar-chart">
     {townsByFee.slice(0, 12).map(t => (
@@ -154,19 +154,19 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
 
   <h3>Key fee-related statistics</h3>
   <ul>
-    <li><strong>Median fee:</strong> ${towns.filter(t => t.license_fee_usd).map(t => t.license_fee_usd!).sort((a, b) => a - b)[Math.floor(towns.length / 2)].toLocaleString()}</li>
-    <li><strong>Average fee:</strong> ${Math.round(totalFeeRevenue / towns.filter(t => t.license_fee_usd).length).toLocaleString()}</li>
-    <li><strong>Total one-time fee revenue across all opted-in towns:</strong> ${totalFeeRevenue.toLocaleString()} (assuming one license per town)</li>
-    <li><strong>Most expensive:</strong> Portland ($5,000) — also the most dispensaries (27 active adult-use store licenses, OCP roster 2026-07-01)</li>
-    <li><strong>Least expensive:</strong> Dover-Foxcroft, Skowhegan ($500 each) — minimal competition</li>
+    <li><strong>Median known fee:</strong> ${townsByFee.map(t => t.license_fee_usd!).sort((a, b) => a - b)[Math.floor(townsByFee.length / 2)].toLocaleString()}</li>
+    <li><strong>Average known fee:</strong> ${Math.round(totalFeeRevenue / townsByFee.length).toLocaleString()}</li>
+    <li><strong>Sum of known fee values:</strong> ${totalFeeRevenue.toLocaleString()} across 21 reviewed rows (not municipal revenue collected)</li>
+    <li><strong>Highest known fee:</strong> Portland ($5,000) — also the most active Store licenses (27, OCP roster retrieved 2026-08-11)</li>
+    <li><strong>Lowest known fee:</strong> Gardiner, Presque Isle, Winslow, and Wiscasset ($750 each)</li>
   </ul>
 
   <p>For perspective: a $2,500 license fee in a market like Bangor (10 active adult-use store licenses) is a very different cost equation than a $1,000 fee in Sanford (4 licenses). The fee structure does not always match market saturation.</p>
 </section>
 
 <section id="county-breakdown">
-  <h2>County Breakdown — Opt-Ins by County</h2>
-  <p>Maine's 16 counties vary widely in cannabis opt-in activity. York and Kennebec counties lead with four opted-in towns each, Cumberland and Penobscot follow with three, while several northern and Downeast counties have no opted-in municipalities at all.</p>
+  <h2>County Breakdown — Authorized Municipalities by County</h2>
+  <p>All 16 counties contain at least one OCP-authorized incorporated municipality. York leads with nine, followed by Kennebec with eight; Penobscot and Oxford each have seven. These are authorization counts, not store counts.</p>
 
   <div class="bar-chart">
     {topCounties.map(([county, count]) => (
@@ -178,8 +178,7 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
     ))}
   </div>
 
-  <h3>Counties with NO opted-in municipalities (as of April 2026)</h3>
-  <p>Piscataquis has Dover-Foxcroft (the only opt-in in that county). Aroostook has Presque Isle. Several counties — particularly in northern and Downeast Maine — remain entirely opted-out. This represents the geographic frontier of the Maine cannabis market: roughly 90% of the state's land area has no authorized cannabis retail.</p>
+  <p>The full table on <a href="/for-journalists#opt-in-data">For Journalists</a> lists all {meta.town_count} authorized municipalities and their linked active Store counts.</p>
 </section>
 
 <section id="search-demand">
@@ -198,9 +197,9 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
 <section id="methodology">
   <div class="methodology">
     <h3>Methodology &amp; Data Sources</h3>
-    <p><strong>Opt-in data:</strong> Compiled from MDG's ongoing municipal records review, cross-referenced with the Maine OCP public docket and individual town clerk records. Updated quarterly. Last refresh: April 2026. Next refresh: October 2026.</p>
-    <p><strong>License fees:</strong> Pulled from individual municipal ordinances and town-clerk fee schedules. May not reflect the most recent revision; confirm with town clerk before relying on a specific number for a business decision.</p>
-    <p><strong>Dispensary counts:</strong> Compiled from OCP license filings and direct outreach to operators. Estimates only — actual operating counts may vary by ±20%.</p>
+    <p><strong>Authorization data:</strong> Complete statewide universe of {meta.town_count} incorporated municipalities where the OCP municipal model (refreshed 2026-07-09) records adult-use retail authorization. The canonical model covers 485 cities, towns, and plantations; it does not classify an OCP activity flag of N as an evidence-backed opt-out without primary local evidence.</p>
+    <p><strong>License fees and opt-in years:</strong> Independently retained for 21 reviewed rows only. The other 57 authorized rows use null rather than an estimate. Fee values describe local schedules, not municipal revenue collected; confirm current amounts with the town clerk.</p>
+    <p><strong>Store counts:</strong> Distinct active adult-use Store license IDs in the OCP roster retrieved 2026-08-11 (the source URL filename says 2026-07-01; OCP's HTTP Last-Modified was 2026-08-10), grouped by canonical host municipality with documented place-name normalization. Pending, conditional, expired, and non-Store licenses are excluded; roster locations that conflict with the authorization model are excluded pending reconciliation.</p>
     <p><strong>Search demand data:</strong> A reviewed multi-snapshot aggregate from MDG's Google Search Console exports, published {gscSummary.publishedAt}; it is not a single reporting window. It reports counts only; raw query text is retained in private operational storage and is not published. The figures describe impressions on MDG, not total Maine-cannabis search volume.</p>
     <p><strong>License:</strong> All data in this report is released under CC BY 4.0. Cite as: Nash, E. &amp; Finch, M. (2026). <em>Maine Cannabis Market Pulse 2026.</em> Maine Dispensary Guide. mainedispensaryguide.com/market-pulse-2026.</p>
     <p><strong>Caveats:</strong> This is observational data, not a controlled study. Numbers are point-in-time snapshots. Maine's regulatory environment changes frequently; verify current status with the OCP and individual town clerks before relying on any specific figure for a business decision.</p>
@@ -213,9 +212,9 @@ const topCounties = Object.entries(townsByCounty).sort((a, b) => b[1] - a[1]).sl
 
   <p class="citation">Nash, E. &amp; Finch, M. (2026). <em>Maine Cannabis Market Pulse 2026.</em> Maine Dispensary Guide. mainedispensaryguide.com/market-pulse-2026</p>
 
-  <p class="citation">Maine Dispensary Guide's 2026 Market Pulse report finds that {meta.town_count} Maine municipalities have opted in to allow adult-use cannabis businesses, with {totalOperating}+ operating dispensaries and ${totalFeeRevenue.toLocaleString()} in cumulative municipal license fees (mainedispensaryguide.com, August 2026).</p>
+  <p class="citation">Maine Dispensary Guide's 2026 Market Pulse records {meta.town_count} OCP-authorized incorporated municipalities across all 16 counties, linked to {totalOperating} active adult-use Store licenses in the OCP roster retrieved August 11, 2026 (mainedispensaryguide.com, August 2026).</p>
 
-  <p class="citation">According to the 2026 Maine Cannabis Market Pulse, an annual original-research report from Maine Dispensary Guide, {meta.town_count} of Maine's 488 municipalities have formally opted in to allow adult-use cannabis businesses. The opted-in towns — representing {meta.counties_covered} of the state's 16 counties — host {totalOperating}+ operating dispensaries and have generated ${totalFeeRevenue.toLocaleString()} in cumulative municipal license fee revenue. The report, which synthesizes GSC search analytics, OCP public filings, and municipal records, is the first of its kind for the Maine market.</p>
+  <p class="citation">According to the 2026 Maine Cannabis Market Pulse, {meta.town_count} of Maine's 485 incorporated municipalities are recorded as authorized for adult-use retail. The full statewide table includes Store-license counts for every authorized municipality; municipal fee and opt-in-year details are independently populated for 21 rows and null elsewhere rather than estimated.</p>
 
   <p class="citation" style="margin-top: 0.75rem; font-size: 0.875rem; color: var(--color-text-light);">For the sales-volume, transaction-count, and tax-revenue context that this opt-in dataset complements — $246.4M adult-use retail sales in 2025 across 4.84M transactions, $43.72M in AUCP state revenue, and the Jan 1, 2026 tax reset — see the companion <a href="/market-stats">Maine Cannabis Market Stats 2026</a> hub.</p>
 </section>

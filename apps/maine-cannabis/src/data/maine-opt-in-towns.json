@@ -1,59 +1,46 @@
 {
   "meta": {
-    "source": "Maine Dispensary Guide \u2014 Opt-In Tracker",
+    "source": "Maine Dispensary Guide — Opt-In Tracker",
     "source_url": "https://mainedispensaryguide.com/guides/maine-cannabis-opt-in-tracker",
     "as_of": "2026-08-11",
     "last_updated": "2026-08-11",
-    "license": "CC BY 4.0 \u2014 cite mainedispensaryguide.com",
-    "town_count": 21,
-    "counties_covered": 10,
-    "method": "Towns retained only where the OCP municipal opt-in model (refreshed 2026-07-09, maine.gov/dafs/ocp/open-data/adult-use/opt-in-communities) records retail authorization. dispensaries_operating = active adult-use Store licenses per the OCP licensee roster of 2026-07-01. Towns without recorded retail authorization \u2014 incl. Bar Harbor and Wells, whose voters rejected retail ordinances in 2022 and 2025 \u2014 are not opted-in and are not listed; see the corrections log."
+    "license": "CC BY 4.0 — cite mainedispensaryguide.com",
+    "town_count": 78,
+    "counties_covered": 16,
+    "method": "Complete statewide universe of incorporated Maine municipalities where the OCP municipal opt-in model (refreshed 2026-07-09, maine.gov/dafs/ocp/open-data/adult-use/opt-in-communities) records retail authorization. dispensaries_operating = distinct active adult-use Store license IDs per the OCP roster retrieved 2026-08-11 (source URL filename dated 2026-07-01; HTTP Last-Modified 2026-08-10), grouped by canonical host municipality; known roster place-name aliases (Stratton→Eustis, Hollis Center→Hollis, Greenville Junction→Greenville) are normalized. Store licenses in municipalities without OCP-recorded retail authorization are excluded pending reconciliation. year_opted_in and license_fee_usd are populated only where independently retained from the prior reviewed subset; null means not yet verified. Bar Harbor and Wells are excluded because voters rejected retail in 2022 and 2025; see the corrections log.",
+    "source_artifacts": {
+      "municipal_authorization": {
+        "source_url": "https://www.maine.gov/dafs/ocp/open-data/adult-use/opt-in-communities",
+        "model_refreshed_at": "2026-07-09T20:34:15.803"
+      },
+      "adult_use_roster": {
+        "source_url": "https://www.maine.gov/dafs/ocp/sites/maine.gov.dafs.ocp/files/inline-files/Adult_Use_Establishments_And_Contacts_2026_07_01.csv",
+        "retrieved_at": "2026-08-11",
+        "http_last_modified": "2026-08-10T19:11:13Z",
+        "sha256": "37c678ced16a14eaba81821f254b5596bf6b1ee3f5a4619ef95a17dfa2aee0fa",
+        "license_receipt": "maine-opt-in-store-license-receipt.json",
+        "license_receipt_sha256": "99d2c0c43d66f421961d02091f334c1ab095dc2cc6da0e47d8f71f6a7ad48cf7",
+        "active_store_ids_in_roster": 189,
+        "active_store_ids_linked_to_authorized_municipalities": 184,
+        "excluded_active_store_records": [
+          { "license_id": "AMS1486", "roster_location": "Warren", "reason": "canonical model has no recorded retail authorization" },
+          { "license_id": "AMS1558", "roster_location": "Guilford", "reason": "canonical model has no recorded retail authorization" },
+          { "license_id": "AMS1692", "roster_location": "West Paris", "reason": "canonical model has no recorded retail authorization" },
+          { "license_id": "AMS1770", "roster_location": "Baring Plt", "reason": "location is outside the canonical incorporated-municipality model" },
+          { "license_id": "AMS1783", "roster_location": "Baring Plantation", "reason": "location is outside the canonical incorporated-municipality model" }
+        ]
+      }
+    }
   },
   "towns": [
     {
-      "town": "Portland",
-      "county": "Cumberland",
-      "type": "City",
-      "year_opted_in": 2017,
-      "license_fee_usd": 5000,
-      "dispensaries_operating": 27,
-      "notes": "Most competitive market in Maine; 27 active adult-use store licenses (OCP roster, 2026-07-01)."
-    },
-    {
-      "town": "South Portland",
-      "county": "Cumberland",
-      "type": "City",
-      "year_opted_in": 2018,
-      "license_fee_usd": 2500,
-      "dispensaries_operating": 12,
-      "notes": "Strong suburban market; 12 active adult-use store licenses (OCP roster, 2026-07-01)."
-    },
-    {
-      "town": "Biddeford",
-      "county": "York",
-      "type": "City",
-      "year_opted_in": 2019,
-      "license_fee_usd": 1500,
-      "dispensaries_operating": 3,
-      "notes": "Revitalizing downtown; 3 active adult-use store licenses (OCP roster, 2026-07-01)."
-    },
-    {
-      "town": "Sanford",
-      "county": "York",
+      "town": "Anson",
+      "county": "Somerset",
       "type": "Town",
-      "year_opted_in": 2020,
-      "license_fee_usd": 1000,
-      "dispensaries_operating": 4,
-      "notes": "York County hub; 4 active adult-use store licenses (OCP roster, 2026-07-01)."
-    },
-    {
-      "town": "Lewiston",
-      "county": "Androscoggin",
-      "type": "City",
-      "year_opted_in": 2018,
-      "license_fee_usd": 2000,
-      "dispensaries_operating": 8,
-      "notes": "Second-largest city; 8 active adult-use store licenses (OCP roster, 2026-07-01)."
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
     },
     {
       "town": "Auburn",
@@ -62,7 +49,7 @@
       "year_opted_in": 2018,
       "license_fee_usd": 1500,
       "dispensaries_operating": 7,
-      "notes": "Twin city with Lewiston; 7 active adult-use store licenses (OCP roster, 2026-07-01)."
+      "notes": "Twin city with Lewiston; 7 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
     },
     {
       "town": "Augusta",
@@ -71,16 +58,16 @@
       "year_opted_in": 2019,
       "license_fee_usd": 1500,
       "dispensaries_operating": 5,
-      "notes": "State capital; 5 active adult-use store licenses (OCP roster, 2026-07-01)."
+      "notes": "State capital; 5 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
     },
     {
-      "town": "Waterville",
-      "county": "Kennebec",
-      "type": "City",
-      "year_opted_in": 2020,
-      "license_fee_usd": 1000,
-      "dispensaries_operating": 6,
-      "notes": "Central Maine market; 6 active adult-use store licenses (OCP roster, 2026-07-01)."
+      "town": "Avon",
+      "county": "Franklin",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
     },
     {
       "town": "Bangor",
@@ -89,16 +76,7 @@
       "year_opted_in": 2018,
       "license_fee_usd": 2500,
       "dispensaries_operating": 10,
-      "notes": "Largest city north of Portland; 10 active adult-use store licenses (OCP roster, 2026-07-01)."
-    },
-    {
-      "town": "Brunswick",
-      "county": "Cumberland",
-      "type": "Town",
-      "year_opted_in": 2019,
-      "license_fee_usd": 1500,
-      "dispensaries_operating": 3,
-      "notes": "Coastal mid-coast; college town; 3 active adult-use store licenses (OCP roster, 2026-07-01)."
+      "notes": "Largest city north of Portland; 10 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
     },
     {
       "town": "Bath",
@@ -107,70 +85,52 @@
       "year_opted_in": 2020,
       "license_fee_usd": 1000,
       "dispensaries_operating": 2,
-      "notes": "Small coastal city; 2 active adult-use store licenses (OCP roster, 2026-07-01)."
+      "notes": "Small coastal city; 2 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
     },
     {
-      "town": "Wiscasset",
-      "county": "Lincoln",
-      "type": "Town",
-      "year_opted_in": 2021,
-      "license_fee_usd": 750,
-      "dispensaries_operating": 1,
-      "notes": "Tourist destination; route 1 location; 1 active adult-use store license (OCP roster, 2026-07-01)."
-    },
-    {
-      "town": "Rockland",
-      "county": "Knox",
-      "type": "City",
-      "year_opted_in": 2019,
-      "license_fee_usd": 1250,
-      "dispensaries_operating": 4,
-      "notes": "Mid-coast hub; tourist traffic; 4 active adult-use store licenses (OCP roster, 2026-07-01)."
-    },
-    {
-      "town": "Ellsworth",
-      "county": "Hancock",
-      "type": "City",
-      "year_opted_in": 2019,
-      "license_fee_usd": 1250,
-      "dispensaries_operating": 0,
-      "notes": "Downeast Maine hub; gateway to Acadia. Retail authorized but no active adult-use store licenses (OCP roster, 2026-07-01); medical access via Curaleaf Ellsworth (DSP105) and Main Street Medical caregivers."
-    },
-    {
-      "town": "Presque Isle",
-      "county": "Aroostook",
-      "type": "City",
-      "year_opted_in": 2020,
-      "license_fee_usd": 750,
-      "dispensaries_operating": 1,
-      "notes": "Aroostook County hub; 1 active adult-use store license (Royal Leaf, OCP roster, 2026-07-01). March 2026 moratorium on new licenses (per The County + WAGM-TV)."
-    },
-    {
-      "town": "Old Orchard Beach",
+      "town": "Berwick",
       "county": "York",
       "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 3,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 3 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Bethel",
+      "county": "Oxford",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 3,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 3 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Biddeford",
+      "county": "York",
+      "type": "City",
       "year_opted_in": 2019,
       "license_fee_usd": 1500,
-      "dispensaries_operating": 1,
-      "notes": "Beach tourist destination; seasonal volume; 1 active adult-use store license (Theory Wellness, OCP roster, 2026-07-01)."
-    },
-    {
-      "town": "Kittery",
-      "county": "York",
-      "type": "Town",
-      "year_opted_in": 2018,
-      "license_fee_usd": 2000,
       "dispensaries_operating": 3,
-      "notes": "Route 1 retail hub; outlet shopping destination; 3 active adult-use store licenses (OCP roster, 2026-07-01)."
+      "notes": "Revitalizing downtown; 3 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
     },
     {
-      "town": "Orono",
-      "county": "Penobscot",
+      "town": "Boothbay",
+      "county": "Lincoln",
       "type": "Town",
-      "year_opted_in": 2021,
-      "license_fee_usd": 1000,
+      "year_opted_in": null,
+      "license_fee_usd": null,
       "dispensaries_operating": 1,
-      "notes": "University of Maine location; student market; 1 active adult-use store license (OCP roster, 2026-07-01)."
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Bowdoinham",
+      "county": "Sagadahoc",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
     },
     {
       "town": "Brewer",
@@ -179,16 +139,151 @@
       "year_opted_in": 2020,
       "license_fee_usd": 1000,
       "dispensaries_operating": 3,
-      "notes": "Bangor suburb; 3 active adult-use store licenses (OCP roster, 2026-07-01)."
+      "notes": "Bangor suburb; 3 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
     },
     {
-      "town": "Winslow",
+      "town": "Bridgton",
+      "county": "Cumberland",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 3,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 3 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Brunswick",
+      "county": "Cumberland",
+      "type": "Town",
+      "year_opted_in": 2019,
+      "license_fee_usd": 1500,
+      "dispensaries_operating": 3,
+      "notes": "Coastal mid-coast; college town; 3 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Buckfield",
+      "county": "Oxford",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Bucksport",
+      "county": "Hancock",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Carrabassett Valley",
+      "county": "Franklin",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Casco",
+      "county": "Cumberland",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Chelsea",
       "county": "Kennebec",
       "type": "Town",
-      "year_opted_in": 2021,
-      "license_fee_usd": 750,
+      "year_opted_in": null,
+      "license_fee_usd": null,
       "dispensaries_operating": 1,
-      "notes": "Waterville suburb; central Maine; 1 active adult-use store license (OCP roster, 2026-07-01)."
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Columbia",
+      "county": "Washington",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Damariscotta",
+      "county": "Lincoln",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Detroit",
+      "county": "Somerset",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Eliot",
+      "county": "York",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 6,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 6 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Ellsworth",
+      "county": "Hancock",
+      "type": "City",
+      "year_opted_in": 2019,
+      "license_fee_usd": 1250,
+      "dispensaries_operating": 0,
+      "notes": "Downeast Maine hub; gateway to Acadia. Retail authorized but no active adult-use store licenses (OCP roster retrieved 2026-08-11); medical access via Curaleaf Ellsworth (DSP105) and Main Street Medical caregivers."
+    },
+    {
+      "town": "Eustis",
+      "county": "Franklin",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Fairfield",
+      "county": "Somerset",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Farmington",
+      "county": "Franklin",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Fryeburg",
+      "county": "Oxford",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
     },
     {
       "town": "Gardiner",
@@ -197,7 +292,448 @@
       "year_opted_in": 2021,
       "license_fee_usd": 750,
       "dispensaries_operating": 3,
-      "notes": "Suburban Augusta area; Route 1 location; 3 active adult-use store licenses (OCP roster, 2026-07-01)."
+      "notes": "Suburban Augusta area; Route 1 location; 3 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Grand Isle",
+      "county": "Aroostook",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Greenville",
+      "county": "Piscataquis",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Hallowell",
+      "county": "Kennebec",
+      "type": "City",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Hollis",
+      "county": "York",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Jackson",
+      "county": "Waldo",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Jonesport",
+      "county": "Washington",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Kittery",
+      "county": "York",
+      "type": "Town",
+      "year_opted_in": 2018,
+      "license_fee_usd": 2000,
+      "dispensaries_operating": 3,
+      "notes": "Route 1 retail hub; outlet shopping destination; 3 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Lebanon",
+      "county": "York",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 5,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 5 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Lewiston",
+      "county": "Androscoggin",
+      "type": "City",
+      "year_opted_in": 2018,
+      "license_fee_usd": 2000,
+      "dispensaries_operating": 8,
+      "notes": "Second-largest city; 8 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Lincoln",
+      "county": "Penobscot",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Lisbon",
+      "county": "Androscoggin",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Manchester",
+      "county": "Kennebec",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 3,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 3 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Mechanic Falls",
+      "county": "Androscoggin",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Medway",
+      "county": "Penobscot",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Milo",
+      "county": "Piscataquis",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Newport",
+      "county": "Penobscot",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Newry",
+      "county": "Oxford",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Northport",
+      "county": "Waldo",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Old Orchard Beach",
+      "county": "York",
+      "type": "Town",
+      "year_opted_in": 2019,
+      "license_fee_usd": 1500,
+      "dispensaries_operating": 1,
+      "notes": "Beach tourist destination; seasonal volume; 1 active adult-use store license (Theory Wellness, OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Orono",
+      "county": "Penobscot",
+      "type": "Town",
+      "year_opted_in": 2021,
+      "license_fee_usd": 1000,
+      "dispensaries_operating": 1,
+      "notes": "University of Maine location; student market; 1 active adult-use store license (OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Oxford",
+      "county": "Oxford",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 4,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 4 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Paris",
+      "county": "Oxford",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Parsonsfield",
+      "county": "York",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Perry",
+      "county": "Washington",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Peru",
+      "county": "Oxford",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Poland",
+      "county": "Androscoggin",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Portland",
+      "county": "Cumberland",
+      "type": "City",
+      "year_opted_in": 2017,
+      "license_fee_usd": 5000,
+      "dispensaries_operating": 27,
+      "notes": "Most competitive market in Maine; 27 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Presque Isle",
+      "county": "Aroostook",
+      "type": "City",
+      "year_opted_in": 2020,
+      "license_fee_usd": 750,
+      "dispensaries_operating": 1,
+      "notes": "Aroostook County hub; 1 active adult-use store license (Royal Leaf, OCP roster retrieved 2026-08-11). March 2026 moratorium on new licenses (per The County + WAGM-TV)."
+    },
+    {
+      "town": "Richmond",
+      "county": "Sagadahoc",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Rockland",
+      "county": "Knox",
+      "type": "City",
+      "year_opted_in": 2019,
+      "license_fee_usd": 1250,
+      "dispensaries_operating": 4,
+      "notes": "Mid-coast hub; tourist traffic; 4 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Rome",
+      "county": "Kennebec",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Sanford",
+      "county": "York",
+      "type": "City",
+      "year_opted_in": 2020,
+      "license_fee_usd": 1000,
+      "dispensaries_operating": 4,
+      "notes": "York County hub; 4 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Shirley",
+      "county": "Piscataquis",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Solon",
+      "county": "Somerset",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Somerville",
+      "county": "Lincoln",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "South Portland",
+      "county": "Cumberland",
+      "type": "City",
+      "year_opted_in": 2018,
+      "license_fee_usd": 2500,
+      "dispensaries_operating": 12,
+      "notes": "Strong suburban market; 12 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Southwest Harbor",
+      "county": "Hancock",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 1,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 1 active adult-use Store license in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Stacyville",
+      "county": "Penobscot",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Thomaston",
+      "county": "Knox",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Thorndike",
+      "county": "Waldo",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Turner",
+      "county": "Androscoggin",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 3,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 3 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Wade",
+      "county": "Aroostook",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Washburn",
+      "county": "Aroostook",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Waterville",
+      "county": "Kennebec",
+      "type": "City",
+      "year_opted_in": 2020,
+      "license_fee_usd": 1000,
+      "dispensaries_operating": 6,
+      "notes": "Central Maine market; 6 active adult-use store licenses (OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Wilton",
+      "county": "Franklin",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 0,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 0 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Windham",
+      "county": "Cumberland",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
+    },
+    {
+      "town": "Winslow",
+      "county": "Kennebec",
+      "type": "Town",
+      "year_opted_in": 2021,
+      "license_fee_usd": 750,
+      "dispensaries_operating": 1,
+      "notes": "Waterville suburb; central Maine; 1 active adult-use store license (OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Wiscasset",
+      "county": "Lincoln",
+      "type": "Town",
+      "year_opted_in": 2021,
+      "license_fee_usd": 750,
+      "dispensaries_operating": 1,
+      "notes": "Tourist destination; route 1 location; 1 active adult-use store license (OCP roster retrieved 2026-08-11)."
+    },
+    {
+      "town": "Woolwich",
+      "county": "Sagadahoc",
+      "type": "Town",
+      "year_opted_in": null,
+      "license_fee_usd": null,
+      "dispensaries_operating": 2,
+      "notes": "Retail authorization recorded in the OCP municipal opt-in model; 2 active adult-use Store licenses in the OCP roster retrieved 2026-08-11. Opt-in year and municipal fee not yet independently verified."
     }
   ]
 }
