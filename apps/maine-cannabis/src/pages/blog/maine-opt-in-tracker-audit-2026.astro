@@ -1,0 +1,183 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+import optInData from '../../data/maine-opt-in-towns.json';
+
+const article = {
+  author: "Steve Kelly",
+  authorId: "steve-kelly",
+  authorTitle: "Founder & Publisher",
+  publishDate: "2026-08-11",
+  modifiedDate: "2026-08-11",
+  section: "Press & Media"
+};
+const topics = ["policy", "municipal", "data", "operator-guide"];
+
+type Town = {
+  town: string;
+  county: string;
+  type: string;
+  year_opted_in: number | null;
+  license_fee_usd: number | null;
+  dispensaries_operating: number | null;
+  notes: string;
+};
+const meta = optInData.meta as { as_of: string; town_count: number; counties_covered: number; source: string; source_url: string; license: string; last_updated: string };
+const towns: Town[] = optInData.towns as Town[];
+const totalDispensaries = towns.reduce((sum: number, t) => sum + (t.dispensaries_operating || 0), 0);
+
+const removedNoRecord = [
+  "Westbrook", "Scarborough", "Saco", "Topsham", "Camden",
+  "Dover-Foxcroft", "Caribou", "Houlton", "York", "Skowhegan", "Belfast"
+];
+
+const countCorrections = [
+  { town: "Portland", old: 12, now: 27 },
+  { town: "South Portland", old: 0, now: 12 },
+  { town: "Bangor", old: 6, now: 10 },
+  { town: "Lewiston", old: 4, now: 8 },
+  { town: "Auburn", old: 2, now: 7 },
+  { town: "Waterville", old: 1, now: 6 },
+  { town: "Augusta", old: 0, now: 5 },
+  { town: "Sanford", old: 1, now: 4 },
+  { town: "Rockland", old: 2, now: 4 }
+];
+
+const faqItems = [
+  { question: "Why did you remove 13 towns from the Opt-In Tracker?", answer: "Because the Maine Office of Cannabis Policy's municipal opt-in model (refreshed 2026-07-09) records no adult-use retail authorization for any of them. Our prior dataset listed them as opted-in without primary-source support, and because the dataset is cited by journalists under CC BY 4.0, we removed every town we could not verify against OCP's own records." },
+  { question: "Did Bar Harbor opt in to recreational cannabis?", answer: "No. Bar Harbor voters rejected citizen-initiated adult-use retail ordinances at town meeting in June 2022 and again at the ballot in November 2022. Our previous dataset incorrectly listed Bar Harbor as opted-in with two operating dispensaries; that entry has been removed and is documented in our corrections log." },
+  { question: "Did Wells, Maine opt in to recreational cannabis?", answer: "No. Wells voters rejected adult-use retail on June 10, 2025 (Article 17 at town meeting). The previous dataset listed Wells as opted-in; that entry has been removed." },
+  { question: "How do you count operating dispensaries per town?", answer: "dispensaries_operating counts distinct active adult-use Store licenses in the OCP licensee roster (2026-07-01 snapshot) whose host municipality is that town. Pending, conditional, and non-Store license types are excluded. Ellsworth, for example, is retail-authorized but shows 0 because it has no active store license in the current roster." },
+  { question: "I cited the old '34 towns' figure. What should I do?", answer: "Update to the current dataset: 21 OCP-verified opted-in towns across 10 counties, with " + totalDispensaries + "+ active adult-use store licenses as of 2026-08-11. The live dataset at mainedispensaryguide.com/guides/maine-cannabis-opt-in-tracker carries a CC BY 4.0 license and a dated methodology note; citing the live page rather than a static snapshot keeps your figure current." },
+  { question: "How is this tracker different from your 485-municipality tracker?", answer: "The Opt-In Tracker (maine-opt-in-towns.json) tracks the towns where retail is authorized AND counts operating stores — it is the journalist-facing dataset. The Municipal Authorization Tracker covers all 485 of Maine's incorporated cities, towns, and plantations with authorization status (authorized, opted-out, or no recorded decision), but not store counts. Both are derived from OCP open data." },
+  { question: "How often is the dataset refreshed?", answer: "When the OCP publishes a new opt-in communities model or licensee roster. Each refresh is dated in the dataset metadata and, when figures change, documented in our public corrections log at mainedispensaryguide.com/about/corrections." }
+];
+---
+
+<Layout
+  title="We Removed 13 Towns From Maine's Cannabis Opt-In Tracker. Here's Why."
+  description="We audited our journalist-cited Opt-In Tracker against OCP primary sources and removed 13 of 34 towns — including Bar Harbor and Wells, where voters rejected retail. Full methodology and corrected counts."
+  heroImage="/images/heroes/opt-in-tracker-audit-2026.jpg"
+  article={article}
+  topics={topics}
+>
+<style>
+  article { max-width: 42rem; margin: 0 auto; }
+  .article-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--color-accent); }
+  .article-header h1 { font-size: 2.25rem; line-height: 1.2; color: var(--color-primary); margin-bottom: 1rem; }
+  .subtitle { font-size: 1.2rem; color: var(--color-text-light); font-style: italic; }
+  .answer-capsule { font-size: 1.15rem; line-height: 1.7; background: color-mix(in oklab, var(--color-soft-green) 8%, transparent); border-left: 4px solid var(--color-primary); padding: 1.25rem 1.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1.5rem 0; }
+  section { margin-bottom: 2.5rem; }
+  h2 { font-size: 1.6rem; color: var(--color-primary); margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--color-accent); }
+  p { line-height: 1.7; margin-bottom: 1rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  li { line-height: 1.7; margin-bottom: 0.5rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+  th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+  th { background: var(--color-background); font-weight: 700; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .stat-block { background-color: color-mix(in oklab, var(--color-soft-green) 6%, transparent); border: 1px solid var(--color-accent); border-radius: 0.5rem; padding: 1.5rem 2rem; margin: 2rem 0; }
+  .stat-block h3 { margin-top: 0; margin-bottom: 1rem; color: var(--color-primary); }
+  .stat-block ul { list-style: none; padding: 0; margin: 0; }
+  .stat-block li { padding: 0.5rem 0; border-bottom: 1px solid color-mix(in oklab, var(--color-soft-green) 15%, transparent); }
+  .stat-block li:last-child { border-bottom: none; }
+  .byline { font-size: 0.95rem; color: var(--color-text-light); margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--color-border); }
+  .byline p { margin: 0.25rem 0; }
+  .disclaimer { background: var(--color-disclaimer-bg); border: 1px solid var(--color-disclaimer-border); padding: 1rem; border-radius: 0.5rem; font-size: 0.875rem; color: var(--color-disclaimer-text); margin-top: 2rem; }
+  .removed { color: var(--color-primary); font-weight: 600; }
+</style>
+
+<article>
+  <div class="article-header">
+    <h1>We Removed 13 Towns From Maine's Cannabis Opt-In Tracker. Here's Why.</h1>
+    <p class="subtitle">A primary-source audit of our CC BY 4.0 opt-in dataset found 13 of 34 towns with no recorded retail authorization — and store counts that lagged OCP's own roster by years.</p>
+    <div class="byline">
+      <p>By <a href="/about/authors#steve-kelly"><strong>Steve Kelly</strong></a>, Founder &amp; Publisher and publisher of record for the Maine Opt-In Tracker. <strong>Data reviewed by the Maine Cannabis editorial team.</strong></p>
+      <p>Published {article.publishDate} · Updated {article.modifiedDate}</p>
+    </div>
+  </div>
+
+  <p class="answer-capsule">
+    <strong>On August 11, 2026, we rebuilt our Opt-In Tracker dataset from scratch against the Maine Office of Cannabis Policy's own records.</strong> The result: 13 of the 34 towns we had listed as opted-in do not appear in the OCP's retail-authorization model, so we removed them. Store counts for the remaining {meta.town_count} verified towns were re-derived from the OCP licensee roster — in most cases, significantly upward. The dataset journalists have been citing since April now lists <strong>{meta.town_count} verified towns across {meta.counties_covered} counties, with {totalDispensaries}+ active adult-use store licenses</strong>.
+  </p>
+
+  <section>
+    <h2>Why we audited a dataset we already published</h2>
+    <p>Our <a href="/embed/opt-in-tracker">Opt-In Tracker</a> is licensed CC BY 4.0 and built to be cited. Reporters pull town counts, license-fee figures, and aggregate totals from it; our <a href="/for-journalists">press kit</a> points them at those numbers directly. That is exactly why the dataset has to survive contact with the primary sources behind it.</p>
+    <p>On August 11 we reconciled the dataset, last updated 2026-04-15, against two OCP records: the municipal opt-in model (refreshed 2026-07-09) and the adult-use licensee roster snapshot of 2026-07-01. It failed on both axes — which towns are opted in, and how many stores operate in each. The full record of what was wrong and what replaced it is in our public <a href="/about/corrections">corrections log</a>, filed at critical severity.</p>
+  </section>
+
+  <section>
+    <h2>The 13 towns we removed</h2>
+    <p>Thirteen of 34 listed towns have <strong>no recorded adult-use retail authorization</strong> in the OCP model. Two of them are not merely unverified — their voters explicitly rejected retail:</p>
+    <ul>
+      <li><span class="removed">Bar Harbor</span> — voters turned down citizen-initiated retail ordinances at town meeting in June 2022 and again at the ballot in November 2022. The old dataset nonetheless listed Bar Harbor as opted-in since 2019 with two operating dispensaries. Our Bar Harbor guide had inherited that claim in three places; all three are now corrected.</li>
+      <li><span class="removed">Wells</span> — voters rejected adult-use retail on June 10, 2025 (Article 17 at town meeting).</li>
+    </ul>
+    <p>The other eleven towns show no OCP-recorded retail authorization at all: {removedNoRecord.join(', ')}. "No recorded authorization" is not the same as a ban — a town clerk can confirm whether a vote is pending — but it is not an opt-in, and a dataset of opted-in towns has no business listing it.</p>
+    <Callout title="If your town is on this list" type="info">
+      Removal from our tracker means the OCP has no record of retail authorization — not that cannabis retail is politically dead there. Towns can authorize retail at any time via town meeting or council vote. Verify current status with your town clerk.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>The store counts were wrong too — mostly low</h2>
+    <p>For the 21 towns that survived verification, not a single count held up: every town was undercounted or stale, some dramatically:</p>
+    <table aria-label="Store count corrections in the Maine Opt-In Tracker audit, old dataset versus OCP roster">
+      <thead>
+        <tr><th>Town</th><th class="num">Old count</th><th class="num">Verified (OCP roster 2026-07-01)</th></tr>
+      </thead>
+      <tbody>
+        {countCorrections.map(c => (
+          <tr>
+            <td><strong>{c.town}</strong></td>
+            <td class="num">{c.old}</td>
+            <td class="num">{c.now}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p>Portland's true count is 27 active store licenses, not 12. South Portland had zero listed against 12 operating. Augusta showed zero against five. Aggregate across the verified towns: <strong>{totalDispensaries} active adult-use store licenses</strong> as of the 2026-07-01 roster.</p>
+    <p>Ellsworth deserves a footnote: it is retail-authorized and stays in the dataset, but its verified store count is 0 — authorization and an operating storefront are different facts, and this rebuild keeps them separate.</p>
+  </section>
+
+  <section>
+    <h2>Methodology, in full</h2>
+    <div class="stat-block">
+      <h3>How the rebuilt dataset works</h3>
+      <ul>
+        <li><strong>Opt-in status:</strong> a town is listed only where the OCP municipal opt-in model (refreshed 2026-07-09) records retail authorization.</li>
+        <li><strong>Store counts:</strong> distinct <em>active</em> adult-use Store license IDs per the OCP licensee roster of 2026-07-01, grouped by host municipality. Pending, conditional, expired, and non-Store license types excluded.</li>
+        <li><strong>Cross-check:</strong> aggregate counts validated against our generated statewide retail-license product before publication.</li>
+        <li><strong>License:</strong> CC BY 4.0 — free to cite with attribution to mainedispensaryguide.com.</li>
+        <li><strong>Current figures:</strong> {meta.town_count} towns, {meta.counties_covered} counties, {totalDispensaries}+ active store licenses, as of {meta.as_of}.</li>
+      </ul>
+    </div>
+    <p>The methodology now lives inside the dataset itself, in the <code>meta.method</code> field, so anyone who downloads the JSON gets the counting rules with the numbers.</p>
+  </section>
+
+  <section>
+    <h2>What this means if you cited us</h2>
+    <p>If a story published between April and August 2026 used our old figures — "34 municipalities," "41+-town patchwork," or per-town counts — those figures should be updated. The corrected aggregate is <strong>{meta.town_count} OCP-verified opted-in towns across {meta.counties_covered} counties</strong>.</p>
+    <p>Two structural fixes protect future citations:</p>
+    <ol>
+      <li><strong>Cite the live page, not a snapshot.</strong> The <a href="/guides/maine-cannabis-opt-in-tracker">tracker</a> and <a href="/embed/opt-in-tracker">embeddable widget</a> always render the current dataset with its as-of date.</li>
+      <li><strong>Every change gets a dated record.</strong> This audit is entry <code>maine-opt-in-towns-dataset</code> in the <a href="/about/corrections">public corrections log</a>, with the full before/after and every primary source linked.</li>
+    </ol>
+    <p>Journalists working on municipal opt-in politics can also use our full-state picture: <a href="/blog/which-towns-allow-dispensaries-in-maine">78 of Maine's 485 municipalities</a> have authorized retail, 20 have explicitly opted out, and the rest have no recorded decision.</p>
+  </section>
+
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <Faq faqs={faqItems} />
+  </section>
+
+  <section class="disclaimer">
+    <p><em>Figures derive from the Maine Office of Cannabis Policy's opt-in communities model (refreshed 2026-07-09) and adult-use licensee roster (2026-07-01 snapshot). Municipal authorization and license status change between snapshots; verify with the OCP and the relevant town clerk before relying on any figure here. This is not legal advice.</em></p>
+  </section>
+
+  <AutoRelated currentPath="/blog/maine-opt-in-tracker-audit-2026" currentTopics={topics} section="Press & Media" limit={6} />
+</article>
+</Layout>
