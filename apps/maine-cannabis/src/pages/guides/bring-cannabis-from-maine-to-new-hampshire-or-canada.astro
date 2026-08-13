@@ -1,0 +1,261 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Callout from '../../components/Callout.astro';
+import Faq from '../../components/Faq.astro';
+import AutoRelated from '../../components/AutoRelated.astro';
+
+const article = {
+  author: "Calvin Waters",
+  authorId: "calvin-waters",
+  authorTitle: "Licensing & Compliance Analyst",
+  reviewer: { name: "Margaret Finch", jobTitle: "Finance & Taxation Analyst", id: "margaret-finch" },
+  publishDate: "2026-08-13",
+  modifiedDate: "2026-08-13",
+  section: "Learn"
+};
+
+const topics = ["medical-cannabis", "consumer-guide", "travel", "legal-compliance"];
+
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Guides", href: "/guides" },
+  { label: "Cross-Border Transport", href: "/guides/bring-cannabis-from-maine-to-new-hampshire-or-canada" }
+];
+
+const crossBorderFaqs = [
+  { question: "Can I bring medical marijuana from Maine to New Hampshire or Canada?", answer: "No. Neither your Maine medical cannabis credential, the state that issued it, nor Maine law authorizes you to carry cannabis across a state line or an international border. Interstate transport of cannabis is a federal offense under the Controlled Substances Act (21 U.S.C. sections 841 and 960), and the Cannabis Act of Canada prohibits importing or exporting cannabis in any form, including oils, with penalties of up to 14 years imprisonment. The legal alternatives are to buy and consume in Maine, or, if you hold a valid medical credential, to buy at a New Hampshire Alternative Treatment Center, where out-of-state and Canadian cards are recognized and have had unrestricted purchase access since October 1, 2024." },
+  { question: "Does my medical marijuana card protect me if I am caught crossing a border with cannabis?", answer: "No. A state medical cannabis credential is not federal authorization. The Congressional Research Service states that so long as marijuana is a controlled substance, all unauthorized activities involving it are federal crimes, including in states that have legalized it, and the Controlled Substances Act's authorization carve-out covers DEA-registered actors, not state patients. U.S. Customs and Border Protection guidance is explicit: even with a medical marijuana prescription or card, entering the United States with marijuana is not allowed." },
+  { question: "Didn't federal rescheduling in April 2026 make it legal to travel with medical cannabis?", answer: "No. On April 28, 2026, the Department of Justice and DEA placed only two categories in Schedule III: FDA-approved marijuana products and marijuana products regulated by a qualifying state medical license. All other marijuana, including adult-use cannabis, remains Schedule I. Schedule III status does not create a patient transport right: patients are not DEA registrants, and unauthorized possession, distribution, or import-export of a Schedule III substance is still a federal offense carrying up to 10 years imprisonment." },
+  { question: "Is recreational marijuana legal in New Hampshire yet?", answer: "No. As of August 2026, New Hampshire has decriminalized small amounts but has not legalized adult use. HB 186, a legalization bill, passed the New Hampshire House in January 2026 but was tabled by the Senate on March 5, 2026, ending it for the session. Possession of three-quarters of an ounce or less of flower is a violation carrying a $100 fine for a first or second offense; possession above that threshold is a misdemeanor under RSA 318-B:26." },
+  { question: "Can I use my Maine medical marijuana card to buy cannabis in New Hampshire?", answer: "Yes. New Hampshire's RSA 126-X:2, V has recognized out-of-state and Canadian patient credentials for years, and HB 1278, effective October 1, 2024, removed the prior purchase-frequency limits. A patient whose home state or Canadian province authorizes therapeutic cannabis possession may purchase at a New Hampshire Alternative Treatment Center with their home credential plus matching photo ID, at the same frequency as New Hampshire patients. Visitors are limited to two ounces of possession and two ounces of purchases per 10-day period, and may not cultivate in New Hampshire." },
+  { question: "Can I bring cannabis from Maine into Canada, even a small amount?", answer: "No. Section 11 of Canada's Cannabis Act prohibits importing or exporting cannabis without authorization, and possessing cannabis for the purpose of exporting it. Canada Border Services Agency guidance states the prohibition applies regardless of the amount, regardless of whether you hold a medical document, and regardless of where you are travelling from. Consequences range from a $200 to $2,000 administrative penalty for undeclared cannabis to criminal charges carrying up to 14 years imprisonment on indictment." },
+  { question: "Can a Canadian medical cannabis patient bring their medical cannabis into Maine?", answer: "No. Canadian medical documents do not authorize international transport; Health Canada issues individual exemptions only in rare and exceptional circumstances such as palliative care. The legal path for a Canadian patient visiting Maine is different: Maine does not recognize Canadian credentials (the OCP approved list covers U.S. states and Washington DC only), but any adult 21 or older with government-issued photo ID can purchase adult-use cannabis in Maine, and New Hampshire also recognizes Canadian medical credentials for purchases at its ATCs." },
+  { question: "What happens if TSA finds cannabis in my carry-on bag?", answer: "TSA officers do not search for drugs, but if they find an illegal substance or evidence of criminal activity during screening, TSA refers the matter to a law enforcement officer. TSA's Medical Marijuana entry was updated April 27, 2026 to 'Yes (Special Instructions)' for carry-on and checked bags, tracking the April 2026 Schedule III action for state-licensed medical products. Airports are federal jurisdiction, so the outcome of a referral is governed by federal law and local discretion, and flying with cannabis internationally additionally subjects you to the destination country's laws." },
+  { question: "Is it legal to buy cannabis in Maine and drive home to another state with it?", answer: "No. Maine's authorization to possess and transport cannabis under Title 28-B section 1501 is a state-law authorization that operates only within Maine and cannot authorize conduct across a state line. Once you cross the line, federal law governs the transport and the destination state's law governs possession. In New Hampshire, for example, general possession rules apply regardless of where the cannabis was purchased: three-quarters of an ounce or less of flower is a $100 violation, more is a misdemeanor." },
+  { question: "What should a medical patient do instead of transporting cannabis?", answer: "Three legal alternatives: (1) buy and consume in Maine, where your credential is honored at registered dispensaries with a 2.5-ounce-per-15-day purchase limit; (2) if travelling to New Hampshire, buy at a New Hampshire Alternative Treatment Center with your home credential and matching photo ID, then possess only within New Hampshire's limits; (3) consume or securely store your cannabis before any border crossing, because both U.S. and Canadian law prohibit carrying any amount across the international boundary, and even admitting to cannabis use at a U.S. port of entry can make a non-citizen inadmissible." },
+  { question: "Could admitting cannabis use at the U.S. border ban me from the United States?", answer: "Possibly. U.S. Customs and Border Protection's published guidance states that an arriving non-citizen who admits having committed acts constituting the essential elements of a controlled substance violation is inadmissible, and that admission to cannabis use may result in refusal of admission, with waivers available only case by case at CBP's discretion. Use of or involvement in the cannabis industry can also make a person ineligible for Trusted Traveler programs such as NEXUS and Global Entry. CBP has not published a post-rescheduling revision of this guidance as of August 2026." },
+  { question: "Where are the Maine-Canada border crossings, and is cannabis enforcement common there?", answer: "Maine has about two dozen land crossings along its 611-mile border with Quebec and New Brunswick; the three busiest are Houlton-Woodstock on I-95, Calais-St. Stephen, and Madawaska-Edmundston. Enforcement does happen at these crossings: CBP seized 5.3 pounds of marijuana at Houlton in March 2019, and CBSA charged two travellers with smuggling under the Customs Act after dogs found concealed cannabis and THC cartridges at the St. Stephen Ferry Point crossing in April 2024. CBSA's enforcement statistics report more than 54.9 million grams of cannabis products seized at the Canadian border in fiscal year 2025-2026." }
+];
+---
+
+<Layout title="Can You Bring Cannabis from Maine to NH or Canada? (2026)" description="Can medical marijuana patients bring cannabis from Maine to New Hampshire or Canada? No — federal and Canadian law prohibit it. What the April 2026 Schedule III change does and doesn't do, NH reciprocity, CBSA penalties, and the legal alternatives." heroImage="/images/heroes/bring-cannabis-from-maine-to-new-hampshire-or-canada-2026.jpg" article={article} topics={topics} breadcrumbs={breadcrumbs}>
+
+<style>
+  article.guide { max-width: 46rem; margin: 0 auto; }
+  .article-header h1 { font-size: 2.25rem; line-height: 1.2; color: var(--color-primary); }
+  .subtitle { font-size: 1.2rem; color: var(--color-text-light); font-style: italic; }
+  .answer-capsule {
+    font-size: 1.15rem; line-height: 1.7;
+    background: color-mix(in oklab, var(--color-soft-green, #e8f0ea) 40%, transparent);
+    border-left: 4px solid var(--color-primary);
+    padding: 1.25rem 1.5rem; border-radius: 0 0.5rem 0.5rem 0; margin: 1.5rem 0;
+  }
+  .stat-block {
+    background-color: color-mix(in oklab, var(--color-soft-green, #e8f0ea) 30%, transparent);
+    border: 1px solid var(--color-accent); border-radius: 0.5rem;
+    padding: 1.5rem 2rem; margin: 2rem 0;
+  }
+  .stat-block ul { list-style: none; padding: 0; margin: 0; }
+  .stat-block li { padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .stat-block li:last-child { border-bottom: none; }
+  table { border-collapse: collapse; width: 100%; margin: 1.5rem 0; font-size: 0.95rem; }
+  th, td { border: 1px solid var(--color-border, #ddd); padding: 0.6rem 0.75rem; text-align: left; vertical-align: top; }
+  th { background: color-mix(in oklab, var(--color-primary) 8%, transparent); }
+  .route-no { color: #8a1f1f; font-weight: 700; }
+  .route-yes { color: var(--color-primary); font-weight: 700; }
+  blockquote.statute { border-left: 3px solid var(--color-accent); margin: 1.25rem 0; padding: 0.5rem 1rem; color: var(--color-text-light); font-style: italic; }
+</style>
+
+<article class="guide">
+  <header class="article-header">
+    <h1>Can I Bring Medical Marijuana from Maine to New Hampshire or Canada?</h1>
+    <p class="subtitle">No — and no medical credential, state law, or license changes that. Here is the full 2026 picture for both borders, with the legal alternatives.</p>
+    <div class="byline">
+      <p><strong>By {article.author}.</strong> Reviewed by {article.reviewer.name}, {article.reviewer.jobTitle}. Published {article.publishDate}.</p>
+    </div>
+  </header>
+
+  <Callout title="Editorial standard" type="info">
+    Every legal claim in this guide is anchored to a primary source — the U.S. Code, the Maine Legislature, the New Hampshire General Court, the Justice Laws Website of Canada, and published guidance from CBP, CBSA, TSA, and OCP — all verified on August 13, 2026. Cannabis law is changing fast (the federal rescheduling described below took effect April 28, 2026); re-verify before you travel. This guide is informational and is not legal advice.
+  </Callout>
+
+  <section class="answer-capsule" aria-labelledby="short-answer">
+    <h2 id="short-answer">The short answer</h2>
+    <p><strong>No. A medical marijuana patient residing in New Hampshire or Canada may not bring cannabis purchased in Maine back across the border — in either direction, by any route, in any amount.</strong> Interstate transport of cannabis is a federal crime under the Controlled Substances Act (21 U.S.C. &sect;841 and &sect;960), and your Maine or New Hampshire patient credential is not a federal defense. Carrying cannabis across the Canada&ndash;U.S. border is additionally a crime under Canada's Cannabis Act (section 11), punishable by up to 14 years imprisonment. The April 2026 federal rescheduling of state-licensed medical cannabis to Schedule III did not create any transport right for patients. The legal alternatives are to <a href="/guides/maine-out-of-state-patient-reciprocity">buy and consume in Maine</a>, or to purchase at a New Hampshire Alternative Treatment Center, where out-of-state and Canadian patient credentials are recognized.</p>
+  </section>
+
+  <section>
+    <h2>Every route at a glance</h2>
+    <figure style="margin: 1.5rem 0;">
+      <img src="/images/infographics/bring-cannabis-from-maine-to-new-hampshire-or-canada-routes.jpg" alt="Infographic: every cannabis transport route from Maine to New Hampshire or Canada, marked legal or illegal, with the governing law and penalty for each" loading="lazy" style="width: 100%; max-width: 540px; border-radius: 0.5rem; display: block; margin: 0 auto;" />
+    </figure>
+    <table aria-label="Cross-border cannabis transport routes: legal status and governing authority">
+      <thead>
+        <tr><th>Route</th><th>Allowed?</th><th>Governing law</th><th>Typical consequence if caught</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Maine &rarr; New Hampshire (by car)</td><td class="route-no">No</td><td>21 U.S.C. &sect;841 / &sect;960 (federal); RSA 318-B:2-c, 318-B:26 (NH possession once inside)</td><td>Federal trafficking exposure; in NH, $100 violation (&le;&frac34; oz) or misdemeanor (&gt;&frac34; oz)</td></tr>
+        <tr><td>New Hampshire &rarr; Maine</td><td class="route-no">No</td><td>21 U.S.C. &sect;841 / &sect;960 (federal)</td><td>Federal trafficking exposure; Maine authorizes only cannabis obtained in Maine</td></tr>
+        <tr><td>Maine &rarr; Canada (land, air, or water)</td><td class="route-no">No</td><td>Cannabis Act s.11 (Canada); 21 U.S.C. &sect;960 (U.S. export)</td><td>Seizure, $200&ndash;$2,000 administrative penalty, or criminal charges up to 14 years</td></tr>
+        <tr><td>Canada &rarr; Maine</td><td class="route-no">No</td><td>Cannabis Act s.11 (Canada); 21 U.S.C. &sect;960 + CBP enforcement (U.S.)</td><td>Both countries prosecute; CBP may also deny admission to non-citizens</td></tr>
+        <tr><td>Flying out of any Maine airport with cannabis</td><td class="route-no">No</td><td>Federal jurisdiction at airports; TSA referral policy (updated 2026-04-27)</td><td>Referral to law enforcement; outcome varies by jurisdiction and quantity</td></tr>
+        <tr><td>Buy in Maine, consume in Maine</td><td class="route-yes">Yes</td><td>Title 28-B &sect;1501 (adult use); Title 22 &sect;2423-D (visiting patients)</td><td>&mdash; this is the lawful path</td></tr>
+        <tr><td>Maine/Canadian patient buys at a New Hampshire ATC</td><td class="route-yes">Yes</td><td>NH RSA 126-X:2, V; HB 1278 (eff. 2024-10-01)</td><td>&mdash; 2 oz possession / 2 oz per 10-day purchase window</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>1. Federal law: why the transport itself is the crime</h2>
+    <p>The Controlled Substances Act is the controlling law the moment cannabis crosses a state line. <strong>21 U.S.C. &sect;841(a)(1)</strong> makes it unlawful for any person knowingly or intentionally to manufacture, distribute, or dispense — or possess with intent to distribute — a controlled substance, <em>"except as authorized by this subchapter."</em> Crossing a state line with cannabis purchased for personal use typically lands in the possession-with-intent-to-distribute framework, and the state line supplies federal jurisdiction. For international movement, <strong>21 U.S.C. &sect;960</strong> (the Controlled Substances Import and Export Act) separately prohibits importing or exporting a controlled substance, and possessing it aboard a vessel, aircraft, or vehicle.</p>
+    <p>Penalties for the quantities a traveler would actually carry (under 50 kg of marijuana): <strong>up to 5 years imprisonment and a $250,000 fine</strong> under &sect;841(b)(1)(D), doubling with a prior felony drug conviction. If the product falls within the April 2026 Schedule III carve-out described below, the distribution provisions instead carry <strong>up to 10 years and a $500,000 fine</strong> under &sect;841(b)(1)(E)(i). There is also a narrow small-amount exception: &sect;841(b)(4) treats distributing "a small amount of marihuana for no remuneration" as simple possession (&sect;844) rather than trafficking — but carrying your own purchase across a line is not the same as giving it away, and it does nothing about the import/export statutes at the Canadian border.</p>
+    <blockquote class="statute">"Except as authorized by this subchapter, it shall be unlawful for any person knowingly or intentionally&mdash;(1) to manufacture, distribute, or dispense, or possess with intent to manufacture, distribute, or dispense, a controlled substance..." — 21 U.S.C. &sect;841(a)(1), as codified at uscode.house.gov (verified 2026-08-13)</blockquote>
+
+    <h3>Does a medical card create a federal defense? No.</h3>
+    <p>The &sect;841 carve-out — "except as authorized by this subchapter" — refers to actors authorized under the CSA itself: DEA registrants, researchers, and the like. A state-issued patient credential is not federal authorization. The Congressional Research Service's analyses of rescheduling put it plainly: any activity involving marijuana that is not authorized under the CSA remains a federal crime anywhere in the United States, including in states that have purported to legalize it (CRS LSB10482; LSB10859). The annual federal appropriations rider protecting state medical marijuana programs limits DOJ enforcement of state-legal, <em>in-state</em> activity — it does not touch interstate transport. U.S. Customs and Border Protection takes the same position for travellers: its travel advisory for medical marijuana prescription holders states that medical marijuana remains illegal under federal law, and CBP has repeatedly restated that crossing the border with it may result in denied admission, seizure, fines, and apprehension.</p>
+
+    <h3>What the April 2026 Schedule III action actually changed</h3>
+    <p>On April 23, 2026, Acting Attorney General Todd Blanche announced an order — effective April 28, 2026, published at 91 Fed. Reg. 22714 — placing two and only two categories into Schedule III: <strong>(1) FDA-approved drug products containing marijuana, and (2) marijuana products regulated by a qualifying state-issued medical marijuana license.</strong> Everything else, including all adult-use (recreational) cannabis, <strong>remains Schedule I</strong>. The broader rescheduling of all marijuana is still pending: an expedited DEA administrative hearing began June 29, 2026 and concluded no later than July 15, 2026 (per the Notice of Hearing at 91 Fed. Reg. 22777), but no final rule had issued as of this writing — and separate court challenges to the April order are pending in the D.C. Circuit.</p>
+    <p>Three consequences for a traveling patient:</p>
+    <ul>
+      <li><strong>The product's schedule may have changed; your rights did not.</strong> The rescheduling creates DEA-registration pathways for state-licensed businesses. It grants patients no registration, no prescription, and no authorization to possess, carry, or transport. Transporting a Schedule III substance without authorization is still a federal crime — up to 10 years under &sect;841(b)(1)(E)(i).</li>
+      <li><strong>Adult-use cannabis stayed Schedule I.</strong> If you bought recreational cannabis at a Maine adult-use store, it carries the full Schedule I penalty framework the moment it crosses a line.</li>
+      <li><strong>Agencies are still enforcing.</strong> CBP's public posture in 2026 remains that marijuana encountered at the border is subject to seizure, fines, and arrest; the agency has not published any post-rescheduling carve-out for travellers. TSA's guidance was updated (see section 4) but still refers discovered illegal substances to law enforcement.</li>
+    </ul>
+    <Callout title="Why this matters for the question you asked" type="warning">
+      A lot of 2026 coverage framed the Schedule III order as "medical marijuana is now federally legal." It is not. No patient can lawfully carry any cannabis — medical or adult-use — across a state line or the Canadian border. The rescheduling narrowed <em>which statute tier</em> a given product falls under; it did not authorize a single gram of cross-border movement.
+    </Callout>
+  </section>
+
+  <section>
+    <h2>2. Maine law: it authorizes possession in Maine, and nothing beyond the border</h2>
+    <p>Adult-use buyers act under <strong>Title 28-B &sect;1501</strong>, which authorizes a person 21 or older to "use, possess or transport" up to 2&frac12; ounces of cannabis. That authorization is a Maine-law authorization: it governs conduct in Maine, and Maine has no power to authorize conduct in New Hampshire, in Canada, or on the interstate corridor between them. Title 28-B contains no export provision; the licensed supply chain (cultivation, manufacturing, retail) is wired entirely for in-state sale and distribution.</p>
+    <p>Medical visitors act under <strong>Title 22 &sect;2423-D</strong> (enacted by PL 2019, ch. 209), which is the mirror image of this question: it governs <em>inbound</em> patients. It lets a visiting qualifying patient from a recognized jurisdiction — with a valid home credential and matching photo ID — do what a Maine patient may do, capped at 2&frac12; ounces of harvested cannabis in a 15-day period, with no cultivation and no transfer to another person. It says nothing about taking cannabis home, because it cannot. The Office of Cannabis Policy's visiting-patients guidance frames the benefit as purchasing "while visiting Maine," sets the same 2.5-ounce-per-15-days cap, and closes with an explicit disclaimer that nothing in its guidance should be construed as legal advice or as permitting purchase if prohibited by the visitor's home state. There is no OCP guidance authorizing outbound transport — the state has no authority to grant it.</p>
+    <blockquote class="statute">"A visiting qualifying patient from another jurisdiction that authorizes the medical use of cannabis pursuant to a law recognized by the department who possesses a valid medical cannabis certification from that other jurisdiction and photographic identification or a driver's license from that jurisdiction may engage in conduct authorized for a qualifying patient under this chapter..." — Title 22 &sect;2423-D, Maine Legislature (verified 2026-08-13)</blockquote>
+    <p>The practical takeaway: <strong>buying legally in Maine and transporting are two separate legal events.</strong> Your Maine purchase is lawful; the moment you cross the state line with it, a different legal system is judging you.</p>
+  </section>
+
+  <section>
+    <h2>3. Bringing cannabis into New Hampshire</h2>
+    <p>New Hampshire is the state Maine's southern-border shoppers most often ask about, because it sits one bridge away and still has not legalized adult use. That combination is exactly what makes the transport question sharp.</p>
+
+    <h3>3.1 Recreational cannabis in NH: still illegal in 2026</h3>
+    <p>A 2026 legalization bill, <strong>HB 186</strong>, passed the New Hampshire House 208&ndash;135 in January but was tabled by the Senate 15&ndash;9 on March 5, 2026 — dead for the session. Possession is judged by amount under <strong>RSA 318-B:2-c</strong> and <strong>RSA 318-B:26</strong>, regardless of where the cannabis was purchased:</p>
+    <table aria-label="New Hampshire possession penalties as of August 2026">
+      <thead><tr><th>Amount</th><th>Offense</th><th>Penalty</th><th>Authority</th></tr></thead>
+      <tbody>
+        <tr><td>&le; &frac34; oz flower (or &le; 5 g hashish)</td><td>Violation</td><td>$100 fine (1st/2nd offense); $300 (3rd within 3 years); Class B misdemeanor on a 4th within 3 years. The court must waive the fine for a single conviction within 3 years if a substance-abuse assessment is completed within 60 days. No arrest for a decriminalized amount unless you refuse to identify yourself.</td><td>RSA 318-B:2-c, II &amp; V</td></tr>
+        <tr><td>&gt; &frac34; oz flower (simple possession)</td><td>Misdemeanor</td><td>Misdemeanor; RSA 318-B:26, XIII fixes the fine at $350 for this tier</td><td>RSA 318-B:26, II(c)</td></tr>
+        <tr><td>&ge; 1 oz <em>with intent to sell, dispense, or compound</em></td><td>Trafficking tier</td><td>Up to 7 years and $100,000</td><td>RSA 318-B:26, I(c)(5)</td></tr>
+        <tr><td>&ge; 5 lbs <em>with intent to sell, dispense, or compound</em></td><td>Trafficking tier</td><td>Up to 20 years</td><td>RSA 318-B:26, I(b)(6)</td></tr>
+      </tbody>
+    </table>
+    <p>Note the split in that table: New Hampshire's quantity-based felony tiers live in paragraph I of RSA 318-B:26, which covers manufacture, sale, and transport <em>with intent to sell</em> — not simple possession. A traveller caught in New Hampshire with a personal quantity faces the misdemeanor ceiling of paragraph II(c), while the federal interstate-transport charge applies either way. Carrying a large quantity across the line, however, invites trafficking charging on both sides of the border.</p>
+    <p>One New Hampshire provision does care where your cannabis came from — but it is narrow. RSA 318-B:2-c, I(b) protects adults 21+ who possess a "personal-use amount of a regulated marijuana-infused product": an <em>infused product</em> (not flower, not concentrate) obtained from a state where adult sales are legal and regulated, in its <em>original, child-resistant, labeled packaging</em>, containing no more than <strong>300 mg THC total</strong>. That is the only statutory recognition of out-of-state-origin cannabis in New Hampshire law, and it cannot cure the federal transport problem — it governs possession once you are already in the state.</p>
+
+    <h3>3.2 The legal alternative: buy at a New Hampshire ATC with your medical credential</h3>
+    <p>New Hampshire's therapeutic cannabis program was established in 2013 under <strong>RSA 126-X</strong>, and it is genuinely friendly to visiting patients. <strong>HB 1278, effective October 1, 2024,</strong> removed the old three-purchases-per-year cap:</p>
+    <blockquote class="statute">"A valid registry identification card, or its equivalent, that is issued under the laws of another state, district, territory, commonwealth, or insular possession of the United States, or under the laws of Canada that allows, in the jurisdiction of issuance, a visiting qualifying patient to possess cannabis for therapeutic purposes, shall have the same force and effect and be subject to the same restrictions as a valid registry identification card issued by the department in this state..." — RSA 126-X:2, V, New Hampshire General Court (verified 2026-08-13)</blockquote>
+    <p>What that means for a Maine patient (or a Canadian patient):</p>
+    <ul>
+      <li>Your home-jurisdiction medical credential is treated like a New Hampshire card for possession purposes — up to <strong>2 ounces of usable cannabis</strong>.</li>
+      <li>You may purchase at any of the <strong>seven licensed Alternative Treatment Centers</strong> operated by GraniteLeaf Cannabis (Merrimack, Chichester), Sanctuary ATC (Plymouth, Conway), and Temescal Wellness (Dover, Lebanon, Keene). The Dover location is roughly 15 minutes from the Piscataqua River Bridge on I-95.</li>
+      <li>Bring your cannabis ID card plus <strong>matching photo ID</strong> from the same jurisdiction. No New Hampshire registration is required.</li>
+      <li>Purchase limit: <strong>2 ounces in any 10-day period</strong>. No qualifying-condition matching is required since HB 1278.</li>
+      <li>You may not cultivate in New Hampshire, and you may not obtain cannabis from a New Hampshire patient or caregiver (RSA 126-X:2, V(b)).</li>
+    </ul>
+    <p>Note that this protects <em>possession once in New Hampshire</em>. It does not license carrying cannabis <em>into</em> New Hampshire — the federal transport prohibition sits in between, which is precisely why the buy-there alternative exists.</p>
+    <p>Enforcement reality on the corridor: there is no public evidence of cannabis-specific checkpoints at the Maine&ndash;New Hampshire line; joint Maine&ndash;New Hampshire I-95 operations documented by the New Hampshire State Police have been traffic-safety focused. But ordinary traffic stops on I-95 and the turnpike can and do lead to possession charges, and the federal exposure is not hypothetical — it is the default legal frame for any cannabis that crosses the line.</p>
+  </section>
+
+  <section>
+    <h2>4. Bringing cannabis to or from Canada</h2>
+    <p>The Canada&ndash;U.S. border is the hardest line in this entire topic. Both countries prohibit the crossing, and both treat your medical status as irrelevant to transport.</p>
+
+    <h3>4.1 Canada's side: Cannabis Act section 11</h3>
+    <p>Section 11 of the Cannabis Act (S.C. 2018, c. 16), as consolidated on the Justice Laws Website, provides:</p>
+    <blockquote class="statute">"11 (1) Unless authorized under this Act, the importation or exportation of cannabis is prohibited. (2) Unless authorized under this Act, it is prohibited to possess cannabis for the purpose of exporting it." — Cannabis Act, s.11, Justice Laws Website (verified 2026-08-13)</blockquote>
+    <p>The penalties under s.11(3): an indictable offence carries <strong>up to 14 years imprisonment</strong>; on summary conviction, an individual faces <strong>a fine of up to $5,000, up to six months imprisonment, or both</strong>. Cross-border movement can also be prosecuted as smuggling under the Customs Act, which CBSA describes as punishable by up to 5 years. Licences to import or export cannabis exist only for medical, scientific, or industrial-hemp purposes under s.62 — there is no traveller authorization regime.</p>
+    <p>Canada Border Services Agency's published guidance addresses the medical question head on: transporting cannabis across the border "in any form — including any oils containing THC or cannabidiol (CBD)" without a Health Canada permit or exemption "remains a serious criminal offence subject to arrest and prosecution, despite the legalization of cannabis in Canada," <strong>regardless of the amount, regardless of whether you hold a medical document, and regardless of where you are travelling from</strong>. Government of Canada travel guidance adds that the required authorization "is not the same as a medical prescription," and individual Health Canada exemptions are issued "only in rare and exceptional circumstances, such as for palliative care cases."</p>
+    <p>What actually happens at the border:</p>
+    <ul>
+      <li><strong>Declaration is mandatory.</strong> If you have cannabis in any form, you must declare it; not declaring is itself a path to arrest and prosecution.</li>
+      <li><strong>Administrative penalties.</strong> Since March 29, 2021, undeclared cannabis or inaccurate information draws a written penalty assessment of <strong>$200 to $2,000</strong>, scaled by concealment, quantity, and history; the cannabis is detained with no terms of release.</li>
+      <li><strong>Criminal charges.</strong> Seizure plus prosecution for importation/smuggling. CBSA's enforcement statistics report more than 54.9 million grams of cannabis products seized at the border in fiscal year 2025&ndash;2026 (CBSA publishes volumes, not event counts).</li>
+      <li><strong>Leaving Canada is equally prohibited</strong> — the export side of section 11 means a Canadian patient cannot legally take their own medicine to Maine either.</li>
+    </ul>
+
+    <h3>4.2 The U.S. side of the same border</h3>
+    <p>U.S. Customs and Border Protection's 2018 statement on Canada's legalization remains the agency's published position, republished live by the U.S. Embassy in Canada: "U.S. Customs and Border Protection enforces the laws of the United States and U.S. laws will not change following Canada's legalization of marijuana... crossing the border or arriving at a U.S. port of entry in violation of this law may result in denied admission, seizure, fines, and apprehension." Two extra risks beyond the transport itself:</p>
+    <ul>
+      <li><strong>Admission of use.</strong> CBP guidance states that a non-citizen who "admits having committed, or admits committing, acts which constitute the essential elements of a violation of... any law or regulation of a State, the United States, or a foreign country relating to a controlled substance" is inadmissible — and that admission to cannabis use may result in refusal of admission, with waivers available only case by case at CBP's discretion. The popular "lifetime ban" framing is journalistic shorthand for inadmissibility grounds with no fixed expiration absent a discretionary waiver; the operational point stands.</li>
+      <li><strong>Trusted Traveler programs.</strong> Use of cannabis or involvement in the industry can make a person ineligible for NEXUS or Global Entry — a real cost for anyone who crosses the Maine&ndash;Canada border regularly.</li>
+    </ul>
+
+    <h3>4.3 The Maine&ndash;Canada crossings where this plays out</h3>
+    <p>Maine has roughly two dozen land crossings along its 611-mile border with Quebec and New Brunswick. The three busiest are <strong>Houlton&ndash;Woodstock (I-95), Calais&ndash;St. Stephen, and Madawaska&ndash;Edmundston</strong>; the full roster runs from Coburn Gore/Woburn in western Maine to Ferry Point (the Calais FDR Bridge) in the east. Enforcement at these crossings is documented:</p>
+    <ul>
+      <li><strong>Houlton (March 2019):</strong> a Border Patrol agent found 5.3 pounds of marijuana in a vehicle; the driver, who held an expired Maine medical marijuana card, was the subject of a CBP seizure announcement that noted "marijuana possession is still against federal law."</li>
+      <li><strong>St. Stephen Ferry Point (April 2024):</strong> CBSA officers and detector dogs found concealed firearms, 2.9 grams of loose cannabis, and three THC vape cartridges on two Canadian citizens entering from the U.S.; both were arrested for smuggling under the Customs Act. CBSA's release repeated the core rule: cannabis in any form, including THC or CBD oils, without a Health Canada permit, is a criminal offence "despite the legalization of cannabis in Canada."</li>
+    </ul>
+    <p>Crossings into Maine fell roughly 28% year-to-date through mid-2025 (per the Portland Press Herald), but the legal posture at each port of entry has not softened, and CBSA's seizure statistics show the agency processing cannabis at the border every single day somewhere in the country.</p>
+  </section>
+
+  <section>
+    <h2>5. Flying: TSA, airports, and federal jurisdiction</h2>
+    <p>TSA's "What Can I Bring?" entry for <strong>Medical Marijuana</strong> was updated April 27, 2026 — the day before the Schedule III order took effect — and now reads "Yes (Special Instructions)" for both carry-on and checked bags. Read it carefully: TSA's screening procedures "are focused on security and are designed to detect potential threats to aviation and passengers," officers "do not search for illegal drugs," but "if any illegal substance or evidence of criminal activity is discovered during security screening, TSA will refer the matter to a law enforcement officer."</p>
+    <p>Three things follow. First, airports are federal jurisdiction, so what happens after a referral is governed by federal law and local discretion — outcomes for small personal quantities in legal states have historically ranged from warnings and disposal to arrest, and federal prosecution, while rare for personal amounts, remains legally available. Second, the April 2026 schedule change gives state-licensed medical products a less severe federal tier than adult-use flower, but TSA's referral duty and the &sect;841 problem do not disappear. Third, an international flight compounds the issue: the destination country's law governs arrival, and for Canada that is Cannabis Act section 11 — up to 14 years.</p>
+  </section>
+
+  <section class="stat-block">
+    <h3>Cross-border cannabis transport — 2026 snapshot</h3>
+    <ul>
+      <li><strong>Federal status, adult-use cannabis:</strong> Schedule I (April 2026 rescheduling did not include it) — DOJ order effective 2026-04-28, 91 Fed. Reg. 22714</li>
+      <li><strong>Federal status, state-licensed medical products:</strong> Schedule III — same order; broader rescheduling hearing concluded by 2026-07-15, final rule still pending (91 Fed. Reg. 22777)</li>
+      <li><strong>Interstate transport penalty, personal quantities (&lt;50 kg):</strong> up to 5 years / $250,000 (21 U.S.C. &sect;841(b)(1)(D)); Schedule III products up to 10 years / $500,000 (&sect;841(b)(1)(E)(i))</li>
+      <li><strong>Canada border penalty:</strong> up to 14 years imprisonment (Cannabis Act s.11(3)(a)); $200&ndash;$2,000 administrative penalty for undeclared cannabis (CBSA, since 2021-03-29); 54.9 million grams of cannabis products seized in FY2025&ndash;26 (CBSA enforcement statistics)</li>
+      <li><strong>New Hampshire:</strong> no adult-use legalization (HB 186 tabled 2026-03-05); &frac34; oz decriminalized ($100, RSA 318-B:2-c); medical reciprocity since 2024-10-01 (HB 1278) — 7 ATCs, 2 oz per 10-day purchase window</li>
+      <li><strong>Maine visiting-patient limit:</strong> 2.5 oz of medical cannabis and products per 15 days (Title 22 &sect;2423-D; OCP visiting-patients page)</li>
+      <li><strong>Maine&ndash;Canada border:</strong> ~24 land crossings; busiest are Houlton&ndash;Woodstock, Calais&ndash;St. Stephen, Madawaska&ndash;Edmundston</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>6. What to do instead — the lawful playbooks</h2>
+    <p><strong>New Hampshire patient visiting Maine:</strong> use your credential at any Maine registered dispensary (NH has been on OCP's approved list since the reciprocity regime began), buy up to 2.5 oz per 15 days, and consume in Maine — in a private residence or owner-permitted private property, never in public or in a vehicle. Leave no product in the car for the drive home; buy again on your next visit. Full mechanics in our <a href="/guides/maine-out-of-state-patient-reciprocity">out-of-state patient reciprocity guide</a>.</p>
+    <p><strong>Canadian patient visiting Maine:</strong> your Canadian medical document is not recognized by Maine's visiting-patient program (OCP's list covers U.S. states and DC) and does not authorize carrying medicine across the border. If you are 21+, you can purchase adult-use cannabis in Maine with a passport or other government photo ID and consume it privately while you are here. New Hampshire also accepts Canadian credentials at its ATCs if your itinerary goes through the Granite State.</p>
+    <p><strong>Maine patient travelling to New Hampshire:</strong> bring your card, not your cannabis. Buy at a New Hampshire ATC (Dover is the closest to I-95), stay within the 2-ounce/10-day window, and keep any product in New Hampshire — transporting it onward or back across any line recreates the federal problem.</p>
+    <p><strong>Maine patient travelling to Canada:</strong> there is no lawful way to bring your medicine. Canadian patients must obtain their supply through the Canadian system; U.S. travellers should assume cannabis-free travel, including CBD oils, which CBSA treats identically.</p>
+    <p><strong>Anyone flying:</strong> treat the airport as federal territory. Even with TSA's updated entry, discovery means referral, and the destination's law governs arrival. Cannabis-free luggage is the only zero-risk configuration.</p>
+  </section>
+
+  <section>
+    <h2>7. Frequently asked questions</h2>
+    <Faq faqs={crossBorderFaqs} />
+  </section>
+
+  <section class="related-content">
+    <h2>Continue reading</h2>
+    <ul>
+      <li><a href="/guides/maine-out-of-state-patient-reciprocity">Out-of-State Medical Cannabis Patients in Maine: Reciprocity Guide</a> — the 28-state approved list, what to bring, and the 2.5 oz / 15-day limit.</li>
+      <li><a href="/blog/cannabis-friendly-maine-travel">Cannabis-Friendly Maine Travel Guide</a> — where tourists can buy, consume, and stay, including vehicles, airports, and borders.</li>
+      <li><a href="/blog/maine-medical-marijuana-patient-guide">Maine Medical Marijuana Patient Guide</a> — certification, caregiver rules, and what visiting patients should bring.</li>
+      <li><a href="/guides/first-time-maine-dispensary-buyer">First-Time Maine Dispensary Buyer Guide</a> — limits, ID, taxes, and what to expect at the counter.</li>
+      <li><a href="/blog/is-weed-legal-in-maine">Is Weed Legal in Maine?</a> — the full 2026 legality picture for adult-use and medical cannabis.</li>
+    </ul>
+  </section>
+
+  <section class="disclaimer">
+    <p><em>This article is for informational purposes only and does not constitute legal advice. Cannabis laws in the United States, New Hampshire, and Canada changed materially in 2026, and further federal rescheduling proceedings are ongoing; verify current rules with the cited agencies before travelling. If your situation involves pending charges, a border incident, or admissibility concerns, consult a licensed attorney in the relevant jurisdiction.</em></p>
+  </section>
+
+  <section class="content-verification">
+    <div class="verification-badge">
+      <span class="verification-icon">◆</span>
+      <span class="verification-text"> Last reviewed <strong>2026-08-13</strong> by <strong>Calvin Waters + Margaret Finch</strong> against the U.S. Code (uscode.house.gov), the Maine Legislature (legislature.maine.gov), the New Hampshire General Court (gc.nh.gov), the Justice Laws Website of Canada (laws-lois.justice.gc.ca), and published guidance from CBP, CBSA, TSA, DOJ/DEA, and the Maine OCP — all accessed 2026-08-13. Editor-pair review on file; methodology and reviewer bios at <a href="/about/corrections">/about/corrections</a> and <a href="/about/authors">/about/authors</a>. </span>
+    </div>
+  </section>
+
+  <AutoRelated currentPath="/guides/bring-cannabis-from-maine-to-new-hampshire-or-canada" currentTopics={['medical-cannabis', 'consumer-guide', 'travel', 'legal-compliance']} section="Learn" limit={6} />
+</article>
+</Layout>
