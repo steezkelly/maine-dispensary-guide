@@ -1,16 +1,6 @@
 {
-  "buildCommand": "bash vercel-build.sh",
-  "outputDirectory": "dist",
-  "routes": [
-    {
-      "src": "^/api/lead$",
-      "dest": "${MDG_LEAD_WEBHOOK_URL}",
-      "env": [
-        "MDG_LEAD_WEBHOOK_URL"
-      ]
-    }
-  ],
-  "rewrites": [],
+  "buildCommand": "npm run build",
+  "outputDirectory": "apps/maine-cannabis/dist",
   "redirects": [
     {
       "source": "/guides/maine-cannabis-280e-guide",
