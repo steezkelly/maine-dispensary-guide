@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "apps/maine-cannabis/dist",
+  "outputDirectory": "dist",
   "redirects": [
     {
       "source": "/guides/maine-cannabis-280e-guide",
@@ -161,6 +161,15 @@
           "value": "public, s-maxage=300, stale-while-revalidate=3600"
         }
       ]
+    }
+  ],
+  "routes": [
+    {
+      "src": "/4a00ca05232c46f3badda7f9f2e0e296.txt",
+      "dest": "/4a00ca05232c46f3badda7f9f2e0e296.txt",
+      "headers": {
+        "Content-Type": "text/plain; charset=utf-8"
+      }
     }
   ]
 }

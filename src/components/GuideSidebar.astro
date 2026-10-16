@@ -1,0 +1,5 @@
+---
+import GuideSidebarComponent from './ui/GuideSidebar.astro';
+const { currentPath = Astro.url.pathname, currentTopics = [] } = Astro.props;
+---
+<GuideSidebarComponent currentPath={currentPath} currentTopics={currentTopics} />

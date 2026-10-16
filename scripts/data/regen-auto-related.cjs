@@ -37,8 +37,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const REPO = path.resolve(__dirname, '..', '..');
-const PAGES_DIR = path.join(REPO, 'apps', 'maine-cannabis', 'src', 'pages');
-const DATA_FILE = path.join(REPO, 'apps', 'maine-cannabis', 'src', 'data', 'autoRelatedData.json');
+const PAGES_DIR = path.join(REPO, 'src', 'pages');
+const DATA_FILE = path.join(REPO, 'src', 'data', 'autoRelatedData.json');
 
 const ASTRO_RE = /\.astro$/;
 
